@@ -27,8 +27,8 @@ export default defineComponent({
   setup () {
     const loading = ref(true)
     const columns = ref([
-      { name: 'id', label: 'ID', field: 'id' },
-      { name: 'name', label: 'Name', field: 'name' },
+      { name: 'id', label: 'ID', field: 'id', align: 'left' },
+      { name: 'name', label: 'Name', field: 'name', align: 'left' },
     ])
     const rows = ref([])
 
