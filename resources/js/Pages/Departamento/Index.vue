@@ -1,12 +1,17 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import TextoUtil from "@/Util/TextoUtil";
+import {Inertia} from "@inertiajs/inertia";
 
 const props = defineProps({
     empresas: {
         type: Array
     }
 })
+
+const destroirEmpresa = (id) => {
+    Inertia.delete(route('empresa.destroy', id));
+}
 
 const formatarEndereco = (empresa) => {
     if(!empresa.cep) return "";
@@ -55,7 +60,7 @@ const formatarEndereco = (empresa) => {
                             <td>
                                 <div class="btn-group">
                                     <a :href="route('empresa.show', empresa)" class="btn btn-sm btn-outline btn-square btn-primary"><i class="fa-solid fa-file"></i></a>
-                                    <button class="btn btn-sm btn-outline btn-square btn-secondary"><i class="fa-solid fa-trash"></i></button>
+                                    <a @click="destroirEmpresa(empresa.id)" class="btn btn-sm btn-outline btn-square btn-secondary"><i class="fa-solid fa-trash"></i></a>
                                 </div>
                             </td>
                             <td class="hidden sm:table-cell">{{ TextoUtil.formatarParaCNPJ(empresa.cnpj) }}</td>

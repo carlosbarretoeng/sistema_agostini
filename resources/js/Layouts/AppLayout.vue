@@ -34,16 +34,9 @@ const logout = () => {
                     <ul class="menu menu-horizontal dropdown-content">
                         <li><a :href="route('dashboard')">Início</a></li>
                         <li tabindex="0">
-                            <a class="justify-between">
+                            <a :href="route('empresa.index')" class="justify-between">
                                 Empresas
-                                <i class="fa-solid fa-angle-down"></i>
                             </a>
-                            <ul class="mt-0 p-2 text-black shadow menu menu-compact dropdown-content bg-base-100 rounded-box">
-                                <li><a :href="route('empresa.index')">Cadastro</a></li>
-                                <li><a>Departamentos</a></li>
-                                <li><a>Setores</a></li>
-                                <li><a>Maquinário</a></li>
-                            </ul>
                         </li>
                     </ul>
                 </div>

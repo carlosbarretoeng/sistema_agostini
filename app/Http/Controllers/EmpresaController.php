@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Empresa;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -41,12 +42,28 @@ class EmpresaController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function store(Request $request)
     {
-        //
+        $dados = $request->all();
+        $empresa = new Empresa();
+        $empresa->cnpj = str_replace(array('.','-','/', ' '),'',$dados['cnpj']);
+        $empresa->logo = $dados['logo'];
+        $empresa->razao_social = $dados['razao_social'];
+        $empresa->nome_fantasia = $dados['nome_fantasia'];
+        $empresa->cep = str_replace(array('.','-','/', ' '), '', $dados['cep']);
+        $empresa->logradouro = $dados['logradouro'];
+        $empresa->numero = $dados['numero'];
+        $empresa->complemento = $dados['complemento'];
+        $empresa->bairro = $dados['bairro'];
+        $empresa->cidade = $dados['cidade'];
+        $empresa->uf = $dados['uf'];
+        $empresa->email = $dados['email'];
+        $empresa->telefone = str_replace(array('.','-','/', '(', ')', ' '), '', $dados['telefone']);
+        $empresa->save();
+        return redirect()->route('empresa.index');
     }
 
     /**
@@ -74,7 +91,7 @@ class EmpresaController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -87,10 +104,11 @@ class EmpresaController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
     public function destroy($id)
     {
-        //
+        Empresa::destroy($id);
+        return redirect()->route('empresa.index');
     }
 }

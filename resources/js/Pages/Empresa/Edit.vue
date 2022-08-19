@@ -2,6 +2,8 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import {ref} from "vue";
 import axios from "axios";
+import {Inertia} from "@inertiajs/inertia";
+import {useForm} from "@inertiajs/inertia-vue3";
 
 const props = defineProps({
     empresa: {
@@ -13,16 +15,42 @@ const props = defineProps({
     }
 })
 
+const formEmpresa = useForm({
+    cnpj: props.empresa.cnpj ?? null,
+    logo: props.empresa.logo ?? null,
+    razao_social: props.empresa.razao_social ?? null,
+    nome_fantasia: props.empresa.nome_fantasia ?? null,
+    cep: props.empresa.cep,
+    logradouro: props.empresa.logradouro,
+    numero: props.empresa.numero,
+    complemento: props.empresa.complemento,
+    bairro: props.empresa.bairro,
+    cidade: props.empresa.cidade,
+    uf: props.empresa.uf,
+    email: props.empresa.email,
+    telefone: props.empresa.telefone
+})
+
 const disabled = !props.podeAdicionar;
 
-const tab = ref(0);
+const tab = ref(1);
+
+const salvarEmpresa = () => {
+    formEmpresa.post(route('empresa.store'))
+}
 
 const conculaReceitaWs = () => {
-    console.log(props.empresa.cnpj.length === 14);
-    axios.defaults.headers.get['Access-Control-Allow-Origin'] = '*';
-    axios.get('https://receitaws.com.br/v1/cnpj/' + props.empresa.cnpj).then((data) => {
-        console.log('>>', data)
-    })
+    const options = {
+        method: 'GET',
+        url: 'https://receitaws.com.br/v1/cnpj/45631323000111',
+        headers: {'Content-Type': 'application/json'}
+    };
+
+    axios.request(options).then(function (response) {
+        console.log(response.data);
+    }).catch(function (error) {
+        console.error(error);
+    });
 }
 
 </script>
@@ -51,14 +79,14 @@ const conculaReceitaWs = () => {
                 </div>
             </div>
             <div class="flex-none gap-2" v-if="tab === 0 && !disabled">
-                <a class="btn btn-primary gap-2" :class="{ 'btn-square': false }" :href="route('empresa.index')">
+                <a class="btn btn-primary gap-2" :class="{ 'btn-square': false }" @click="salvarEmpresa()">
                     <i class="fa-solid fa-save fa-xl"></i>
                     <span class="hidden sm:block">Salvar</span>
                 </a>
             </div>
         </div>
 
-        <div class="tabs mb-2">
+        <div class="tabs mb-2 hidden sm:block">
             <a class="tab tab-lifted" :class="{'tab-active': tab === 0}" @click="tab = 0">Dados</a>
             <a class="tab tab-lifted" :class="{'tab-active': tab === 1}" @click="tab = 1">Departamentos</a>
             <a class="tab tab-lifted" :class="{'tab-active': tab === 2}" @click="tab = 2">Setores</a>
@@ -77,23 +105,23 @@ const conculaReceitaWs = () => {
                                     <span class="label-text uppercase font-bold">CNPJ</span>
                                 </label>
                                 <div class="flex">
-                                    <input type="text" class="input input-bordered w-full" v-model="empresa.cnpj" :disabled="disabled"/>
-                                    <button class="btn btn-square btn-accent ml-4" v-if="!disabled" @click="conculaReceitaWs">
+                                    <input type="text" class="input input-bordered w-full" v-maska="'##.###.###/####-##'" v-model="formEmpresa.cnpj" :disabled="disabled"/>
+                                    <!-- <button class="btn btn-square btn-accent ml-4" v-if="!disabled" @click="conculaReceitaWs">
                                         <i class="fa-solid fa-search fa-lg"></i>
-                                    </button>
+                                    </button> -->
                                 </div>
                             </div>
                             <div class="form-control w-full sm:col-span-4">
                                 <label class="label">
                                     <span class="label-text uppercase font-bold">Razão Social</span>
                                 </label>
-                                <input type="text" class="input input-bordered w-full" v-model="empresa.razao_social" :disabled="disabled"/>
+                                <input type="text" class="input input-bordered w-full" v-model="formEmpresa.razao_social" :disabled="disabled"/>
                             </div>
                             <div class="form-control w-full sm:col-span-4">
                                 <label class="label">
                                     <span class="label-text uppercase font-bold">Nome Fantasia</span>
                                 </label>
-                                <input type="text" class="input input-bordered w-full" v-model="empresa.nome_fantasia" :disabled="disabled"/>
+                                <input type="text" class="input input-bordered w-full" v-model="formEmpresa.nome_fantasia" :disabled="disabled"/>
                             </div>
                         </div>
                     </div>
@@ -105,47 +133,47 @@ const conculaReceitaWs = () => {
                                     <span class="label-text uppercase font-bold">CEP</span>
                                 </label>
                                 <div class="flex">
-                                    <input type="text" class="input input-bordered w-full" v-model="empresa.cep" :disabled="disabled"/>
-                                    <button class="btn btn-square btn-accent ml-4" v-if="!disabled">
+                                    <input type="text" class="input input-bordered w-full" v-maska="'##.###-###'" v-model="formEmpresa.cep" :disabled="disabled"/>
+                                    <!-- <button class="btn btn-square btn-accent ml-4" v-if="!disabled">
                                         <i class="fa-solid fa-search fa-lg"></i>
-                                    </button>
+                                    </button> -->
                                 </div>
                             </div>
                             <div class="form-control w-full sm:col-span-2">
                                 <label class="label">
                                     <span class="label-text uppercase font-bold">Logradouro</span>
                                 </label>
-                                <input type="text" class="input input-bordered w-full" v-model="empresa.logradouro" :disabled="disabled"/>
+                                <input type="text" class="input input-bordered w-full" v-model="formEmpresa.logradouro" :disabled="disabled"/>
                             </div>
                             <div class="form-control w-full">
                                 <label class="label">
                                     <span class="label-text uppercase font-bold">Número</span>
                                 </label>
-                                <input type="text" class="input input-bordered w-full" v-model="empresa.numero" :disabled="disabled"/>
+                                <input type="text" class="input input-bordered w-full" v-model="formEmpresa.numero" :disabled="disabled"/>
                             </div>
                             <div class="form-control w-full">
                                 <label class="label">
                                     <span class="label-text uppercase font-bold">Complemento</span>
                                 </label>
-                                <input type="text" class="input input-bordered w-full" v-model="empresa.complemento" :disabled="disabled"/>
+                                <input type="text" class="input input-bordered w-full" v-model="formEmpresa.complemento" :disabled="disabled"/>
                             </div>
                             <div class="form-control w-full sm:col-span-2">
                                 <label class="label">
                                     <span class="label-text uppercase font-bold">Bairro</span>
                                 </label>
-                                <input type="text" class="input input-bordered w-full" v-model="empresa.bairro" :disabled="disabled"/>
+                                <input type="text" class="input input-bordered w-full" v-model="formEmpresa.bairro" :disabled="disabled"/>
                             </div>
                             <div class="form-control w-full sm:col-span-2">
                                 <label class="label">
                                     <span class="label-text uppercase font-bold">Cidade</span>
                                 </label>
-                                <input type="text" class="input input-bordered w-full" v-model="empresa.bairro" :disabled="disabled"/>
+                                <input type="text" class="input input-bordered w-full" v-model="formEmpresa.cidade" :disabled="disabled"/>
                             </div>
                             <div class="form-control w-full">
                                 <label class="label">
                                     <span class="label-text uppercase font-bold">UF</span>
                                 </label>
-                                <input type="text" class="input input-bordered w-full" v-model="empresa.uf" :disabled="disabled"/>
+                                <input type="text" class="input input-bordered w-full" v-model="formEmpresa.uf" :disabled="disabled"/>
                             </div>
                         </div>
                     </div>
@@ -156,15 +184,43 @@ const conculaReceitaWs = () => {
                                 <label class="label">
                                     <span class="label-text uppercase font-bold">Email de contato</span>
                                 </label>
-                                <input type="text" class="input input-bordered w-full" v-model="empresa.email" :disabled="disabled"/>
+                                <input type="text" class="input input-bordered w-full" v-model="formEmpresa.email" :disabled="disabled"/>
                             </div>
                             <div class="form-control w-full sm:col-span-3">
                                 <label class="label">
                                     <span class="label-text uppercase font-bold">Telefone de contato</span>
                                 </label>
-                                <input type="text" class="input input-bordered w-full" v-model="empresa.telefone" :disabled="disabled"/>
+                                <input type="text" class="input input-bordered w-full" v-maska="['+## (##) ####-####', '+## (##) #####-####']" v-model="formEmpresa.telefone" :disabled="disabled"/>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div v-if="tab === 1">
+            <div class="bg-base-200 mb-4">
+                <div class="grid grid-cols-6 gap-4 p-4">
+                    <button class="btn btn-ghost btn-block gap-2 border border-base-300 shadow rounded-md">
+                        <i class="fa-solid fa-plus fa-lg"></i>
+                        Adicionar
+                    </button>
+                    <div class="border border-base-300 bg-base-100 shadow rounded-md p-2" v-for="i in 0" :key="i">
+                        ....
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div v-if="tab === 2">
+            <div class="bg-base-200 mb-4">
+                <div class="grid grid-cols-6 gap-4 p-4">
+                    <button class="btn btn-ghost btn-block gap-2 border border-base-300 shadow rounded-md">
+                        <i class="fa-solid fa-plus fa-lg"></i>
+                        Adicionar
+                    </button>
+                    <div class="border border-base-300 bg-base-100 shadow rounded-md p-2" v-for="i in 0" :key="i">
+                        ....
                     </div>
                 </div>
             </div>

@@ -14,6 +14,8 @@ import { fab } from '@fortawesome/free-brands-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { dom } from "@fortawesome/fontawesome-svg-core";
 
+import Maska from 'maska'
+
 library.add(fas);
 library.add(fab);
 library.add(far);
@@ -28,6 +30,7 @@ createInertiaApp({
         return createApp({ render: () => h(app, props) })
             .use(plugin)
             .use(ZiggyVue, Ziggy)
+            .use(Maska)
             .component("font-awesome-icon", FontAwesomeIcon)
             .mount(el);
     },
