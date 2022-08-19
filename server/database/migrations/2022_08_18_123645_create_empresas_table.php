@@ -13,21 +13,21 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('companies', function (Blueprint $table) {
+        Schema::create('empresas', function (Blueprint $table) {
             $table->id();
-            $table->string('cnpj');
-            $table->string('nome');
-            $table->string('fantasia');
-            $table->string('logo');
-            $table->string('email');
+            $table->string('cnpj', 14);
+            $table->string('logo')->nullable();
+            $table->string('razao_social');
+            $table->string('nome_fantasia')->nullable();
+            $table->string('cep',8);
             $table->string('logradouro');
             $table->string('numero');
-            $table->string('complemento');
+            $table->string('complemento')->nullable();
             $table->string('bairro');
-            $table->string('municipio');
-            $table->string('uf');
-            $table->string('cep');
-            $table->string('telefone');
+            $table->string('cidade');
+            $table->string('uf', 2);
+            $table->string('telefone', 14)->nullable();
+            $table->string('email')->nullable();
             $table->timestamps();
         });
     }
@@ -39,6 +39,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('companies');
+        Schema::dropIfExists('empresas');
     }
 };

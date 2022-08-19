@@ -1,29 +1,15 @@
 <?php
 
-use App\Models\User;
-use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+if (App::environment('production')) {
+    URL::forceScheme('https');
+}
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+Route::redirect('/', '/login');
 
 Route::middleware([
     'auth:sanctum',
@@ -32,14 +18,9 @@ Route::middleware([
 ])->group(function () {
     Route::get('/dashboard', function () { return Inertia::render('Dashboard'); })->name('dashboard');
 
-    Route::get('/users', function () {
-        $users = User::all();
-        return Inertia::render('Users/Index', compact('users'));
-    })->name('users.index');
+    Route::resource('empresa', \App\Http\Controllers\EmpresaController::class, ['names' => 'empresa']);
 
-    Route::resource('company', \App\Http\Controllers\CompanyController::class, ['names' => 'company']);
-
+    /*Route::resource('company', \App\Http\Controllers\CompanyController::class, ['names' => 'company']);
     Route::resource('product', \App\Http\Controllers\CompanyController::class, ['names' => 'product']);
-
-    Route::resource('report', \App\Http\Controllers\CompanyController::class, ['names' => 'report']);
+    Route::resource('report', \App\Http\Controllers\CompanyController::class, ['names' => 'report']);*/
 });

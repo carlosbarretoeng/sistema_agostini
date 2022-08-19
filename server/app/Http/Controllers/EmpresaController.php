@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Company;
+use App\Models\Empresa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class CompanyController extends Controller
+class EmpresaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,18 +17,25 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $companies = Company::all();
-        return Inertia::render('Company/Index', array("companies" => $companies));
+        $empresas = Empresa::all();
+        return Inertia::render(
+            'Empresa/Index',
+            [
+                'empresas' => $empresas
+            ]
+        );
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
-        //
+        $empresa = new Empresa();
+        $podeAdicionar = true;
+        return Inertia::render('Empresa/Edit', compact('empresa', 'podeAdicionar'));
     }
 
     /**
@@ -47,10 +55,9 @@ class CompanyController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function show($id)
+    public function show(Empresa $empresa)
     {
-        $company = Company::find($id);
-        return Inertia::render('Company/Show', array("company" => $company));
+        return Inertia::render('Empresa/Edit', compact('empresa'));
     }
 
     /**

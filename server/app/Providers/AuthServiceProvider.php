@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Empresa;
 use App\Models\Team;
+use App\Policies\EmpresaPolicy;
 use App\Policies\TeamPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -14,6 +16,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
+        Empresa::class => EmpresaPolicy::class,
         Team::class => TeamPolicy::class,
     ];
 
