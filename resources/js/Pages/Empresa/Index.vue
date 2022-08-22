@@ -17,8 +17,8 @@ const formatarEndereco = (empresa) => {
     if(!empresa.cep) return "";
     let endereco = empresa.logradouro + ', ' + empresa.numero;
     endereco += (empresa.complemento ? ' - ' + empresa.complemento : '') + '<br/>';
-    endereco += empresa.bairro + ', ' + empresa.cidade + '-' + empresa.uf + '<br/>';
-    endereco += TextoUtil.formatarParaCEP(empresa.cep);
+    endereco += empresa.bairro + '<br/>';
+    endereco += empresa.cidade + '-' + empresa.uf + ' | ' + TextoUtil.formatarParaCEP(empresa.cep);
     return endereco
 }
 
@@ -48,7 +48,7 @@ const formatarEndereco = (empresa) => {
                 <table class="table table-compact w-full">
                     <thead>
                         <tr>
-                            <th class=""></th>
+                            <th class="w-[114px]"></th>
                             <th class="hidden sm:table-cell">CNPJ</th>
                             <th class="">Nome</th>
                             <th class="hidden sm:table-cell">Contatos</th>
@@ -57,17 +57,18 @@ const formatarEndereco = (empresa) => {
                     </thead>
                     <tbody>
                         <tr v-for="empresa in empresas" :key="empresa.id">
-                            <td>
+                            <td class="border-r">
                                 <div class="btn-group">
-                                    <a :href="route('empresa.show', empresa)" class="btn btn-sm btn-outline btn-square btn-primary"><i class="fa-solid fa-file"></i></a>
-                                    <a @click="destroirEmpresa(empresa.id)" class="btn btn-sm btn-outline btn-square btn-secondary"><i class="fa-solid fa-trash"></i></a>
+                                    <a :href="route('empresa.show', empresa)" class="btn btn-sm btn-outline btn-square"><i class="fa-solid fa-file"></i></a>
+                                    <a :href="route('empresa.edit', empresa)" class="btn btn-sm btn-outline btn-square"><i class="fa-solid fa-edit"></i></a>
+                                    <a @click="destroirEmpresa(empresa.id)" class="btn btn-sm btn-outline btn-square"><i class="fa-solid fa-trash"></i></a>
                                 </div>
                             </td>
-                            <td class="hidden sm:table-cell">{{ TextoUtil.formatarParaCNPJ(empresa.cnpj) }}</td>
-                            <td>
+                            <td class="border-r w-[160px] hidden sm:table-cell">{{ TextoUtil.formatarParaCNPJ(empresa.cnpj) }}</td>
+                            <td class="border-r">
                                 <div class="flex items-center space-x-3">
                                     <div class="avatar">
-                                        <div class="mask mask-squircle w-10 h-10">
+                                        <div class="w-10 h-10">
                                             <img :src="empresa.logo ? empresa.logo : 'https://ui-avatars.com/api/?name=' + (empresa.nome_fantasia ? empresa.nome_fantasia : empresa.razao_social)" alt="Avatar Tailwind CSS Component" />
                                         </div>
                                     </div>
@@ -77,7 +78,7 @@ const formatarEndereco = (empresa) => {
                                     </div>
                                 </div>
                             </td>
-                            <td class="hidden sm:table-cell">
+                            <td class="border-r hidden sm:table-cell">
                                 <div>
                                     <div class="text-xs">{{ empresa.email }}</div>
                                     <div class="text-xs">{{ TextoUtil.formatarParaTelefone(empresa.telefone) }}</div>

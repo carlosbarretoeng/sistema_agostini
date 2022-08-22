@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Empresa;
+use App\Models\Team;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,12 +12,7 @@ use Inertia\Response;
 
 class EmpresaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
-    public function index()
+    public function index(): Response
     {
         $empresas = Empresa::all();
         return Inertia::render(
@@ -27,28 +23,25 @@ class EmpresaController extends Controller
         );
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
+    public function create(): Response
     {
         $empresa = new Empresa();
-        $podeAdicionar = true;
-        return Inertia::render('Empresa/Edit', compact('empresa', 'podeAdicionar'));
+        $canSave = true;
+        return Inertia::render('Empresa/Edit', compact('empresa', 'canSave'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param Request $request
-     * @return RedirectResponse
-     */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $dados = $request->all();
+
+        $team = new Team();
+        $team->user_id = 1;
+        $team->name = "team_" . str_replace(array('.','-','/', ' '),'',$dados['cnpj']);
+        $team->personal_team = false;
+        $team->save();
+
         $empresa = new Empresa();
+        $empresa->team_id = $team->id;
         $empresa->cnpj = str_replace(array('.','-','/', ' '),'',$dados['cnpj']);
         $empresa->logo = $dados['logo'];
         $empresa->razao_social = $dados['razao_social'];
@@ -66,47 +59,24 @@ class EmpresaController extends Controller
         return redirect()->route('empresa.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function show(Empresa $empresa)
+    public function show(Empresa $empresa): Response
     {
-        return Inertia::render('Empresa/Edit', compact('empresa'));
+        $canSave = false;
+        return Inertia::render('Empresa/Edit', compact('empresa', 'canSave'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function edit(Empresa $empresa): Response
     {
-        //
+        $canSave = true;
+        return Inertia::render('Empresa/Edit', compact('empresa', 'canSave'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return RedirectResponse
-     */
-    public function destroy($id)
+    public function destroy($id): RedirectResponse
     {
         Empresa::destroy($id);
         return redirect()->route('empresa.index');

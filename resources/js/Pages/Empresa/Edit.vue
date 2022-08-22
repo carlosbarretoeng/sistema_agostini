@@ -2,14 +2,15 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import {ref} from "vue";
 import axios from "axios";
-import {Inertia} from "@inertiajs/inertia";
 import {useForm} from "@inertiajs/inertia-vue3";
+
+import SetoresIndex from '@/Pages/Setor/Index.vue';
 
 const props = defineProps({
     empresa: {
         type: Object
     },
-    podeAdicionar: {
+    canSave: {
         type: Boolean,
         default: false
     }
@@ -31,7 +32,7 @@ const formEmpresa = useForm({
     telefone: props.empresa.telefone
 })
 
-const disabled = !props.podeAdicionar;
+const disabled = !props.canSave;
 
 const tab = ref(1);
 
@@ -88,11 +89,10 @@ const conculaReceitaWs = () => {
 
         <div class="tabs mb-2 hidden sm:block">
             <a class="tab tab-lifted" :class="{'tab-active': tab === 0}" @click="tab = 0">Dados</a>
-            <a class="tab tab-lifted" :class="{'tab-active': tab === 1}" @click="tab = 1">Departamentos</a>
-            <a class="tab tab-lifted" :class="{'tab-active': tab === 2}" @click="tab = 2">Setores</a>
-            <a class="tab tab-lifted" :class="{'tab-active': tab === 3}" @click="tab = 3">Colaboradores</a>
-            <a class="tab tab-lifted" :class="{'tab-active': tab === 4}" @click="tab = 4">Maquinário</a>
-            <a class="tab tab-lifted" :class="{'tab-active': tab === 5}" @click="tab = 5">Produtos</a>
+            <a class="tab tab-lifted" :class="{'tab-active': tab === 1}" @click="tab = 1">Setores</a>
+            <a class="tab tab-lifted" :class="{'tab-active': tab === 2}" @click="tab = 2">Colaboradores</a>
+            <a class="tab tab-lifted" :class="{'tab-active': tab === 3}" @click="tab = 3">Maquinário</a>
+            <a class="tab tab-lifted" :class="{'tab-active': tab === 4}" @click="tab = 4">Produtos</a>
         </div>
 
         <div v-if="tab === 0">
@@ -173,7 +173,7 @@ const conculaReceitaWs = () => {
                                 <label class="label">
                                     <span class="label-text uppercase font-bold">UF</span>
                                 </label>
-                                <input type="text" class="input input-bordered w-full" v-model="formEmpresa.uf" :disabled="disabled"/>
+                                <input type="text" class="input input-bordered w-full" v-maska="'AA'" v-model="formEmpresa.uf" :disabled="disabled"/>
                             </div>
                         </div>
                     </div>
@@ -199,31 +199,7 @@ const conculaReceitaWs = () => {
         </div>
 
         <div v-if="tab === 1">
-            <div class="bg-base-200 mb-4">
-                <div class="grid grid-cols-6 gap-4 p-4">
-                    <button class="btn btn-ghost btn-block gap-2 border border-base-300 shadow rounded-md">
-                        <i class="fa-solid fa-plus fa-lg"></i>
-                        Adicionar
-                    </button>
-                    <div class="border border-base-300 bg-base-100 shadow rounded-md p-2" v-for="i in 0" :key="i">
-                        ....
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div v-if="tab === 2">
-            <div class="bg-base-200 mb-4">
-                <div class="grid grid-cols-6 gap-4 p-4">
-                    <button class="btn btn-ghost btn-block gap-2 border border-base-300 shadow rounded-md">
-                        <i class="fa-solid fa-plus fa-lg"></i>
-                        Adicionar
-                    </button>
-                    <div class="border border-base-300 bg-base-100 shadow rounded-md p-2" v-for="i in 0" :key="i">
-                        ....
-                    </div>
-                </div>
-            </div>
+            <SetoresIndex/>
         </div>
     </AppLayout>
 </template>

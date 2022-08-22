@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('empresas', function (Blueprint $table) {
             $table->id();
             $table->string('cnpj', 14);
+            $table->unsignedBigInteger('team_id');
+            $table->foreign('team_id')->references('id')->on('teams');
             $table->string('logo')->nullable();
             $table->string('razao_social');
             $table->string('nome_fantasia')->nullable();
@@ -28,6 +30,7 @@ return new class extends Migration
             $table->string('uf', 2);
             $table->string('telefone', 14)->nullable();
             $table->string('email')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
