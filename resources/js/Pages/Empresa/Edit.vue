@@ -4,10 +4,13 @@ import {ref} from "vue";
 import axios from "axios";
 import {useForm} from "@inertiajs/inertia-vue3";
 
-import SetoresIndex from '@/Pages/Setor/Index.vue';
+import SetoresIndex from '@/Pages/Setor/IndexComponent.vue';
 
 const props = defineProps({
     empresa: {
+        type: Object
+    },
+    setores: {
         type: Object
     },
     canSave: {
@@ -34,7 +37,7 @@ const formEmpresa = useForm({
 
 const disabled = !props.canSave;
 
-const tab = ref(1);
+const tab = ref(0);
 
 const salvarEmpresa = () => {
     formEmpresa.post(route('empresa.store'))
@@ -80,6 +83,8 @@ const conculaReceitaWs = () => {
                 </div>
             </div>
             <div class="flex-none gap-2" v-if="tab === 0 && !disabled">
+            </div>
+            <div id="contextActions" class="flex-1 justify-end">
                 <a class="btn btn-primary gap-2" :class="{ 'btn-square': false }" @click="salvarEmpresa()">
                     <i class="fa-solid fa-save fa-xl"></i>
                     <span class="hidden sm:block">Salvar</span>
@@ -199,7 +204,7 @@ const conculaReceitaWs = () => {
         </div>
 
         <div v-if="tab === 1">
-            <SetoresIndex/>
+            <SetoresIndex :setores="setores"/>
         </div>
     </AppLayout>
 </template>

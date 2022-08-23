@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Empresa;
+use App\Models\Setor;
 use App\Models\Team;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -62,7 +63,8 @@ class EmpresaController extends Controller
     public function show(Empresa $empresa): Response
     {
         $canSave = false;
-        return Inertia::render('Empresa/Edit', compact('empresa', 'canSave'));
+        $setores = Setor::where('empresa_id', $empresa->id)->get();
+        return Inertia::render('Empresa/Edit', compact('empresa', 'canSave', 'setores'));
     }
 
     public function edit(Empresa $empresa): Response
