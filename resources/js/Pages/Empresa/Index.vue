@@ -1,5 +1,6 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
+import ModalEmpresa from '@/Pages/Empresa/Modal.vue';
 import TextoUtil from "@/Util/TextoUtil";
 import {Inertia} from "@inertiajs/inertia";
 
@@ -31,10 +32,11 @@ const formatarEndereco = (empresa) => {
                 <a class="normal-case text-xl font-bold">Empresas</a>
             </div>
             <div class="flex-none gap-2">
-                <a class="btn btn-primary gap-2" :href="route('empresa.create')">
-                    <i class="fa-solid fa-add"></i>
-                    Adicionar
-                </a>
+                <label for="adicionarEmpresaModal" class="btn btn-primary gap-2 modal-button">
+                    <i class="fa-solid fa-add fa-xl"></i>
+                    <span class="hidden sm:block">Adicionar</span>
+                </label>
+                <ModalEmpresa modalId="adicionarEmpresaModal" />
                 <!-- <div class="form-control">
                     <input type="text" placeholder="Search" class="input input-bordered" />
                 </div>
@@ -60,7 +62,10 @@ const formatarEndereco = (empresa) => {
                             <td class="border-r">
                                 <div class="btn-group">
                                     <a :href="route('empresa.show', empresa)" class="btn btn-sm btn-outline btn-square"><i class="fa-solid fa-file"></i></a>
-                                    <a :href="route('empresa.edit', empresa)" class="btn btn-sm btn-outline btn-square"><i class="fa-solid fa-edit"></i></a>
+
+                                    <label :for="'editarEmpresaModal' + empresa.id" class="btn btn-sm btn-outline btn-square"><i class="fa-solid fa-edit"></i></label>
+                                    <ModalEmpresa :modalId="'editarEmpresaModal' + empresa.id" :empresa="empresa" update />
+
                                     <a @click="destroirEmpresa(empresa.id)" class="btn btn-sm btn-outline btn-square"><i class="fa-solid fa-trash"></i></a>
                                 </div>
                             </td>

@@ -2,83 +2,64 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Setor;
 use Illuminate\Http\Request;
 
 class SetorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $attr = $request->all();
+        return Setor::all()->where('empresa_id', '=', $attr['empresa_id']);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $attr = $request->all();
+
+        $setor = new Setor();
+        $setor->empresa_id = $attr['empresa_id'];
+        $setor->nome = $attr['nome'];
+        $setor->descricao = $attr['descricao'];
+        $setor->save();
+
+        return back();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        //
+        $oldSetor = Setor::find($id);
+        $attrs = $request->all();
+        $toReplace = array('.','-','/', '(', ')', ' ');
+        if($oldSetor) {
+            foreach (array_keys($attrs) as $k){
+                if(str_replace($toReplace, '', $oldSetor[$k]) !== str_replace($toReplace, '', $attrs[$k])){
+                    $oldSetor[$k] = $attrs[$k];
+                }
+            }
+            $oldSetor->save();
+        }
+        return back();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        //
+        Setor::destroy($id);
+        return back();
     }
 }

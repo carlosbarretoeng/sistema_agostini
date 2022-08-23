@@ -19,8 +19,6 @@ Route::middleware([
     Route::get('/dashboard', function () { return Inertia::render('Dashboard'); })->name('dashboard');
 
     Route::resource('empresa', \App\Http\Controllers\EmpresaController::class, ['names' => 'empresa']);
-
-    /*Route::resource('company', \App\Http\Controllers\CompanyController::class, ['names' => 'company']);
-    Route::resource('product', \App\Http\Controllers\CompanyController::class, ['names' => 'product']);
-    Route::resource('report', \App\Http\Controllers\CompanyController::class, ['names' => 'report']);*/
+    Route::resource('setor', \App\Http\Controllers\SetorController::class, ['names' => 'setor']);
+    Route::resource('colaborador', \App\Http\Controllers\ColaboradorController::class, ['names' => 'colaborador']);
 });

@@ -1,11 +1,5 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import DeleteUserForm from '@/Pages/Profile/Partials/DeleteUserForm.vue';
-import JetSectionBorder from '@/Components/SectionBorder.vue';
-import LogoutOtherBrowserSessionsForm from '@/Pages/Profile/Partials/LogoutOtherBrowserSessionsForm.vue';
-import TwoFactorAuthenticationForm from '@/Pages/Profile/Partials/TwoFactorAuthenticationForm.vue';
-import UpdatePasswordForm from '@/Pages/Profile/Partials/UpdatePasswordForm.vue';
-import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm.vue';
 
 defineProps({
     confirmsTwoFactorAuthentication: Boolean,
@@ -30,7 +24,7 @@ defineProps({
                     <div class="pt-6 p-4">
                         <h2 class="card-title">{{ $page.props.user.name }}</h2>
                         <p>{{ $page.props.user.email }}</p>
-                        <div class="text-2xs">{{ $page.props.user.current_team.name }}</div>
+                        <div class="text-2xs">{{ $page.props.user }}</div>
                     </div>
                 </div>
             </div>

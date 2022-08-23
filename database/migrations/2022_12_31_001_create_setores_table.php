@@ -13,7 +13,7 @@ return new class extends Migration
             $table->unsignedBigInteger('empresa_id');
             $table->foreign('empresa_id')->references('id')->on('empresas');
             $table->string('nome');
-            $table->text('descricao');
+            $table->text('descricao')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
