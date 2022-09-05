@@ -1,13 +1,8 @@
 <script setup>
 import { ref } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
-import { Head, Link } from '@inertiajs/inertia-vue3';
-import JetApplicationMark from '@/Components/ApplicationMark.vue';
-import JetBanner from '@/Components/Banner.vue';
-import JetDropdown from '@/Components/Dropdown.vue';
-import JetDropdownLink from '@/Components/DropdownLink.vue';
-import JetNavLink from '@/Components/NavLink.vue';
-import JetResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+import { Head } from '@inertiajs/inertia-vue3';
+import Navigation from "./Navigation.vue";
 
 defineProps({
     title: String,
@@ -33,12 +28,12 @@ const logout = () => {
         <Head :title="title" />
 
         <div class="drawer">
-            <input id="my-drawer-3" type="checkbox" class="drawer-toggle" />
+            <input id="drawerApp" type="checkbox" class="drawer-toggle" />
             <div class="drawer-content flex flex-col">
                 <!-- Navbar -->
                 <div class="navbar bg-primary">
-                    <div class="flex-none pr-2">
-                        <label for="my-drawer-3" class="btn btn-square btn-ghost">
+                    <div class="flex-none pr-2 sm:hidden">
+                        <label for="drawerApp" class="btn btn-square btn-ghost">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                         </label>
                     </div>
@@ -64,36 +59,26 @@ const logout = () => {
                     </div>
                 </div>
 
-                <div>
-                    <header v-if="$slots.header" class="bg-white shadow">
-                        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                            <slot name="header" />
-                        </div>
-                    </header>
+                <div class="flex h-full">
+                    <div class="p-2 w-56 hidden sm:inline-flex bg-base-100">
+                        <Navigation />
+                    </div>
+                    <div class="flex-1">
+                        <header v-if="$slots.header">
+                            <div class="mx-auto p-4">
+                                <slot name="header" />
+                            </div>
+                        </header>
 
-                    <!-- Page Content -->
-                    <main>
-                        <slot />
-                    </main>
+                        <main class="p-2">
+                            <slot />
+                        </main>
+                    </div>
                 </div>
             </div>
             <div class="drawer-side">
-                <label for="my-drawer-3" class="drawer-overlay"></label>
-
-                <ul class="menu bg-base-100 w-11/12">
-                    <li><a>Item 1</a></li>
-                    <!-- tabindex will make the parent menu focusable to keep the submenu open if it's focused -->
-                    <li tabindex="0">
-                        <span>Parent</span>
-                        <ul class="bg-base-100 border shadow">
-                            <li><a>Submenu 1</a></li>
-                            <li><a>Submenu 2</a></li>
-                            <li><a>Submenu 3</a></li>
-                        </ul>
-                    </li>
-                    <li><a>Item 3</a></li>
-                </ul>
-
+                <label for="drawerApp" class="drawer-overlay"></label>
+                <Navigation />
             </div>
         </div>
     </div>
