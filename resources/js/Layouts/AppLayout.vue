@@ -34,11 +34,11 @@ const logout = () => {
                 <div class="navbar bg-primary">
                     <div class="flex-none pr-2 sm:hidden">
                         <label for="drawerApp" class="btn btn-square btn-ghost">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                            <font-awesome-icon icon="fa-solid fa-bars" class="fa-2xl text-base-100" />
                         </label>
                     </div>
                     <div class="flex-1">
-                        <a :href="route('dashboard')" class="normal-case text-xl">Agostini</a>
+                        <a class="font-bold text-3xl uppercase text-base-100">Agostini</a>
                     </div>
                     <div class="flex-none gap-2">
                         <div class="dropdown dropdown-end">

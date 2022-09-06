@@ -14,20 +14,44 @@ const toggleDrawer = () => {
         </li>
         <li>
             <a :href="route('dashboard')">
-                <!-- <font-awesome-icon icon="home"/> -->
                 <span>Início</span>
             </a>
         </li>
         <li>
+            <a :href="route('app.tempos.index')">
+                <span>App Tempos</span>
+            </a>
+        </li>
+        <hr/>
+        <li>
+            <a :href="route('usuario.index')">
+                <span>Usuários</span>
+            </a>
+        </li>
+        <li>
+            <a :href="route('perfil.index')">
+                <span>Perfis</span>
+            </a>
+        </li>
+        <li>
+            <a :href="route('permissao.index')">
+                <span>Permissões</span>
+            </a>
+        </li>
+        <hr/>
+        <li>
             <a :href="route('empresa.index')">
-                <!-- <font-awesome-icon icon="fa-solid fa-buildings" /> -->
                 <span>Empresas</span>
             </a>
         </li>
         <li>
             <a :href="route('departamento.index')">
-                <!-- <font-awesome-icon icon="fa-solid fa-building" /> -->
                 <span>Departamentos</span>
+            </a>
+        </li>
+        <li>
+            <a :href="route('maquinario.index')">
+                <span>Maquinário</span>
             </a>
         </li>
     </ul>

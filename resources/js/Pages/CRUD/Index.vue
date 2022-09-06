@@ -1,6 +1,7 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { mask } from 'maska'
+import {Inertia} from "@inertiajs/inertia";
 
 const props = defineProps({
     label: {
@@ -19,6 +20,11 @@ const props = defineProps({
 
 const formatarValorPorMascara = (mascara, valor) => {
     return mask(valor, mascara) ?? valor;
+}
+
+const destroy = (id) => {
+    console.log(id);
+    Inertia.delete(route(props.entity + '.destroy', id));
 }
 </script>
 <template>
@@ -56,16 +62,28 @@ const formatarValorPorMascara = (mascara, valor) => {
                         v-for="datum in data"
                         :key="entity + '_id_' + datum['id'] + '_' + (new Date()).getTime()"
                     >
-                        <td class="btn-group w-[110px]">
+                        <td class="w-[110px]">
                             <a :href="route( entity + '.show', datum['id'])" class="btn btn-sm btn-square btn-outline">
                                 <font-awesome-icon icon="fa-solid fa-info" />
                             </a>
                             <a :href="route(entity + '.edit', datum['id'])" class="btn btn-sm btn-square btn-outline">
                                 <font-awesome-icon icon="fa-solid fa-edit" />
                             </a>
-                            <a class="btn btn-sm btn-square btn-outline">
+                            <label :for="entity + '_id_' + datum['id'] + '_deleteModal'" class="btn btn-sm btn-square btn-outline">
                                 <font-awesome-icon icon="fa-solid fa-trash" />
-                            </a>
+                            </label>
+
+                            <input type="checkbox" :id="entity + '_id_' + datum['id'] + '_deleteModal'" class="modal-toggle" />
+                            <div class="modal modal-bottom sm:modal-middle">
+                                <div class="modal-box">
+                                    <h3 class="font-bold text-lg">Excluir {{ label }}</h3>
+                                    <p class="py-4">Essa operação não poderá ser revertida! Tem certeza?</p>
+                                    <div class="modal-action">
+                                        <label :for="entity + '_id_' + datum['id'] + '_deleteModal'" class="btn">Não</label>
+                                        <button @click="destroy(datum['id'])" for="my-modal-6" class="btn">Sim</button>
+                                    </div>
+                                </div>
+                            </div>
                         </td>
                         <td
                             v-for="field in fields"

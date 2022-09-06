@@ -1,12 +1,19 @@
 <script setup>
-import {reactive} from "vue";
+import {reactive, ref} from "vue";
 
 const props = defineProps({
     name: String,
     label: String,
     colSpan: Number,
-    values: Array | null
+    value: String,
+    values: Array | null,
+    disabled: {
+        type: Boolean,
+        default: false
+    }
 })
+
+const selected = ref(props.value)
 
 const calculateClass = reactive({
     'sm:col-span-1': props.colSpan === 1,
@@ -23,6 +30,10 @@ const calculateClass = reactive({
     'sm:col-span-12': props.colSpan === 12,
 })
 
+const fetchValue = (event) => {
+    return event;
+}
+
 </script>
 <template>
     <div :class="calculateClass">
@@ -30,9 +41,14 @@ const calculateClass = reactive({
             <label class="label">
                 <span class="label-text">{{ label }}</span>
             </label>
-            <select class="select select-bordered max-w-full">
+            <select
+                class="select select-bordered max-w-full"
+                v-model.lazy="selected"
+                @input="$emit('update', fetchValue($event.target.value))"
+                :disabled="disabled"
+            >
                 <option disabled selected></option>
-                <option v-for="(val, idx) in values" :key="name + '_option_' + idx">{{ Array.isArray(val) ? val[1] : val }}</option>
+                <option v-for="(val, idx) in values" :key="name + '_option_' + idx" :value="Array.isArray(val) ? val[0] : val ">{{ Array.isArray(val) ? val[1] : val }}</option>
             </select>
         </div>
         </div>

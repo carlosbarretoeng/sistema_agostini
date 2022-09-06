@@ -42,7 +42,7 @@ const fetchValue = (event) => {
             </label>
             <input
                 v-maska="mask"
-                :type="type === 'string' ? 'text' : 'number'"
+                type="password"
                 class="input input-bordered w-full"
                 v-model.lazy="value"
                 @input="$emit('update', fetchValue($event))"

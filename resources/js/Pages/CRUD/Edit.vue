@@ -14,13 +14,20 @@ const props = defineProps({
     },
     fields: {
         type: Array
+    },
+    data: {
+        type: Object
+    },
+    disabled: {
+        type: Boolean,
+        default: true
     }
 })
 
 const preForm = {};
 
 props.fields.forEach(field => {
-    preForm[field['name']] = ''
+    preForm[field['name']] = props.data[field['name']]
 })
 
 const form = useForm(preForm);
@@ -40,7 +47,7 @@ const calculateClass = (field) => {
 }
 
 function submit() {
-    Inertia.post(route(props.entity + '.store'), form);
+    Inertia.put(route(props.entity + '.update', props.data['id']), form);
 }
 </script>
 <template>
@@ -58,8 +65,8 @@ function submit() {
                 </div>
                 <div class="flex-none">
                     <button @click="submit" class="btn btn-primary gap-2">
-                        <font-awesome-icon icon="fa-solid fa-save"/>
-                        <span class="hidden sm:block">Salvar</span>
+                        <font-awesome-icon icon="fa-solid fa-arrows-rotate" />
+                        <span class="hidden sm:block">Atualizar</span>
                     </button>
                 </div>
             </div>
@@ -70,8 +77,9 @@ function submit() {
                 <Fields
                     v-for="field in fields"
                     :key="field['name'] + '_' + (new Date()).getTime()"
-                    v-bind="{field}"
+                    v-bind="{field, 'value': '' + data[field['name']], disabled}"
                     @update="updateFormValue($event, field['name'])"
+                    va
                 />
             </div>
         </div>
@@ -79,5 +87,6 @@ function submit() {
         <div class="overflow-x-auto mb-4">
             <slot></slot>
         </div>
+
     </AppLayout>
 </template>

@@ -5,23 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Departamento extends Model
+class Maquinario extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'nome'
-    ];
-
-    public static function getDescription($instance): string
-    {
-        return $instance['nome'];
-    }
 
     public static function getFields(): array
     {
         return [
             Field::item(name: 'empresas_id', label:'Empresa', type: 'foreign', entity: Empresa::class),
+            Field::item(name: 'departamentos_id', label:'Departamento', type: 'foreign', entity: Departamento::class),
             Field::item(name: 'nome', label:'Nome', show: true),
         ];
     }

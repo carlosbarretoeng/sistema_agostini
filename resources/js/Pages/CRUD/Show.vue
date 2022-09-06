@@ -14,6 +14,13 @@ const props = defineProps({
     },
     fields: {
         type: Array
+    },
+    data: {
+        type: Object
+    },
+    disabled: {
+        type: Boolean,
+        default: true
     }
 })
 
@@ -57,20 +64,20 @@ function submit() {
                     </a>
                 </div>
                 <div class="flex-none">
-                    <button @click="submit" class="btn btn-primary gap-2">
-                        <font-awesome-icon icon="fa-solid fa-save"/>
-                        <span class="hidden sm:block">Salvar</span>
-                    </button>
+                    <a :href="route(entity + '.edit', data['id'])" class="btn btn-primary gap-2">
+                        <font-awesome-icon icon="fa-solid fa-edit"/>
+                        <span class="hidden sm:block">Editar</span>
+                    </a>
                 </div>
             </div>
         </template>
 
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto mb-4">
             <div class="grid sm:grid-cols-12 sm:gap-2">
                 <Fields
                     v-for="field in fields"
                     :key="field['name'] + '_' + (new Date()).getTime()"
-                    v-bind="{field}"
+                    v-bind="{field, 'value': '' + data[field['name']], disabled}"
                     @update="updateFormValue($event, field['name'])"
                 />
             </div>
@@ -79,5 +86,6 @@ function submit() {
         <div class="overflow-x-auto mb-4">
             <slot></slot>
         </div>
+
     </AppLayout>
 </template>
