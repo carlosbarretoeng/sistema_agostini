@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Departamento as DepartamentoModel;
 
-class DepartamentoController extends Controller
+class DepartamentoController extends CrudController
 {
     public function __construct()
     {

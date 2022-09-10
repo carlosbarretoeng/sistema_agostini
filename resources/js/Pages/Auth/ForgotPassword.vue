@@ -1,60 +1,76 @@
 <script setup>
+import { ref } from 'vue';
 import { Head, useForm } from '@inertiajs/inertia-vue3';
-import JetAuthenticationCard from '@/Components/AuthenticationCard.vue';
-import JetAuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
-import JetButton from '@/Components/Button.vue';
-import JetInput from '@/Components/Input.vue';
-import JetInputError from '@/Components/InputError.vue';
-import JetLabel from '@/Components/Label.vue';
 
 defineProps({
     status: String,
 });
 
 const form = useForm({
-    email: '',
+    email: 'carlosbarreto.eng@gmail.com',
 });
 
+let successMessage = ref(null);
+let errorMessage = ref(null);
+
 const submit = () => {
-    form.post(route('password.email'));
+    form.post(route('password.email'), {
+        onError: (err) => {
+            errorMessage.value = Object.values(err).pop();
+            form.reset();
+            setTimeout(() => errorMessage.value = null, 5000);
+        },
+        onSuccess: () => {
+            successMessage.value = "Mensagem enviada! Verifique sua caixa de entrada!";
+            setTimeout(() => successMessage.value = null, 5000);
+        }
+    });
 };
 </script>
 
 <template>
-    <Head title="Forgot Password" />
+    <Head title="Recuperar Senha" />
 
-    <JetAuthenticationCard>
-        <template #logo>
-            <JetAuthenticationCardLogo />
-        </template>
-
-        <div class="mb-4 text-sm text-gray-600">
-            Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.
-        </div>
-
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
-            {{ status }}
-        </div>
-
-        <form @submit.prevent="submit">
+    <div v-if="errorMessage" class="absolute bottom-0 w-full p-2">
+        <div class="alert alert-error shadow-lg">
             <div>
-                <JetLabel for="email" value="Email" />
-                <JetInput
-                    id="email"
-                    v-model="form.email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    required
-                    autofocus
-                />
-                <JetInputError class="mt-2" :message="form.errors.email" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <span>{{ errorMessage }}</span>
             </div>
+        </div>
+    </div>
 
-            <div class="flex items-center justify-end mt-4">
-                <JetButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Email Password Reset Link
-                </JetButton>
+    <div v-if="successMessage" class="absolute bottom-0 w-full p-2">
+        <div class="alert alert-success shadow-lg">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <span>{{ successMessage }}</span>
             </div>
-        </form>
-    </JetAuthenticationCard>
+        </div>
+    </div>
+
+    <div class="min-h-screen flex justify-center items-center bg-primary">
+        <div class="card w-80 bg-base-100 shadow-xl">
+            <form @submit.prevent="submit" class="card-body">
+                <h2 class="card-title">Recuperar Senha</h2>
+                <span>
+                    Esqueceu a sua senha? Sem problemas. Nos informe o email cadastrado
+                    que lhe enviaremos uma mensagem com as instruções para escolhar uma
+                    nova senha.
+                </span>
+                <div class="mb-4">
+                    <div class="form-control w-full max-w-xs">
+                        <label class="label">
+                            <span class="label-text">Email</span>
+                        </label>
+                        <input v-model="form.email" type="text" placeholder="Email" class="input input-bordered w-full max-w-xs" />
+                    </div>
+                </div>
+                <div class="card-actions justify-end">
+                    <button type="submit" class="btn btn-primary btn-block">Recuperar senha</button>
+                    <a :href="route('login')" class="btn btn-xs btn-block btn-secondary btn-ghost">Voltar para tela de acesso</a>
+                </div>
+            </form>
+        </div>
+    </div>
 </template>

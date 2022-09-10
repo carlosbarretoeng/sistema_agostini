@@ -26,7 +26,6 @@ class User extends Authenticatable
      * @var string[]
      */
     protected $fillable = [
-        'username',
         'name',
         'email',
         'password',
@@ -59,20 +58,6 @@ class User extends Authenticatable
      * @var array
      */
     protected $appends = [
-        'profile_photo_url',
+        'profile_photo_url'
     ];
-
-    public static function getDescription($instance): string
-    {
-        return $instance['name'];
-    }
-
-    public static function getFields(): array
-    {
-        return array(
-            Field::item(name: 'name', label: 'Nome', show: true),
-            Field::item(name: 'email', label: 'Email', showInDesktop: true),
-            Field::item(name: 'password', label: 'Senha', type: 'password'),
-        );
-    }
 }

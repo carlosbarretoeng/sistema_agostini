@@ -1,17 +1,13 @@
 <script setup>
-import { Head, Link, useForm } from '@inertiajs/inertia-vue3';
-import JetAuthenticationCard from '@/Components/AuthenticationCard.vue';
-import JetAuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
-import JetButton from '@/Components/Button.vue';
-import JetInput from '@/Components/Input.vue';
-import JetInputError from '@/Components/InputError.vue';
-import JetCheckbox from '@/Components/Checkbox.vue';
-import JetLabel from '@/Components/Label.vue';
+import { ref } from 'vue';
+import { Head, useForm } from '@inertiajs/inertia-vue3';
 
 defineProps({
     canResetPassword: Boolean,
     status: String,
 });
+
+let errorMessage = ref(null);
 
 const form = useForm({
     email: 'carlosbarreto.eng@gmail.com',
@@ -24,13 +20,30 @@ const submit = () => {
         ...data,
         remember: form.remember ? 'on' : '',
     })).post(route('login'), {
-        onFinish: () => form.reset('password'),
+        onError: (err) => {
+            console.log( Object.values(err).pop() )
+            errorMessage.value = Object.values(err).pop();
+            form.reset();
+            setTimeout(() => errorMessage.value = null, 5000);
+        },
+        onFinish: (el) => {
+            form.reset('password')
+        }
     });
 };
 </script>
 
 <template>
     <Head title="Acessar" />
+
+    <div v-if="errorMessage" class="absolute bottom-0 w-full p-2">
+        <div class="alert alert-error shadow-lg">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <span>Error! Task failed successfully.</span>
+            </div>
+        </div>
+    </div>
 
     <div class="min-h-screen flex justify-center items-center bg-primary">
         <div class="card w-80 bg-base-100 shadow-xl">
@@ -52,7 +65,7 @@ const submit = () => {
                 </div>
                 <div class="card-actions justify-end">
                     <button type="submit" class="btn btn-primary btn-block">Entrar</button>
-                    <a class="btn btn-xs btn-block btn-secondary btn-ghost">Recuperar Senha</a>
+                    <a v-if="canResetPassword" :href="route('password.request')" class="btn btn-xs btn-block btn-secondary btn-ghost">Recuperar Senha</a>
                 </div>
             </form>
         </div>

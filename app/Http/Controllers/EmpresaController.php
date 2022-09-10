@@ -6,7 +6,7 @@ use App\Models\Empresa as EmpresaModel;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class EmpresaController extends Controller
+class EmpresaController extends CrudController
 {
     public string $label = "Empresa";
     public string $entity = "empresa";
