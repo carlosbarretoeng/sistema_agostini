@@ -28,7 +28,10 @@ class UsuariosCtrl extends Controller
 
     public function show($id)
     {
-        //
+        $data = User::with('roles')->find($id)->get();
+        return Inertia::render('Usuarios/Show', [
+            'data' => $data
+        ]);
     }
 
     public function edit($id)

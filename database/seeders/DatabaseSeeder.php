@@ -22,9 +22,9 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $roleSuperAdmin = \Spatie\Permission\Models\Role::create(['name' => 'super-admin']);
-        $roleAdmin = \Spatie\Permission\Models\Role::create(['name' => 'administrator']);
-        $roleManager = \Spatie\Permission\Models\Role::create(['name' => 'manager']);
-        $roleColaborator = \Spatie\Permission\Models\Role::create(['name' => 'colaborator']);
+        $roleAdmin = \Spatie\Permission\Models\Role::create(['name' => 'administrador']);
+        $roleManager = \Spatie\Permission\Models\Role::create(['name' => 'gerente']);
+        $roleColaborator = \Spatie\Permission\Models\Role::create(['name' => 'colaborador']);
 
         \Spatie\Permission\Models\Permission::create(['name' => 'empresas.create'])->assignRole([$roleSuperAdmin]);
         \Spatie\Permission\Models\Permission::create(['name' => 'empresas.view'])->assignRole([$roleSuperAdmin, $roleAdmin]);
@@ -46,5 +46,11 @@ class DatabaseSeeder extends Seeder
             'email' => 'carlosbarreto.eng@gmail.com',
             'password' => Hash::make('C@rlos0303')
         ])->assignRole('super-admin');
+
+        \App\Models\User::factory()->create([
+            'name' => 'Administrador da Empresa',
+            'email' => 'admin@empresa.com',
+            'password' => Hash::make('admin')
+        ])->assignRole(['administrador', 'colaborador']);
     }
 }

@@ -23,7 +23,7 @@ const props = defineProps({
         </template>
 
         <div class="overflow-x-auto">
-            <table class="table table-compact w-full">
+            <table class="table table-compact w-full hidden sm:table">
                 <thead>
                 <tr>
                     <th class=" w-[110px]"></th>
@@ -69,7 +69,7 @@ const props = defineProps({
                                 v-for="role in datum['roles']"
                                 :key="'usuario_id_' + datum['id'] + '_role_' + role['id'] + '_' + (new Date()).getTime()"
                             >
-                                <span class="badge">{{ role.name }}</span>
+                                <span class="badge mr-2">{{ role.name }}</span>
                             </template>
                         </td>
                     </tr>
@@ -118,6 +118,40 @@ const props = defineProps({
 <!--                </tr>-->
 <!--                </tbody>-->
             </table>
+
+            <div
+                v-for="datum in data"
+                :key="'usuario_id_' + datum['id'] + '_' + (new Date()).getTime()"
+                class="sm:hidden gap-4"
+            >
+                <a :href="route('usuario.show', datum['id'])" class="flex items-center space-x-3 border-2 border-base-300 bg-base-100 p-2">
+                    <div class="avatar">
+                        <div class="mask mask-squircle w-12 h-12">
+                            <img :src="datum['profile_photo_url']" alt="" />
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-bold">{{ datum['name'] }}</div>
+                        <div class="text-sm opacity-50">{{ datum['email'] }}</div>
+                        <div>
+                            <template
+                                v-for="role in datum['roles']"
+                                :key="'usuario_id_' + datum['id'] + '_role_' + role['id'] + '_' + (new Date()).getTime()"
+                            >
+                                <span class="badge badge-xs mr-2">{{ role.name }}</span>
+                            </template>
+                        </div>
+                    </div>
+                    <div>
+                        <a :href="route('usuario.create')" class="btn btn-ghost gap-2">
+                            <font-awesome-icon icon="fa-solid fa-edit"/>
+                        </a>
+                        <a :href="route('usuario.create')" class="btn btn-ghost gap-2">
+                            <font-awesome-icon icon="fa-solid fa-trash"/>
+                        </a>
+                    </div>
+                </a>
+            </div>
         </div>
     </AppLayout>
 </template>
