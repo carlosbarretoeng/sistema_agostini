@@ -35,9 +35,9 @@ class CrudController extends BaseController
         if($viewMap != null) foreach ($viewMap as $action => $view) $this->registerView($action, $view);
     }
 
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        return Inertia::render($this->views['index'], $this->obterIndexData());
+        return Inertia::render($this->views['index'], $this->obterIndexData($request));
     }
 
     public function create(): Response
@@ -78,7 +78,7 @@ class CrudController extends BaseController
         foreach ($fields as $idx => $field) {
             if($field['type'] !== Field::FOREIGN_TYPE) continue;
             $fields[$idx]['values'] = array_map(function ($v) use ($field) {
-                return [$v['id'], $field['entity']::getDescription($v)];
+                return [$v['id'], $v[$field['entity']::getDescription()]];
             }, $field['entity']::all()->toArray());
         }
 
@@ -95,16 +95,18 @@ class CrudController extends BaseController
         return Inertia::render($this->views[$route], $data);
     }
 
-    public function obterIndexData(): array
+    public function obterIndexData(Request $request): array
     {
         $data = $this->model::all();
         $fields = call_user_func($this->model . '::getFields');
+        $descriptionFieldName = $this->model::getDescription();
         $label = $this->label;
         $entity = $this->entity;
 
         return [
             'label' => $label,
             'data' => $data,
+            'descriptionFieldName' => $descriptionFieldName,
             'fields' => $fields,
             'entity' => $entity
         ];

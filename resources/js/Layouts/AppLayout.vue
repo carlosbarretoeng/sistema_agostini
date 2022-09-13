@@ -31,7 +31,7 @@ const logout = () => {
             <input id="drawerApp" type="checkbox" class="drawer-toggle" />
             <div class="drawer-content flex flex-col">
                 <!-- Navbar -->
-                <div class="navbar bg-primary">
+                <div class="navbar bg-primary  sticky">
                     <div class="flex-none pr-2 sm:hidden">
                         <label for="drawerApp" class="btn btn-square btn-ghost">
                             <font-awesome-icon icon="fa-solid fa-bars" class="fa-2xl text-base-100" />
@@ -59,11 +59,11 @@ const logout = () => {
                     </div>
                 </div>
 
-                <div class="flex h-full">
-                    <div class="p-2 w-56 hidden sm:inline-flex bg-base-100">
+                <div class="flex overflow-y-auto h-full">
+                    <div class="p-2 w-56 min-h-screen hidden sm:inline-flex bg-base-100 sm:fixed">
                         <Navigation />
                     </div>
-                    <div class="flex-1">
+                    <div class="flex-1 sm:pl-56">
                         <header v-if="$slots.header">
                             <div class="mx-auto p-4">
                                 <slot name="header" />

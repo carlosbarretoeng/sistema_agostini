@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class UsuariosCtrl extends Controller
 {
@@ -28,9 +30,17 @@ class UsuariosCtrl extends Controller
 
     public function show($id)
     {
-        $data = User::with('roles')->find($id)->get();
+        $data = User::find($id);
+        $data->empresas;
+        $data->syncPermissions = array_merge($data->permissions->toArray(), $data->getAllPermissions()->toArray());
+
+
+        $roles = Role::with('permissions')->get(['name', 'description']);
+        $permissions = Permission::all(['name', 'description']);
         return Inertia::render('Usuarios/Show', [
-            'data' => $data
+            'data' => $data,
+            'roles' => $roles,
+            'permissions' => $permissions,
         ]);
     }
 

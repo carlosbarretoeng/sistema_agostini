@@ -4,7 +4,10 @@ import {reactive, ref} from "vue";
 const props = defineProps({
     label: String,
     colSpan: Number,
-    type: String,
+    type: {
+        type: String,
+        default: 'string'
+    },
     mask: String | null,
     value: String | Number,
     disabled: {
@@ -38,16 +41,16 @@ const fetchValue = (event) => {
     <div :class="calculateClass">
         <div class="form-control w-full">
             <label class="label">
-                <span class="label-text">{{ label }}</span>
+                <span class="label-text font-medium">{{ label }}</span>
             </label>
             <input
                 v-maska="mask"
                 :type="type === 'string' ? 'text' : 'number'"
-                class="input input-bordered w-full"
+                class="input input-bordered w-full disabled:border-1 disabled:border-gray-400"
                 v-model.lazy="value"
                 @input="$emit('update', fetchValue($event))"
                 :disabled="disabled"
             />
         </div>
-        </div>
+    </div>
 </template>

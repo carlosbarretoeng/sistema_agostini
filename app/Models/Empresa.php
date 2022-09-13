@@ -22,9 +22,9 @@ class Empresa extends Model
         'uf'
     ];
 
-    public static function getDescription($instance): string
+    public static function getDescription(): string
     {
-        return $instance['nome_fantasia'];
+        return 'nome_fantasia';
     }
 
     public static function getFields(): array
@@ -34,7 +34,7 @@ class Empresa extends Model
         return array(
             Field::item(name: 'cnpj', label: 'CNPJ', showInDesktop: true, mask: '##.###.###/####-##'),
             Field::item(name: 'nome_fantasia', label: 'Nome Fantasia', colSpan: 4, show: true),
-            Field::item(name: 'razao_social', label:'Razão Social', colSpan: 5, showInDesktop: true),
+            Field::item(name: 'razao_social', label:'Razão Social', colSpan: 5, show: true),
             Field::item(name: 'cep', label:'CEP', colSpan: 2, mask: '##.###-###'),
             Field::item(name: 'logradouro', label:'Logradouro', colSpan: 6),
             Field::item(name: 'numero', label:'Número', colSpan: 1),

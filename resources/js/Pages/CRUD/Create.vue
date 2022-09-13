@@ -19,7 +19,7 @@ const props = defineProps({
 
 const preForm = {};
 
-props.fields.forEach(field => {
+props.fields.filter(field => field.type !== 'reference').forEach(field => {
     preForm[field['name']] = ''
 })
 

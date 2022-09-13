@@ -10,12 +10,14 @@ class Field
     const NUMBER_TYPE = "number";
     const SELECT_TYPE = "select";
     const FOREIGN_TYPE = "foreign";
+    const REFERENCE_TYPE = "reference";
 
     const TYPES = [
         self::STRING_TYPE,
         self::NUMBER_TYPE,
         self::SELECT_TYPE,
-        self::FOREIGN_TYPE
+        self::FOREIGN_TYPE,
+        self::REFERENCE_TYPE
     ];
 
     public static function item(

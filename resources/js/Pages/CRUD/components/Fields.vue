@@ -12,19 +12,17 @@ const props = defineProps({
     <SelectField
         v-if="field['type'] === 'select' || field['type'] === 'foreign'"
         v-bind="field"
-        value=""
         @update="$emit('update', $event)"
     />
     <PasswordField
         v-else-if="field['type'] === 'password'"
         v-bind="field"
-        value=""
         @update="$emit('update', $event)"
     />
+    <template v-else-if="field['type'] === 'reference'" />
     <InputField
         v-else
         v-bind="field"
-        value=""
         @update="$emit('update', $event)"
     />
 </template>

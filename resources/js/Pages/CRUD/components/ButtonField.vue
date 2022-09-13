@@ -1,16 +1,24 @@
 <script setup>
-import {reactive, ref} from "vue";
+import {reactive} from "vue";
 
 const props = defineProps({
     label: String,
+    buttonLabel: String,
+    buttonFlavor: String,
     colSpan: Number,
-    type: String,
-    mask: String | null,
-    value: String | Number,
+    action: Function,
     disabled: {
         type: Boolean,
         default: false
     }
+})
+
+const calculateButtonClass = reactive({
+    'btn': true,
+    'btn-block': true,
+    'btn-primary': props.buttonFlavor === 'primary',
+    'btn-secondary': props.buttonFlavor === 'secondary',
+    'btn-accent': props.buttonFlavor === 'accent',
 })
 
 const calculateClass = reactive({
@@ -28,11 +36,6 @@ const calculateClass = reactive({
     'sm:col-span-12': props.colSpan === 12,
 })
 
-const fetchValue = (event) => {
-    const regexToReplace = props.mask ? new RegExp("[" + props.mask.replaceAll('#','') + "]", "g") : null;
-    return regexToReplace ? event.target.value.replaceAll(regexToReplace, '') : event.target.value;
-}
-
 </script>
 <template>
     <div :class="calculateClass">
@@ -40,14 +43,9 @@ const fetchValue = (event) => {
             <label class="label">
                 <span class="label-text font-medium">{{ label }}</span>
             </label>
-            <input
-                v-maska="mask"
-                type="password"
-                class="input input-bordered w-full disabled:border-1 disabled:border-gray-400"
-                v-model.lazy="value"
-                @input="$emit('update', fetchValue($event))"
-                :disabled="disabled"
-            />
+            <button :class="calculateButtonClass" @click="action()" :disabled="disabled">
+                {{ buttonLabel }}
+            </button>
         </div>
         </div>
 </template>

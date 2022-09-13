@@ -43,17 +43,17 @@ const toggleDrawer = () => {
             </li>
             <hr/>
         </div>
-        <li v-if="findPermission('empresa.view')">
+        <li>
             <a :href="route('empresa.index')">
                 <span>Empresas</span>
             </a>
         </li>
-        <li v-if="findPermission('departamento.view')">
+        <li>
             <a :href="route('departamento.index')">
                 <span>Departamentos</span>
             </a>
         </li>
-        <li v-if="findPermission('maquinario.view')">
+        <li>
             <a :href="route('maquinario.index')">
                 <span>Maquinário</span>
             </a>

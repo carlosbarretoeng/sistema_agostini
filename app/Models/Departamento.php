@@ -13,9 +13,16 @@ class Departamento extends Model
         'nome'
     ];
 
-    public static function getDescription($instance): string
+    protected $with = ['empresas'];
+
+    public function empresas()
     {
-        return $instance['nome'];
+        return $this->belongsTo(Empresa::class);
+    }
+
+    public static function getDescription(): string
+    {
+        return 'nome';
     }
 
     public static function getFields(): array
@@ -23,6 +30,7 @@ class Departamento extends Model
         return [
             Field::item(name: 'empresas_id', label:'Empresa', type: 'foreign', entity: Empresa::class),
             Field::item(name: 'nome', label:'Nome', show: true),
+            Field::item(name: 'empresas.nome_fantasia', label:'Empresa', type: 'reference', show: true),
         ];
     }
 }

@@ -2,11 +2,14 @@
 import {reactive, ref} from "vue";
 
 const props = defineProps({
-    name: String,
     label: String,
     colSpan: Number,
     value: String,
     values: Array | null,
+    multiple: {
+        type: Boolean,
+        default: false
+    },
     disabled: {
         type: Boolean,
         default: false
@@ -39,16 +42,17 @@ const fetchValue = (event) => {
     <div :class="calculateClass">
         <div class="form-control w-full">
             <label class="label">
-                <span class="label-text">{{ label }}</span>
+                <span class="label-text font-medium">{{ label }}</span>
             </label>
             <select
-                class="select select-bordered max-w-full"
+                class="select select-bordered max-w-full disabled:border-1 disabled:border-gray-400"
                 v-model.lazy="selected"
                 @input="$emit('update', fetchValue($event.target.value))"
                 :disabled="disabled"
+                :multiple="multiple"
             >
-                <option disabled selected></option>
-                <option v-for="(val, idx) in values" :key="name + '_option_' + idx" :value="Array.isArray(val) ? val[0] : val ">{{ Array.isArray(val) ? val[1] : val }}</option>
+                <option v-if="!multiple" disabled selected></option>
+                <option v-for="(val, idx) in values" :key="'option_' + idx" :value="Array.isArray(val) ? val[0] : val ">{{ Array.isArray(val) ? val[1] : val }}</option>
             </select>
         </div>
         </div>

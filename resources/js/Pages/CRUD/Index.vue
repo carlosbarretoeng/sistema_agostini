@@ -4,22 +4,23 @@ import { mask } from 'maska'
 import {Inertia} from "@inertiajs/inertia";
 
 const props = defineProps({
-    label: {
-        type: String
-    },
-    entity: {
-        type: String
-    },
-    data: {
-        type: Array
-    },
-    fields: {
-        type: Object
-    }
+    label: String,
+    entity: String,
+    descriptionFieldName: String,
+    data: Array,
+    fields: Object
 })
+
+const mobileFields = props.fields.filter(field => field.showInMobile)
 
 const formatarValorPorMascara = (mascara, valor) => {
     return mask(valor, mascara) ?? valor;
+}
+
+const buscaNome = (datum, field) => {
+    let fieldSplited = field.split(".");
+    if(fieldSplited.length === 1) return datum[fieldSplited[0]]
+    return datum[fieldSplited[0]][fieldSplited[1]];
 }
 
 const destroy = (id) => {
@@ -44,17 +45,21 @@ const destroy = (id) => {
         </template>
 
         <div class="overflow-x-auto">
-            <table class="table table-compact w-full">
+            <table class="table table-compact w-full hidden sm:table">
                 <thead>
                     <tr>
                         <th class=" w-[110px]"></th>
-                        <th
+                        <template
                             v-for="field in fields"
                             :key="field['name'] + '_' + (new Date()).getTime()"
-                            :class="{ 'hidden': !field['showInMobile'], 'sm:table-cell': field['showInDesktop'] }"
                         >
-                            {{ field['label'] }}
-                        </th>
+                            <th
+                                :class="{ 'hidden': !field['showInMobile'], 'sm:table-cell': field['showInDesktop'] }"
+                                v-if="field['type'] !== 'reference'"
+                            >
+                                {{ field['label'] }}
+                            </th>
+                        </template>
                     </tr>
                 </thead>
                 <tbody>
@@ -85,21 +90,42 @@ const destroy = (id) => {
                                 </div>
                             </div>
                         </td>
-                        <td
+                        <template
                             v-for="field in fields"
                             :key="entity + '_' + field['name'] + '_' + datum['id'] + '_' + (new Date()).getTime()"
-                            :class="{ 'hidden': !field['showInMobile'], 'sm:table-cell': field['showInDesktop'] }"
                         >
-                            <template v-if="field['mask']">
-                                <span v-html="formatarValorPorMascara(field['mask'], datum[field['name']])"/>
-                            </template>
-                            <template v-else>
-                                {{ datum[field['name']] }}
-                            </template>
-                        </td>
+                            <td
+                                :class="{ 'hidden': !field['showInMobile'], 'sm:table-cell': field['showInDesktop'] }"
+                                v-if="field['type'] !== 'reference'"
+                            >
+                                <template v-if="field['mask']">
+                                    <span v-html="formatarValorPorMascara(field['mask'], datum[field['name']])"/>
+                                </template>
+                                <template v-else>
+                                    {{ datum[field['name']] }}
+                                </template>
+                            </td>
+                        </template>
                     </tr>
                 </tbody>
             </table>
+
+            <div class="overflow-x-auto sm:hidden grid grid-cols-1 sm:grid-cols-3 lg:grid-col-6 gap-2">
+                <div
+                    v-for="datum in data"
+                    :key="entity + '_id_' + datum['id'] + '_' + (new Date()).getTime()"
+                    class=""
+                >
+                    <a :href="route(entity + '.show', datum['id'])" class="flex items-center space-x-3 border-2 border-base-300 bg-base-100 p-2">
+                        <div class="flex-1">
+                            <div class="font-bold">{{ datum[descriptionFieldName] }}</div>
+                            <template v-for="(field, index) in mobileFields" :key="entity + '_' + datum['id'] + '_' + index">
+                                <div v-if="field.name !== descriptionFieldName" class="text-sm opacity-50">{{ buscaNome(datum,field.name) }}</div>
+                            </template>
+                        </div>
+                    </a>
+                </div>
+            </div>
         </div>
     </AppLayout>
 </template>
