@@ -3,7 +3,7 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 </script>
 
 <template>
-    <AppLayout>
-        Em construção
+    <AppLayout title="Início">
+        Em desenvolvimento.
     </AppLayout>
 </template>

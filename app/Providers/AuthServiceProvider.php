@@ -2,22 +2,19 @@
 
 namespace App\Providers;
 
-use App\Models\Empresa;
-use App\Models\Team;
-use App\Policies\EmpresaPolicy;
-use App\Policies\TeamPolicy;
+// use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
     /**
-     * The policy mappings for the application.
+     * The model to policy mappings for the application.
      *
-     * @var array
+     * @var array<class-string, class-string>
      */
     protected $policies = [
-        Empresa::class => EmpresaPolicy::class,
-        Team::class => TeamPolicy::class,
+        'App\Models\Departamento' => 'App\Policies\DepartamentoPolicy',
     ];
 
     /**
@@ -28,7 +25,8 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
-        //
+        Gate::before(function ($user, $ability) {
+            return $user->hasRole('super-admin') ? true : null;
+        });
     }
 }

@@ -1,6 +1,14 @@
 <script setup>
 import { ref } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
+import { Head } from '@inertiajs/inertia-vue3';
+import Navigation from "./Navigation.vue";
+
+defineProps({
+    title: String,
+});
+
+const showingNavigationDropdown = ref(false);
 
 const switchToTeam = (team) => {
     Inertia.put(route('current-team.update'), {
@@ -13,63 +21,65 @@ const switchToTeam = (team) => {
 const logout = () => {
     Inertia.post(route('logout'));
 };
-
 </script>
 
 <template>
-    <div class="drawer">
-        <input id="appdrawer" type="checkbox" class="drawer-toggle" />
-        <div class="drawer-content flex flex-col bg-base-100">
-            <div class="w-full navbar bg-primary text-white z-50">
-                <div class="flex-none lg:hidden">
-                    <label for="appdrawer" class="btn btn-square btn-ghost">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 stroke-current">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </label>
-                </div>
-                <div class="flex-1 sm:flex-none px-2 mx-2 text-2xl font-bold">Agostini</div>
-                <div class="divider divider-horizontal hidden sm:block"></div>
-                <div class="flex-1 hidden lg:block">
-                    <ul class="menu menu-horizontal dropdown-content">
-                        <li><a :href="route('dashboard')">Início</a></li>
-                        <li tabindex="0">
-                            <a :href="route('empresa.index')" class="justify-between">
-                                Empresas
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="flex-none dropdown dropdown-end">
-                    <label tabindex="0" class="btn btn-ghost">
-                        <div class="flex items-center space-x-3">
-                            <div class="text-right text-xs hidden sm:block">
-                                <div class="font-bold">{{ $page.props.user.name }}</div>
-                                <div class="text-2xs opacity-50">{{ $page.props.user.email }}</div>
-                            </div>
-                            <div class="avatar">
-                                <div class="mask mask-squircle w-10 h-10">
-                                    <img :src="$page.props.user.profile_photo_url" alt="Avatar Tailwind CSS Component" />
+    <div>
+        <Head :title="title" />
+
+        <div class="drawer">
+            <input id="drawerApp" type="checkbox" class="drawer-toggle" />
+            <div class="drawer-content flex flex-col">
+                <!-- Navbar -->
+                <div class="navbar bg-primary  sticky">
+                    <div class="flex-none pr-2 sm:hidden">
+                        <label for="drawerApp" class="btn btn-square btn-ghost">
+                            <font-awesome-icon icon="fa-solid fa-bars" class="fa-2xl text-base-100" />
+                        </label>
+                    </div>
+                    <div class="flex-1">
+                        <a class="font-bold text-3xl uppercase text-base-100">Agostini</a>
+                    </div>
+                    <div class="flex-none gap-2">
+                        <div class="dropdown dropdown-end">
+                            <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                                <div class="w-10 rounded-full">
+                                    <img :src="$page.props.user.profile_photo_url" alt="User Avatar" />
                                 </div>
-                            </div>
+                            </label>
+                            <ul tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
+                                <li>
+                                    <a class="justify-between" :href="route('profile.show')" :active="route().current('profile.show')">
+                                        Perfil
+                                    </a>
+                                </li>
+                                <li><a @click="logout">Logout</a></li>
+                            </ul>
                         </div>
-                    </label>
-                    <ul tabindex="0" class="mt-3 p-2 text-black shadow menu menu-compact dropdown-content bg-base-100 rounded-box">
-                        <li><a :href="route('profile.show')">Meu perfil</a></li>
-                        <li><a @click="logout">Logout</a></li>
-                    </ul>
+                    </div>
+                </div>
+
+                <div class="flex overflow-y-auto h-full">
+                    <div class="p-2 w-56 min-h-screen hidden sm:inline-flex bg-base-100 sm:fixed">
+                        <Navigation />
+                    </div>
+                    <div class="flex-1 sm:pl-56">
+                        <header v-if="$slots.header">
+                            <div class="mx-auto p-4">
+                                <slot name="header" />
+                            </div>
+                        </header>
+
+                        <main class="p-2">
+                            <slot />
+                        </main>
+                    </div>
                 </div>
             </div>
-            <main class="mx-4 mt-4">
-                <slot />
-            </main>
-        </div>
-        <div class="drawer-side">
-            <label for="appdrawer" class="drawer-overlay"></label>
-            <ul class="menu p-4 overflow-y-auto w-80 bg-base-100">
-                <li><a :href="route('dashboard')">Início</a></li>
-            </ul>
-
+            <div class="drawer-side">
+                <label for="drawerApp" class="drawer-overlay"></label>
+                <Navigation />
+            </div>
         </div>
     </div>
 </template>
