@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Empresa;
 use App\Models\Field;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -40,9 +41,9 @@ class CrudController extends BaseController
         return Inertia::render($this->views['index'], $this->obterIndexData($request));
     }
 
-    public function create(): Response
+    public function create(Request $request): Response
     {
-        return Inertia::render($this->views['create'], $this->obterCreateData());
+        return Inertia::render($this->views['create'], $this->obterCreateData($request));
     }
 
     public function store(Request $request): RedirectResponse
@@ -73,13 +74,25 @@ class CrudController extends BaseController
         return Redirect::route($this->entity . '.index');
     }
 
-    public function obterForeignValues(array $fields)
+    public function obterForeignValues(array $fields, $empresasId = null)
     {
         foreach ($fields as $idx => $field) {
             if($field['type'] !== Field::FOREIGN_TYPE) continue;
+
+            if($empresasId === null){
+                $entityArray = $field['entity']::all()->toArray();
+            }else{
+                if($field['entity'] === \App\Models\Empresa::class){
+                    $entityArray = $field['entity']::where('id', $empresasId)->get()->toArray();
+                }else{
+                    $entityArray = $field['entity']::empresaDefinida($empresasId)->get()->toArray();
+                }
+            }
+
+            if($field['type'] !== Field::FOREIGN_TYPE) continue;
             $fields[$idx]['values'] = array_map(function ($v) use ($field) {
                 return [$v['id'], $v[$field['entity']::getDescription()]];
-            }, $field['entity']::all()->toArray());
+            }, $entityArray);
         }
 
         return $fields;
@@ -97,7 +110,21 @@ class CrudController extends BaseController
 
     public function obterIndexData(Request $request): array
     {
-        $data = $this->model::all();
+        $empresasId = null;
+        if($request->user()->empresas){
+            $empresasId = $request->user()->empresas->id;
+        }
+
+        if($empresasId === null){
+            $data = $this->model::all();
+        }else{
+            if($this->model === \App\Models\Empresa::class){
+                $data = $this->model::where('id', $empresasId)->get();
+            }else{
+                $data = $this->model::empresaDefinida($empresasId)->get();
+            }
+        }
+        
         $fields = call_user_func($this->model . '::getFields');
         $descriptionFieldName = $this->model::getDescription();
         $label = $this->label;
@@ -112,9 +139,14 @@ class CrudController extends BaseController
         ];
     }
 
-    public function obterCreateData(): array
+    public function obterCreateData(Request $request): array
     {
-        $fields = $this->obterForeignValues(call_user_func($this->model . '::getFields'));
+        $empresasId = null;
+        if($request->user()->empresas){
+            $empresasId = $request->user()->empresas->id;
+        }
+
+        $fields = $this->obterForeignValues(call_user_func($this->model . '::getFields'), $empresasId);
         $label = $this->label;
         $entity = $this->entity;
 

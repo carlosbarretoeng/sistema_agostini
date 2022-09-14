@@ -5,14 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Departamento extends Model
+class Departamento extends CrudModel
 {
-    use HasFactory;
-
-    protected $fillable = [
-        'nome'
-    ];
-
     protected $with = ['empresas'];
 
     public function empresas()

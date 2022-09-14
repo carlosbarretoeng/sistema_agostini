@@ -51,7 +51,6 @@ const fetchValue = (event) => {
                 :disabled="disabled"
                 :multiple="multiple"
             >
-                <option v-if="!multiple" disabled selected></option>
                 <option v-for="(val, idx) in values" :key="'option_' + idx" :value="Array.isArray(val) ? val[0] : val ">{{ Array.isArray(val) ? val[1] : val }}</option>
             </select>
         </div>

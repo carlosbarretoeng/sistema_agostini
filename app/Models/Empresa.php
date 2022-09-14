@@ -2,26 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-class Empresa extends Model
+class Empresa extends CrudModel
 {
-    use HasFactory;
-
-    protected $fillable = [
-        'cnpj',
-        'razao_social',
-        'nome_fantasia',
-        'cep',
-        'logradouro',
-        'numero',
-        'complemento',
-        'bairro',
-        'cidade',
-        'uf'
-    ];
-
     public static function getDescription(): string
     {
         return 'nome_fantasia';

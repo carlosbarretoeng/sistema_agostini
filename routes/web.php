@@ -12,6 +12,7 @@ Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified',])
         Route::resource('empresa',App\Http\Controllers\EmpresaController::class);
         Route::resource('departamento',App\Http\Controllers\DepartamentoController::class);
         Route::resource('maquinario',App\Http\Controllers\MaquinarioController::class);
+        Route::resource('peca',App\Http\Controllers\PecaController::class);
 
         Route::resource('usuario', App\Http\Controllers\UsuariosCtrl::class);
     });
