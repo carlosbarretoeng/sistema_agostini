@@ -50,7 +50,7 @@ class DatabaseSeeder extends Seeder
         Permission::create(['name' => 'peca.update', 'description' => 'Atualizar'])->syncRoles([$roleSuperAdmin, $roleAdmin]);
         Permission::create(['name' => 'peca.delete', 'description' => 'Apagar'])->syncRoles([$roleSuperAdmin, $roleAdmin]);
 
-        Empresa::create([
+        /*Empresa::create([
             "cnpj" => "10000000000001",
             "razao_social" => "EMPRESA 1 LTDA",
             "nome_fantasia" => "EMPRESA 1",
@@ -72,7 +72,7 @@ class DatabaseSeeder extends Seeder
             "bairro" => "CENTRO",
             "cidade" => "SÃO PAULO",
             "uf" => "SP"
-        ]);
+        ]); */
 
         User::factory()->create([
             'name' => 'Carlos Barreto',
@@ -80,7 +80,7 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('C@rlos0303')
         ])->assignRole('super-admin');
 
-        User::factory()->create([
+        /* User::factory()->create([
             'empresas_id' => 1,
             'name' => 'Administrador da Empresa',
             'email' => 'admin@empresa.com',
@@ -156,7 +156,7 @@ class DatabaseSeeder extends Seeder
             'departamentos_id' => 3,
             'maquinarios_id' => 5,
             'nome' => "Peça 2.3.5.2"
-        ]);
+        ]);*/
 
     }
 }

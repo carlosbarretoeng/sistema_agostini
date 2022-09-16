@@ -1,18 +1,7 @@
 <script setup>
 import _ from 'lodash';
-import {usePage} from "@inertiajs/inertia-vue3";
-
-const findPermission = (permission) => {
-    return _.union(usePage().props.value.user.roles.map(el => {
-        return el.permissions.map(ell => ell.name);
-    }))[0].indexOf(permission) > -1;
-}
-
-const findRole = (role) => {
-    return _.union(usePage().props.value.user.roles.map(el => {
-        return el.name;
-    })).indexOf(role) > -1;
-}
+import NavigationSuperAdmin from './NavigationSuperAdmin.vue';
+import AuthUtil from './../../util/auth.util';
 
 const toggleDrawer = () => {
     document.getElementById("drawerApp").checked = false;
@@ -35,33 +24,28 @@ const toggleDrawer = () => {
             </li>
             <hr/>
         </div>
-        <div v-if="findRole('super-admin')">
-            <li>
-                <a :href="route('usuario.index')">
-                    <span>Usuários</span>
+        <NavigationSuperAdmin v-if="AuthUtil.testaPerfil($page.props.user, 'super-admin')" />
+        <div>
+            <li v-if="AuthUtil.testaPermissao($page.props.user, 'empresa.view')">
+                <a :href="route('empresa.index')">
+                    <span>Empresas</span>
                 </a>
             </li>
-            <hr/>
+            <li v-if="AuthUtil.testaPermissao($page.props.user, 'departamento.view')">
+                <a :href="route('departamento.index')">
+                    <span>Departamentos</span>
+                </a>
+            </li>
+            <li v-if="AuthUtil.testaPermissao($page.props.user, 'maquinario.view')">
+                <a :href="route('maquinario.index')">
+                    <span>Maquinário</span>
+                </a>
+            </li>
+            <li v-if="AuthUtil.testaPermissao($page.props.user, 'peca.view')">
+                <a :href="route('peca.index')">
+                    <span>Peça</span>
+                </a>
+            </li>
         </div>
-        <li>
-            <a :href="route('empresa.index')">
-                <span>Empresas</span>
-            </a>
-        </li>
-        <li>
-            <a :href="route('departamento.index')">
-                <span>Departamentos</span>
-            </a>
-        </li>
-        <li>
-            <a :href="route('maquinario.index')">
-                <span>Maquinário</span>
-            </a>
-        </li>
-        <li>
-            <a :href="route('peca.index')">
-                <span>Peça</span>
-            </a>
-        </li>
     </ul>
 </template>

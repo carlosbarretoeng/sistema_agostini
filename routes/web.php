@@ -15,4 +15,5 @@ Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified',])
         Route::resource('peca',App\Http\Controllers\PecaController::class);
 
         Route::resource('usuario', App\Http\Controllers\UsuariosCtrl::class);
+        Route::resource('perfil', App\Http\Controllers\PerfilCtrl::class);
     });

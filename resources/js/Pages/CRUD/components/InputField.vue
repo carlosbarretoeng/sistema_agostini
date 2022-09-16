@@ -39,7 +39,7 @@ const fetchValue = (event) => {
 </script>
 <template>
     <div :class="calculateClass">
-        <div class="form-control w-full">
+        <div class="form-control w-full p-1">
             <label class="label">
                 <span class="label-text font-medium">{{ label }}</span>
             </label>
