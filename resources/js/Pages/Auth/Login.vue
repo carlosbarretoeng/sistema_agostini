@@ -11,8 +11,7 @@ let errorMessage = ref(null);
 
 const form = useForm({
     email: 'carlosbarreto.eng@gmail.com',
-    password: 'C@rlos0303',
-    remember: false,
+    password: 'C@rlos0303'
 });
 
 const submit = () => {

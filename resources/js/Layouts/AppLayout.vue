@@ -25,7 +25,19 @@ const logout = () => {
 
 <template>
     <div>
+
         <Head :title="title" />
+
+        <div v-if="Object.keys($page.props.errors).length" class="absolute bottom-0 pl-56 w-full">
+            <div class="alert alert-error shadow-lg">
+                <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <ul>
+                        <li v-for="(error, index) in $page.props.errors" :key="index">{{ error }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
         <div class="drawer">
             <input id="drawerApp" type="checkbox" class="drawer-toggle" />
@@ -47,9 +59,11 @@ const logout = () => {
                                     <img :src="$page.props.user.profile_photo_url" alt="User Avatar" />
                                 </div>
                             </label>
-                            <ul tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
+                            <ul tabindex="0"
+                                class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
                                 <li>
-                                    <a class="justify-between" :href="route('profile.show')" :active="route().current('profile.show')">
+                                    <a class="justify-between" :href="route('profile.show')"
+                                        :active="route().current('profile.show')">
                                         Perfil
                                     </a>
                                 </li>
@@ -65,8 +79,13 @@ const logout = () => {
                     </div>
                     <div class="flex-1 sm:pl-56">
                         <header v-if="$slots.header">
-                            <div class="mx-auto p-4">
-                                <slot name="header" />
+                            <div class="flex mx-auto p-4 bg-base-300">
+                                <h1 class="flex-1 pt-3 font-semibold text-xl text-gray-800 leading-tight">
+                                    <slot name="header" />
+                                </h1>
+                                <div class="flex-none">
+                                    <slot name="actions" />
+                                </div>
                             </div>
                         </header>
 
