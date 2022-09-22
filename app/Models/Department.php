@@ -8,11 +8,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class Company extends Model
+class Department extends Model
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
-    function departments() {
-        return $this->hasMany(Department::class);
+    protected $with = ['company'];
+
+    public function company(){
+        return $this->belongsTo(Company::class);
+    }
+
+    public function machineries() {
+        return $this->hasMany(Machinery::class);
     }
 }

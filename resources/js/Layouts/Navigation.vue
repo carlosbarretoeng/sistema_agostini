@@ -23,5 +23,25 @@ const toggleDrawer = () => {
                 <span>Empresa</span>
             </a>
         </li>
+        <li>
+            <a :href="route('departament.index')">
+                <span>Departamentos</span>
+            </a>
+        </li>
+        <li>
+            <a :href="route('machinery.index')">
+                <span>Maquinário</span>
+            </a>
+        </li>
+        <li>
+            <a :href="route('departament.index')">
+                <span>Produtos</span>
+            </a>
+        </li>
+        <li>
+            <a :href="route('departament.index')">
+                <span>Ordem de Produção</span>
+            </a>
+        </li>
     </ul>
 </template>

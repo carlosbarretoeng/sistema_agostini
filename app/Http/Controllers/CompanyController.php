@@ -14,7 +14,7 @@ class CompanyController extends Controller
 {
     function index(Request $request) {
         $data = [
-            'companies' => Company::all()
+            'companies' => Company::orderBy('name')->get()
         ];
         return Inertia::render('Company/Index', $data);
     }
@@ -24,11 +24,11 @@ class CompanyController extends Controller
     }
 
     function show(Request $request, Company $company) {
-        return $this->createOrShowOrEdit($request, $company, 'show');        
+        return $this->createOrShowOrEdit($request, $company, 'show');
     }
 
     function edit(Request $request, Company $company) {
-        return $this->createOrShowOrEdit($request, $company, 'edit');        
+        return $this->createOrShowOrEdit($request, $company, 'edit');
     }
 
     function createOrShowOrEdit(Request $request, Company | null $company, String $context) {
@@ -44,18 +44,18 @@ class CompanyController extends Controller
         $rules = [
             'name' => 'required'
         ];
-        
+
         $validator = Validator::make($request->all(), $rules);
-        
+
         if ($validator->fails()) {
             return Redirect::route('company.create')->withErrors($validator);
         } else {
             $attrs = $request->all();
 
             $company = new Company();
-            
+
             $company->name = $attrs['name'];
-            
+
             $company->save();
 
             return Redirect::route('company.index');
@@ -67,18 +67,18 @@ class CompanyController extends Controller
             'id' => 'required',
             'name' => 'required'
         ];
-        
+
         $validator = Validator::make($request->all(), $rules);
-        
+
         if ($validator->fails()) {
             return Redirect::route('company.create')->withErrors($validator);
         } else {
             $attrs = $request->all();
 
             $company = Company::find($attrs['id']);
-            
+
             $company->name = $attrs['name'];
-            
+
             $company->save();
 
             return Redirect::route('company.index');
@@ -86,7 +86,9 @@ class CompanyController extends Controller
     }
 
     function destroy(Request $request, Company $company){
-        $company->delete();
+        dd($company);
+        // $company->departaments()->delete();
+        // $company->delete();
         return Redirect::route('company.index');
     }
 }

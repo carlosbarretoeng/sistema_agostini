@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\MachineryController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -9,5 +12,7 @@ Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified',])
     ->group(function () {
         Route::get('/dashboard', function () { return Inertia::render('Dashboard');})->name('dashboard');
 
-        Route::resource('company', \App\Http\Controllers\CompanyController::class);
+        Route::resource('company', CompanyController::class);
+        Route::resource('departament', DepartmentController::class);
+        Route::resource('machinery', MachineryController::class);
     });
