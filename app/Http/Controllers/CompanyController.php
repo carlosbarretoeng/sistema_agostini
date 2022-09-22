@@ -86,9 +86,15 @@ class CompanyController extends Controller
     }
 
     function destroy(Request $request, Company $company){
-        dd($company);
-        // $company->departaments()->delete();
-        // $company->delete();
+        foreach ($company->departments as $department) {
+            (new DepartmentController())->destroy(null, $department);
+        }
+
+        foreach ($company->products as $product) {
+            (new ProductController())->destroy(null, $product);
+        }
+
+        $company->delete();
         return Redirect::route('company.index');
     }
 }

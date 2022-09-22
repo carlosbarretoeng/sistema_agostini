@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
 
         $companyCount = 0;
         $departmentCount = 0;
+        $productCount = 0;
         $machineryCount = 0;
 
         for ($company = 0; $company < 2; $company++ ){
@@ -27,23 +28,32 @@ class DatabaseSeeder extends Seeder
             ]);
             $companyCount++;
 
-            for ($department = 0; $department < 9; $department++ ){
-                $departmentId = $department + 1;
-                \App\Models\Department::create([
-                    'company_id' => $companyCount,
-                    'name' => 'Departamento ' . $companyId . '.' . $departmentId
-                ]);
-                $departmentCount++;
-
-                for ($machinery = 0; $machinery < 2; $machinery++ ){
-                    $machineryId = $machinery + 1;
-                    \App\Models\Machinery::create([
-                        'department_id' => $departmentCount,
-                        'name' => 'Maquinário ' . $companyId . '.' . $departmentId . '.' . $machineryId
-                    ]);
-                    $machineryCount++;
-                }
-            }
+//            for ($department = 0; $department < 9; $department++ ){
+//                $departmentId = $department + 1;
+//                \App\Models\Department::create([
+//                    'company_id' => $companyCount,
+//                    'name' => 'Departamento ' . $companyId . '.' . $departmentId
+//                ]);
+//                $departmentCount++;
+//
+//                for ($machinery = 0; $machinery < 2; $machinery++ ){
+//                    $machineryId = $machinery + 1;
+//                    \App\Models\Machinery::create([
+//                        'department_id' => $departmentCount,
+//                        'name' => 'Maquinário ' . $companyId . '.' . $departmentId . '.' . $machineryId
+//                    ]);
+//                    $machineryCount++;
+//                }
+//            }
+//
+//            for ($product = 0; $product < 9; $product++ ){
+//                $productId = $product + 1;
+//                \App\Models\Product::create([
+//                    'company_id' => $companyCount,
+//                    'name' => 'Produto ' . $companyId . '.' . $productId
+//                ]);
+//                $productCount++;
+//            }
         }
     }
 }

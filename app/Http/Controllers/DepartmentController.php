@@ -13,32 +13,32 @@ class DepartmentController extends Controller
 {
     function index(Request $request) {
         $data = [
-            'departaments' => Department::orderBy('name')->get()
+            'departments' => Department::orderBy('name')->get()
         ];
-        return Inertia::render('Departament/Index', $data);
+        return Inertia::render('Department/Index', $data);
     }
 
     function create(Request $request) {
         return $this->createOrShowOrEdit($request, null, 'create');
     }
 
-    function show(Request $request, Department $departament) {
-        return $this->createOrShowOrEdit($request, $departament, 'show');
+    function show(Request $request, Department $department) {
+        return $this->createOrShowOrEdit($request, $department, 'show');
     }
 
-    function edit(Request $request, Department $departament) {
-        return $this->createOrShowOrEdit($request, $departament, 'edit');
+    function edit(Request $request, Department $department) {
+        return $this->createOrShowOrEdit($request, $department, 'edit');
     }
 
-    function createOrShowOrEdit(Request $request, Department | null $departament, String $context) {
+    function createOrShowOrEdit(Request $request, Department | null $department, String $context) {
         $data = [
             'context' => $context,
-            'id' => $departament->id ?? null,
-            'company_id' => $departament->company_id ?? null,
-            'name' => $departament->name ?? null,
+            'id' => $department->id ?? null,
+            'company_id' => $department->company_id ?? null,
+            'name' => $department->name ?? null,
             'companies' => Company::all(['id','name']),
         ];
-        return Inertia::render('Departament/Info', $data);
+        return Inertia::render('Department/Info', $data);
     }
 
     function store(Request $request) {
@@ -50,18 +50,18 @@ class DepartmentController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return Redirect::route('departament.create')->withErrors($validator);
+            return Redirect::route('department.create')->withErrors($validator);
         } else {
             $attrs = $request->all();
 
-            $departament = new Department();
+            $departments = new Department();
 
-            $departament->company_id = $attrs['company_id'];
-            $departament->name = $attrs['name'];
+            $departments->company_id = $attrs['company_id'];
+            $departments->name = $attrs['name'];
 
-            $departament->save();
+            $departments->save();
 
-            return Redirect::route('departament.index');
+            return Redirect::route('department.index');
         }
     }
 
@@ -75,24 +75,27 @@ class DepartmentController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return Redirect::route('departament.create')->withErrors($validator);
+            return Redirect::route('department.create')->withErrors($validator);
         } else {
             $attrs = $request->all();
 
-            $departament = Department::find($attrs['id']);
+            $departments = Department::find($attrs['id']);
 
-            $departament->company_id = $attrs['company_id'];
-            $departament->name = $attrs['name'];
+            $departments->company_id = $attrs['company_id'];
+            $departments->name = $attrs['name'];
 
-            $departament->save();
+            $departments->save();
 
-            return Redirect::route('departament.index');
+            return Redirect::route('department.index');
         }
     }
 
-    function destroy(Request $request, Department $departament){
-        $departament->machineries()->delete();
-        $departament->delete();
-        return Redirect::route('departament.index');
+    function destroy(Request | null $request, Department $department){
+        foreach ($department->machineries as $machinery) {
+            (new MachineryController())->destroy(null, $machinery);
+        }
+
+        $department->delete();
+        return Redirect::route('department.index');
     }
 }

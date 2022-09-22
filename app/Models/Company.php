@@ -15,4 +15,8 @@ class Company extends Model
     function departments() {
         return $this->hasMany(Department::class);
     }
+
+    function products() {
+        return $this->hasMany(Product::class);
+    }
 }

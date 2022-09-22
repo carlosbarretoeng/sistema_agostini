@@ -4,14 +4,14 @@ import { useForm } from '@inertiajs/inertia-vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import InputText from '@/Components/InputText.vue';
 import InputSelect from "@/Components/InputSelect.vue";
+import {computed} from "vue";
 
 const props = defineProps({
     context: String,
     id: Number,
-    company_id: Number,
+    company_id: Number | null,
     name: String,
-    companies: Array,
-    departments: Array,
+    companies: Array
 })
 
 const isCreateContext = props.context === 'create'
@@ -20,20 +20,20 @@ const isEditContext = props.context === 'edit'
 
 const form = useForm({
     id: props.id ?? null,
-    name: props.name ?? null,
-    company_id: props.company_id ?? null
+    company_id: props.company_id ?? null,
+    name: props.name ?? null
 })
 
-const destroyCompany = () => {
-    Inertia.delete(route('departament.destroy', props.id));
+const destroyProduct = () => {
+    Inertia.delete(route('product.destroy', props.id));
 }
 
-const saveNewCompany = () => {
-    Inertia.post(route('departament.store'), form);
+const saveNewProduct = () => {
+    Inertia.post(route('product.store'), form);
 }
 
-const updateCompany = () => {
-    Inertia.put(route('departament.update', props.id), form);
+const updateProduct = () => {
+    Inertia.put(route('product.update', props.id), form);
 }
 
 </script>
@@ -42,31 +42,31 @@ const updateCompany = () => {
     <AppLayout>
         <template #header>
             <template v-if="isCreateContext">
-                Novo Departamento
+                Novo Produto
             </template>
             <template v-if="isShowContext || isEditContext">
-                Departamento
+                Produto
             </template>
         </template>
         <template #actions>
-            <a :href="route('departament.index')" class="btn btn-outline mr-2 gap-2">
+            <a :href="route('product.index')" class="btn btn-outline mr-2 gap-2">
                 <font-awesome-icon icon="fa-solid fa-arrow-left" size="lg" />
                 <span class="hidden sm:inline-block">Voltar</span>
             </a>
             <template v-if="isCreateContext">
-                <a @click="saveNewCompany()" class="btn btn-success gap-2">
+                <a @click="saveNewProduct()" class="btn btn-success gap-2">
                     <font-awesome-icon icon="fa-solid fa-save" size="lg" />
                     <span class="hidden sm:inline-block">Salvar</span>
                 </a>
             </template>
             <template v-if="isEditContext">
-                <a @click="updateCompany()" class="btn btn-success gap-2">
+                <a @click="updateProduct()" class="btn btn-success gap-2">
                     <font-awesome-icon icon="fa-solid fa-arrows-rotate" size="lg" />
                     <span class="hidden sm:inline-block">Atualizar</span>
                 </a>
             </template>
             <template v-if="isShowContext">
-                <a :href="route('departament.edit', id)" class="btn btn-info mr-2 gap-2">
+                <a :href="route('product.edit', id)" class="btn btn-info mr-2 gap-2">
                     <font-awesome-icon icon="fa-solid fa-edit" size="lg" />
                     <span class="hidden sm:inline-block">Editar</span>
                 </a>
@@ -79,7 +79,7 @@ const updateCompany = () => {
                         <h3 class="font-bold text-lg">Excluir Empresa</h3>
                         <p class="py-4">Tem certeza de que quer excluir essa empresa? Essa operação não poderá ser defeita.</p>
                         <div class="modal-action">
-                            <a @click="destroyCompany()" class="btn">Sim</a>
+                            <a @click="destroyProduct()" class="btn">Sim</a>
                             <a href="#" class="btn">Não</a>
                         </div>
                     </div>

@@ -93,7 +93,7 @@ class MachineryController extends Controller
         }
     }
 
-    function destroy(Request $request, Machinery $machinery){
+    function destroy(Request | null $request, Machinery $machinery){
         $machinery->delete();
         return Redirect::route('machinery.index');
     }

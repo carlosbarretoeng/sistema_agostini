@@ -24,7 +24,7 @@ const toggleDrawer = () => {
             </a>
         </li>
         <li>
-            <a :href="route('departament.index')">
+            <a :href="route('department.index')">
                 <span>Departamentos</span>
             </a>
         </li>
@@ -34,13 +34,13 @@ const toggleDrawer = () => {
             </a>
         </li>
         <li>
-            <a :href="route('departament.index')">
+            <a :href="route('product.index')">
                 <span>Produtos</span>
             </a>
         </li>
         <li>
-            <a :href="route('departament.index')">
-                <span>Ordem de Produção</span>
+            <a :href="route('part.index')">
+                <span>Peças</span>
             </a>
         </li>
     </ul>
