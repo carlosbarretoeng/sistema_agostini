@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import ProductCard from './components/ProductCard.vue';
+import TextUtil from '@/../util/text.util'
 
 const props = defineProps({
     products: Array
@@ -20,7 +20,20 @@ const props = defineProps({
             </a>
         </template>
         <div class="grid sm:grid-cols-4 gap-2">
-            <ProductCard v-for="product in products" :key="product.id" v-bind="product"/>
+            <template v-for="product in products" :key="product.id">
+                <a :href="route('product.show', product.id)" class="card w-full bg-base-100 shadow-xl p-2">
+                    <div class="flex items-center space-x-3">
+                        <div class="avatar placeholder">
+                            <div class="bg-neutral-focus text-neutral-content rounded-full w-12">
+                                <span>{{ TextUtil.initials(product.name) }}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="font-bold">{{ product.name }}</div>
+                        </div>
+                    </div>
+                </a>
+            </template>
         </div>
     </AppLayout>
 </template>
