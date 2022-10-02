@@ -13,7 +13,7 @@ class PartController extends Controller
 {
     function index(Request $request) {
         $data = [
-            'parts' => Part::orderBy('name')->get()
+            'parts' => Part::inCompany(auth()->user())->orderBy('name')->get()
         ];
         return Inertia::render('Part/Index', $data);
     }
@@ -36,7 +36,7 @@ class PartController extends Controller
             'id' => $part->id ?? null,
             'company_id' => $part->company_id ?? null,
             'name' => $part->name ?? null,
-            'companies' => Company::all(['id','name']),
+            'companies' => Company::inCompany(auth()->user())->get(['id','name']),
         ];
         return Inertia::render('Part/Info', $data);
     }

@@ -14,7 +14,7 @@
 </script>
 <template>
     <div class="form-control w-full">
-        <label class="label">
+        <label v-if="label" class="label">
             <span class="label-text font-medium">{{ label }}</span>
         </label>
         <select

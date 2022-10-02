@@ -14,6 +14,15 @@ class Machinery extends Model
 
     protected $with = ['department'];
 
+    public function scopeInCompany($query, $user)
+    {
+        if(!$user->hasRole('super-admin')){
+            $departments = array_map(function($entry){ return $entry['id']; }, Department::inCompany($user)->get('id')->toArray());
+            return $query->whereIn('department_id', $departments);
+        }
+        return $query;
+    }
+
     public function department(){
         return $this->belongsTo(Department::class);
     }

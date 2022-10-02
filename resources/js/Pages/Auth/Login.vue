@@ -10,7 +10,7 @@ defineProps({
 let errorMessage = ref(null);
 
 const form = useForm({
-    email: 'carlosbarreto.eng@gmail.com',
+    identify: 'carlosbarreto.eng@gmail.com',
     password: 'C@rlos0303'
 });
 
@@ -51,9 +51,9 @@ const submit = () => {
                 <div class="mb-4">
                     <div class="form-control w-full max-w-xs">
                         <label class="label">
-                            <span class="label-text">Usuário ou email</span>
+                            <span class="label-text">Usuário ou Email</span>
                         </label>
-                        <input v-model="form.email" type="text" placeholder="Usuário ou email" class="input input-bordered w-full max-w-xs" />
+                        <input v-model="form.identify" type="text" placeholder="Usuário ou email" class="input input-bordered w-full max-w-xs" />
                     </div>
                     <div class="form-control w-full max-w-xs">
                         <label class="label">

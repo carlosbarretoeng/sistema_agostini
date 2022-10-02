@@ -1,6 +1,9 @@
 <script setup>
-import NavigationBase from './NavigationBase.vue';
-import NavigationApps from './NavigationApps.vue';
+import AuthUtil from "@/../util/auth.util";
+import NavigationSuperAdmin from "./NavigationSuperAdmin.vue";
+import NavigationAdmin from './NavigationAdmin.vue';
+import NavigationColaborator from './NavigationColaborator.vue';
+
 const toggleDrawer = () => {
     document.getElementById("drawerApp").checked = false;
 }
@@ -16,32 +19,8 @@ const toggleDrawer = () => {
                 </a>
             </li>
         </div>
-        <NavigationBase />
-        <NavigationApps />
-        <li>
-            <a :href="route('company.index')">
-                <span>Empresa</span>
-            </a>
-        </li>
-        <li>
-            <a :href="route('department.index')">
-                <span>Departamentos</span>
-            </a>
-        </li>
-        <li>
-            <a :href="route('machinery.index')">
-                <span>Maquinário</span>
-            </a>
-        </li>
-        <li>
-            <a :href="route('product.index')">
-                <span>Produtos</span>
-            </a>
-        </li>
-        <li>
-            <a :href="route('part.index')">
-                <span>Peças</span>
-            </a>
-        </li>
+        <NavigationSuperAdmin v-if="AuthUtil.canView($page.props.user, {role: 'super-admin'})"/>
+        <NavigationAdmin v-if="AuthUtil.canView($page.props.user, {role: 'admin'})"/>
+        <NavigationColaborator v-if="AuthUtil.canView($page.props.user, {role: 'colaborator'})"/>
     </ul>
 </template>

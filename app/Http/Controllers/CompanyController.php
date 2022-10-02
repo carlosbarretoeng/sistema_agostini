@@ -14,7 +14,7 @@ class CompanyController extends Controller
 {
     function index(Request $request) {
         $data = [
-            'companies' => Company::orderBy('name')->get()
+            'companies' => Company::inCompany(auth()->user())->orderBy('name')->get()
         ];
         return Inertia::render('Company/Index', $data);
     }

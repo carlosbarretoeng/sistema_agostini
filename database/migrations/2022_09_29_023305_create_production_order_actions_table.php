@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('recipe_steps', function (Blueprint $table) {
+        Schema::create('production_order_actions', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
         });
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('recipe_steps');
+        Schema::dropIfExists('production_order_actions');
     }
 };

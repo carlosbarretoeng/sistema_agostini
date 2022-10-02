@@ -1,5 +1,6 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
+import AuthUtil from '@/../util/auth.util'
 import TextUtil from '@/../util/text.util'
 
 const props = defineProps({
@@ -14,7 +15,7 @@ const props = defineProps({
             Departamentos
         </template>
         <template #actions>
-            <a :href="route('department.create')" class="btn btn-primary gap-2">
+            <a v-if="AuthUtil.canView($page.props.user, {permission: 'department.create'})" :href="route('department.create')" class="btn btn-primary gap-2">
                 <font-awesome-icon icon="fa-solid fa-circle-plus" size="lg" />
                 <span class="hidden sm:inline-block">Adicionar</span>
             </a>

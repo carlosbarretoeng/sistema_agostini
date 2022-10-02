@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('company_id')->constrained('companies')->onDelete('cascade');
             $table->string('name');
+            $table->float('average_production_time')->unsigned()->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

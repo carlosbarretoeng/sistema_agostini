@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\Machinery;
+use App\Models\Part;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -13,7 +15,7 @@ class ProductController extends Controller
 {
     function index(Request $request) {
         $data = [
-            'products' => Product::orderBy('name')->get()
+            'products' => Product::inCompany(auth()->user())->orderBy('name')->get()
         ];
         return Inertia::render('Product/Index', $data);
     }
@@ -36,7 +38,10 @@ class ProductController extends Controller
             'id' => $product->id ?? null,
             'company_id' => $product->company_id ?? null,
             'name' => $product->name ?? null,
-            'companies' => Company::all(['id','name']),
+            'productRecipe' => $product !== null ? (new ProductRecipeController())->getPartsByProduct($product) : [],
+            'companies' => Company::inCompany(auth()->user())->get(['id','name']),
+            'machineries' => Machinery::inCompany(auth()->user())->get(['id','name']),
+            'parts' => Part::inCompany(auth()->user())->get(['id','name']),
         ];
         return Inertia::render('Product/Info', $data);
     }

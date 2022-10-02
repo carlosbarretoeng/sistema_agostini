@@ -61,26 +61,20 @@ const logout = () => {
                             </label>
                             <ul tabindex="0"
                                 class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
-                                <li>
-                                    <a class="justify-between" :href="route('profile.show')"
-                                        :active="route().current('profile.show')">
-                                        Perfil
-                                    </a>
-                                </li>
-                                <li><a @click="logout">Logout</a></li>
+                                <li><a @click="logout">Sair</a></li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
                 <div class="flex overflow-y-auto h-full">
-                    <div class="p-2 w-56 min-h-screen hidden sm:inline-flex bg-base-100 sm:fixed">
+                    <div class="w-56 min-h-screen hidden sm:inline-flex bg-base-100 sm:fixed">
                         <Navigation />
                     </div>
                     <div class="flex-1 sm:pl-56">
                         <header v-if="$slots.header">
                             <div class="flex mx-auto p-4 bg-base-300">
-                                <h1 class="flex-1 pt-3 font-semibold text-xl text-gray-800 leading-tight">
+                                <h1 class="flex-1 py-3 font-semibold text-xl text-gray-800 leading-tight">
                                     <slot name="header" />
                                 </h1>
                                 <div class="flex-none">

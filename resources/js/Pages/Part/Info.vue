@@ -41,10 +41,10 @@ const updatePart = () => {
     <AppLayout>
         <template #header>
             <template v-if="isCreateContext">
-                Nova Peça
+                Nova Etapa de Produto
             </template>
             <template v-if="isShowContext || isEditContext">
-                Peça
+                Etapa de Produto
             </template>
         </template>
         <template #actions>

@@ -4,6 +4,7 @@ import { useForm } from '@inertiajs/inertia-vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import InputText from '@/Components/InputText.vue';
 import InputSelect from "@/Components/InputSelect.vue";
+import AuthUtil from '@/../util/auth.util';
 import {computed} from "vue";
 
 const props = defineProps({
@@ -54,10 +55,10 @@ const updateMachinery = () => {
     <AppLayout>
         <template #header>
             <template v-if="isCreateContext">
-                Novo Maquinário
+                Nova Estação de Trabalho
             </template>
             <template v-if="isShowContext || isEditContext">
-                Maquinário
+                Estação de Trabalho
             </template>
         </template>
         <template #actions>
@@ -66,23 +67,23 @@ const updateMachinery = () => {
                 <span class="hidden sm:inline-block">Voltar</span>
             </a>
             <template v-if="isCreateContext">
-                <a @click="saveNewMachinery()" class="btn btn-success gap-2">
+                <a v-if="AuthUtil.canView($page.props.user, {permission: 'machinery.create'})" @click="saveNewMachinery()" class="btn btn-success gap-2">
                     <font-awesome-icon icon="fa-solid fa-save" size="lg" />
                     <span class="hidden sm:inline-block">Salvar</span>
                 </a>
             </template>
             <template v-if="isEditContext">
-                <a @click="updateMachinery()" class="btn btn-success gap-2">
+                <a v-if="AuthUtil.canView($page.props.user, {permission: 'machinery.update'})" @click="updateMachinery()" class="btn btn-success gap-2">
                     <font-awesome-icon icon="fa-solid fa-arrows-rotate" size="lg" />
                     <span class="hidden sm:inline-block">Atualizar</span>
                 </a>
             </template>
             <template v-if="isShowContext">
-                <a :href="route('machinery.edit', id)" class="btn btn-info mr-2 gap-2">
+                <a v-if="AuthUtil.canView($page.props.user, {permission: 'machinery.update'})" :href="route('machinery.edit', id)" class="btn btn-info mr-2 gap-2">
                     <font-awesome-icon icon="fa-solid fa-edit" size="lg" />
                     <span class="hidden sm:inline-block">Editar</span>
                 </a>
-                <a href="#deleteModal" class="btn btn-error gap-2">
+                <a v-if="AuthUtil.canView($page.props.user, {permission: 'machinery.delete'})" href="#deleteModal" class="btn btn-error gap-2">
                     <font-awesome-icon icon="fa-solid fa-trash" size="lg" />
                     <span class="hidden sm:inline-block">Excluir</span>
                 </a>

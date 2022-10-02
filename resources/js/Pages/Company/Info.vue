@@ -1,9 +1,9 @@
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue';
 import { Inertia } from "@inertiajs/inertia";
-import InputText from '@/Components/InputText.vue';
 import { useForm } from '@inertiajs/inertia-vue3';
-import route from '../../../../vendor/tightenco/ziggy/src/js';
+import AppLayout from '@/Layouts/AppLayout.vue';
+import InputText from '@/Components/InputText.vue';
+import AuthUtil from '@/../util/auth.util'
 
 const props = defineProps({
     context: String,
@@ -50,23 +50,23 @@ const updateCompany = () => {
                 <span class="hidden sm:inline-block">Voltar</span>
             </a>
             <template v-if="isCreateContext">
-                <a @click="saveNewCompany()" class="btn btn-success gap-2">
+                <a v-if="AuthUtil.canView($page.props.user, {permission: 'company.create'})" @click="saveNewCompany()" class="btn btn-success gap-2">
                     <font-awesome-icon icon="fa-solid fa-save" size="lg" />
                     <span class="hidden sm:inline-block">Salvar</span>
                 </a>
             </template>
             <template v-if="isEditContext">
-                <a @click="updateCompany()" class="btn btn-success gap-2">
+                <a v-if="AuthUtil.canView($page.props.user, {permission: 'company.update'})" @click="updateCompany()" class="btn btn-success gap-2">
                     <font-awesome-icon icon="fa-solid fa-arrows-rotate" size="lg" />
                     <span class="hidden sm:inline-block">Atualizar</span>
                 </a>
             </template>
             <template v-if="isShowContext">
-                <a :href="route('company.edit', id)" class="btn btn-info mr-2 gap-2">
+                <a v-if="AuthUtil.canView($page.props.user, {permission: 'company.update'})" :href="route('company.edit', id)" class="btn btn-info mr-2 gap-2">
                     <font-awesome-icon icon="fa-solid fa-edit" size="lg" />
                     <span class="hidden sm:inline-block">Editar</span>
                 </a>
-                <a href="#deleteModal" class="btn btn-error gap-2">
+                <a v-if="AuthUtil.canView($page.props.user, {permission: 'company.delete'})" href="#deleteModal" class="btn btn-error gap-2">
                     <font-awesome-icon icon="fa-solid fa-trash" size="lg" />
                     <span class="hidden sm:inline-block">Excluir</span>
                 </a>

@@ -13,7 +13,7 @@ class DepartmentController extends Controller
 {
     function index(Request $request) {
         $data = [
-            'departments' => Department::orderBy('name')->get()
+            'departments' => Department::inCompany(auth()->user())->orderBy('name')->get()
         ];
         return Inertia::render('Department/Index', $data);
     }
@@ -36,7 +36,7 @@ class DepartmentController extends Controller
             'id' => $department->id ?? null,
             'company_id' => $department->company_id ?? null,
             'name' => $department->name ?? null,
-            'companies' => Company::all(['id','name']),
+            'companies' => Company::inCompany(auth()->user())->get(['id','name']),
         ];
         return Inertia::render('Department/Info', $data);
     }

@@ -14,7 +14,7 @@ class MachineryController extends Controller
 {
     function index(Request $request) {
         $data = [
-            'machineries' => Machinery::orderBy('name')->get()
+            'machineries' => Machinery::inCompany(auth()->user())->orderBy('name')->get()
         ];
         return Inertia::render('Machinery/Index', $data);
     }
@@ -38,8 +38,8 @@ class MachineryController extends Controller
             'company_id' => $machinery->department->company_id ?? null,
             'department_id' => $machinery->department_id ?? null,
             'name' => $machinery->name ?? null,
-            'companies' => Company::all(['id','name']),
-            'departments' => Department::all(['id', 'name', 'company_id']),
+            'companies' => Company::inCompany(auth()->user())->get(['id','name']),
+            'departments' => Department::inCompany(auth()->user())->get(['id', 'name', 'company_id']),
         ];
         return Inertia::render('Machinery/Info', $data);
     }

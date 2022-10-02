@@ -14,6 +14,15 @@ class Department extends Model
 
     protected $with = ['company'];
 
+    public function scopeInCompany($query, $user)
+    {
+        if(!$user->hasRole('super-admin')){
+            $userCompanyId = $user->company_id;
+            return $query->where('company_id', $userCompanyId);
+        }
+        return $query;
+    }
+
     public function company(){
         return $this->belongsTo(Company::class);
     }

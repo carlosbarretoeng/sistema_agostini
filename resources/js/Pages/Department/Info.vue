@@ -4,6 +4,7 @@ import { useForm } from '@inertiajs/inertia-vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import InputText from '@/Components/InputText.vue';
 import InputSelect from "@/Components/InputSelect.vue";
+import AuthUtil from '@/../util/auth.util'
 
 const props = defineProps({
     context: String,
@@ -54,23 +55,23 @@ const updateDepartment = () => {
                 <span class="hidden sm:inline-block">Voltar</span>
             </a>
             <template v-if="isCreateContext">
-                <a @click="saveNewDepartment()" class="btn btn-success gap-2">
+                <a v-if="AuthUtil.canView($page.props.user, {permission: 'department.create'})" @click="saveNewDepartment()" class="btn btn-success gap-2">
                     <font-awesome-icon icon="fa-solid fa-save" size="lg" />
                     <span class="hidden sm:inline-block">Salvar</span>
                 </a>
             </template>
             <template v-if="isEditContext">
-                <a @click="updateDepartment()" class="btn btn-success gap-2">
+                <a v-if="AuthUtil.canView($page.props.user, {permission: 'department.update'})" @click="updateDepartment()" class="btn btn-success gap-2">
                     <font-awesome-icon icon="fa-solid fa-arrows-rotate" size="lg" />
                     <span class="hidden sm:inline-block">Atualizar</span>
                 </a>
             </template>
             <template v-if="isShowContext">
-                <a :href="route('department.edit', id)" class="btn btn-info mr-2 gap-2">
+                <a v-if="AuthUtil.canView($page.props.user, {permission: 'department.update'})" :href="route('department.edit', id)" class="btn btn-info mr-2 gap-2">
                     <font-awesome-icon icon="fa-solid fa-edit" size="lg" />
                     <span class="hidden sm:inline-block">Editar</span>
                 </a>
-                <a href="#deleteModal" class="btn btn-error gap-2">
+                <a v-if="AuthUtil.canView($page.props.user, {permission: 'department.delete'})" href="#deleteModal" class="btn btn-error gap-2">
                     <font-awesome-icon icon="fa-solid fa-trash" size="lg" />
                     <span class="hidden sm:inline-block">Excluir</span>
                 </a>
