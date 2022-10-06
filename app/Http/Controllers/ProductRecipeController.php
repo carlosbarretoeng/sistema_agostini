@@ -24,8 +24,8 @@ class ProductRecipeController extends Controller
 
         $productRecipe->product_id = $attrs['product_id'];
         $productRecipe->part_id = $attrs['part_id'];
-        if($attrs['machinery_id'] !== "-")
-            $productRecipe->machinery_id = $attrs['machinery_id'];
+        // if($attrs['machinery_id'] !== "-")
+            // $productRecipe->machinery_id = $attrs['machinery_id'];
         $productRecipe->quantity = $attrs['quantity'];
         $productRecipe->order = $attrs['order'];
 
@@ -57,7 +57,7 @@ class ProductRecipeController extends Controller
                 "productName" => $entry['product']['name'],
                 "partId" => $entry['part']['id'],
                 "partName" => $entry['part']['name'],
-                "partAverageProductionTime" => $entry['part']['average_production_time'],
+                "partAverageProductionTime" => $entry['part']['average_production_time'] ?? null,
                 "machineryId" => $entry['machinery']['id'] ?? null,
                 "machineryName" => $entry['machinery']['name'] ?? null,
                 "quantity" => $entry['quantity'],

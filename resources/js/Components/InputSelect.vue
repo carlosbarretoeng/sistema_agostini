@@ -23,13 +23,8 @@
             @input="$emit('update:modelValue', $event.target.value)"
             :disabled="disabled"
         >
-            <template v-if="options.length === 0">
-                <option disabled selected>---</option>
-            </template>
-            <template v-else>
-                <option v-if="options.length > 1" disabled :selected="options.length > 1">Selecione uma opção</option>
-                <option v-for="(option) in options" :key="option.id" :value="option.id" :selected="options.length === 1">{{ option.name }}</option>
-            </template>
+            <option value="null">---</option>
+            <option v-for="(option) in options" :key="option.id" :value="option.id">{{ option.name }}</option>
         </select>
     </div>
 </template>

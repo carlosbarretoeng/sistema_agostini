@@ -19,7 +19,12 @@ Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified',])
     ->group(function () {
         Route::resource('/dashboard', DashboardController::class, ["names"=> 'dashboard']);
 
-        Route::resource('user', UserController::class);
+        Route::put('user/{user}/password', [UserController::class, 'passwordUpdate'])
+            ->middleware(['role:super-admin'])
+            ->name('user.passwordUpdate');
+        Route::resource('user', UserController::class)
+            ->middleware(['role:super-admin']);
+
         Route::resource('company', CompanyController::class);
         Route::resource('department', DepartmentController::class);
         Route::resource('machinery', MachineryController::class);
@@ -27,10 +32,13 @@ Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified',])
         Route::resource('part', PartController::class);
         Route::resource('product_recipe', ProductRecipeController::class);
 
-        Route::get('production_order/print/{productionOrder}', [ProductionOrderController::class, 'print'])->name('production_order.print');
+        Route::get('production_order/print/{productionOrder}', [ProductionOrderController::class, 'print'])
+            ->name('production_order.print');
         Route::resource('production_order', ProductionOrderController::class);
 
-        Route::put('production_order_product/increment/{productionOrder}', [ProductionOrderProductController::class, 'increment'])->name('production_order_product.increment');
-        Route::put('production_order_product/decrement/{productionOrder}', [ProductionOrderProductController::class, 'decrement'])->name('production_order_product.decrement');
+        Route::put('production_order_product/increment/{productionOrder}', [ProductionOrderProductController::class, 'increment'])
+            ->name('production_order_product.increment');
+        Route::put('production_order_product/decrement/{productionOrder}', [ProductionOrderProductController::class, 'decrement'])
+            ->name('production_order_product.decrement');
         Route::resource('production_order_product', ProductionOrderProductController::class);
     });

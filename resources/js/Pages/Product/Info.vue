@@ -147,7 +147,7 @@ const addProductRecipeItem = () => {
                     <h3 class="font-bold text-lg">Adicionar Etapa de Produto</h3>
                     <div>
                         <InputSelect label="Etapa" :options="parts"  v-model="formRecipe.part_id"/>
-                        <InputSelect label="Estação de trabalho" :options="machineries" v-model="formRecipe.machinery_id" />
+<!--                        <InputSelect label="Estação de trabalho" :options="machineries" v-model="formRecipe.machinery_id" />-->
                         <InputText label="Quantidade" mask="##" v-model="formRecipe.quantity"/>
                     </div>
                     <div class="modal-action">
@@ -173,26 +173,27 @@ const addProductRecipeItem = () => {
                     </div>
                     <div class="flex items-center space-x-2 px-2">
                         <div class="w-full">
-                            <div class="grid grid-cols-2 font-light border-b-2">
-                                <div class="font-semibold">Estação:</div>
-                                <div class="text-right">{{ productRecipeItem['machineryName'] ?? '---' }}</div>
-                            </div>
-                            <div class="grid grid-cols-2 font-light">
-                                <div class="font-semibold">Tempo Médio:</div>
-                                <div class="text-right">{{ productRecipeItem['partAverageProductionTime'] ?? '---' }}</div>
-                            </div>
+<!--                            <div class="grid grid-cols-2 font-light border-b-2">-->
+<!--                                <div class="font-semibold">Estação:</div>-->
+<!--                                <div class="text-right">{{ productRecipeItem['machineryName'] ?? '-&#45;&#45;' }}</div>-->
+<!--                            </div>-->
+<!--                            <div class="grid grid-cols-2 font-light">-->
+<!--                                <div class="font-semibold">Tempo Médio:</div>-->
+<!--                                <div class="text-right">{{ productRecipeItem['partAverageProductionTime'] ?? '-&#45;&#45;' }}</div>-->
+<!--                            </div>-->
                         </div>
                     </div>
-                    <div v-if="isEditContext" class="bg-base-300/25 grid grid-cols-3 gap-2 p-2">
-                        <button class="btn btn-ghost btn-sm w-full gap-2" @click="updateOrderUp(productRecipeItem)" :disabled="productRecipeItem['order'] === productRecipe.length">
-                            <font-awesome-icon icon="fa-solid fa-up-long"/>
+                    <div v-if="isEditContext" class="bg-base-300/25 grid grid-cols-3 gap-2">
+                        <button class="btn btn-ghost btn-sm w-full gap-2" @click="updateOrderDown(productRecipeItem)" :disabled="productRecipeItem['order'] <= 1">
+                            <font-awesome-icon icon="fa-solid fa-down-long"/>
                         </button>
                         <button class="btn btn-ghost btn-sm w-full gap-2" @click="updateOrderDelete(productRecipeItem)">
                             <font-awesome-icon icon="fa-solid fa-trash"/>
                         </button>
-                        <button class="btn btn-ghost btn-sm w-full gap-2" @click="updateOrderDown(productRecipeItem)" :disabled="productRecipeItem['order'] <= 1">
-                            <font-awesome-icon icon="fa-solid fa-down-long"/>
+                        <button class="btn btn-ghost btn-sm w-full gap-2" @click="updateOrderUp(productRecipeItem)" :disabled="productRecipeItem['order'] === productRecipe.length">
+                            <font-awesome-icon icon="fa-solid fa-up-long"/>
                         </button>
+
                     </div>
                 </div>
             </template>

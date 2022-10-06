@@ -20,7 +20,7 @@ const props = defineProps({
                 <span class="hidden sm:inline-block">Adicionar</span>
             </a>
         </template>
-        <div class="grid sm:grid-cols-4 gap-2">
+        <div class="grid sm:grid-cols-3 gap-2">
             <template v-for="user in users" :key="user.id">
                 <a :href="route('user.show', user.id)" class="card w-full bg-base-100 shadow-xl p-2">
                     <div class="flex items-center space-x-3 border-b-2 border-base-200 pb-2 mb-1">

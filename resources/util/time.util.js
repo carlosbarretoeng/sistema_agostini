@@ -8,10 +8,12 @@ export default {
         const result = date.toISOString().substr(11, 8);
         return result
     },
-    toFormatedString(date) {
+
+    toFormatedString(date, format = "DD/MM/YYYY HH:mm:ss") {
         moment.locale('pt-br');
-        return moment(date).format("D [de] MMM [de] YYYY", 'pt-br')
+        return moment(date).format(format)
     },
+
     YYYYMMDDtoDDMMYYYY(str) {
         return moment(str, "YYYY-MM-DD").format("DDMMYYYY")
     }

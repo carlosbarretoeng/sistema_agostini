@@ -12,7 +12,7 @@ class ProductRecipe extends Model
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
-    protected $with = ['product', 'part', 'machinery'];
+    protected $with = ['product', 'part'];
 
     public function product(){
         return $this->belongsTo(Product::class);
@@ -20,9 +20,5 @@ class ProductRecipe extends Model
 
     public function part(){
         return $this->belongsTo(Part::class);
-    }
-
-    public function machinery(){
-        return $this->belongsTo(Machinery::class);
     }
 }

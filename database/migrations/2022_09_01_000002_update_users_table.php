@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->string('username');
             $table->foreignId('company_id')->nullable()->constrained('companies');
+            $table->softDeletes();
         });
     }
 

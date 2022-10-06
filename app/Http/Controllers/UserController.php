@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCompanyRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
@@ -34,9 +35,13 @@ class UserController extends Controller
     }*/
 
     function createOrShowOrEdit(Request $request, User | null $user, String $context) {
+        $thisUser = $user ?? null;
+
+        if($thisUser) $thisUser->getAllPermissions();
+
         $data = [
             'context' => $context,
-            'thisUser' => $user?->toArray() ?? null,
+            'thisUser' => $thisUser?->toArray(),
             'companies' => Company::all()->toArray(),
             'roles' => Role::all()->toArray()
         ];
@@ -44,60 +49,63 @@ class UserController extends Controller
     }
 
     function store(Request $request) {
-        $rules = [
-            'name' => 'required'
-        ];
+        $attrs = $request->all();
 
-        $validator = Validator::make($request->all(), $rules);
+        $newUser = new User();
 
-        if ($validator->fails()) {
-            return Redirect::route('company.create')->withErrors($validator);
-        } else {
-            $attrs = $request->all();
+        $newUser->name = $attrs['name'];
+        $newUser->username = $attrs['username'];
+        $newUser->email = $attrs['email'];
+        $newUser->password = Hash::make($attrs['password']);
 
-            $company = new Company();
+        if($attrs['company_id'] &&  $attrs['company_id'] != 'null') $newUser->company_id = $attrs['company_id'];
 
-            $company->name = $attrs['name'];
+        $newUser->save();
 
-            $company->save();
+        $role = Role::find($attrs['role_id'])->name;
 
-            return Redirect::route('company.index');
-        }
+        $newUser->assignRole($role);
+
+        return Redirect::route('user.index');
     }
 
-    function update(Request $request) {
-        $rules = [
-            'id' => 'required',
-            'name' => 'required'
-        ];
+    function update(Request $request, User $user) {
+        $attrs = $request->all();
 
-        $validator = Validator::make($request->all(), $rules);
+        $user->name = $attrs['name'];
+        $user->username = $attrs['username'];
+        $user->email = $attrs['email'];
 
-        if ($validator->fails()) {
-            return Redirect::route('company.create')->withErrors($validator);
-        } else {
-            $attrs = $request->all();
+        if($attrs['company_id']) $user->company_id = $attrs['company_id'];
 
-            $company = Company::find($attrs['id']);
+        $user->save();
 
-            $company->name = $attrs['name'];
+        $roles = $user->getRoleNames();
+        foreach ($roles as $role) $user->removeRole($role);
 
-            $company->save();
+        $role = Role::find($attrs['role_id'])->name;
 
-            return Redirect::route('company.index');
-        }
+        $user->assignRole($role);
+        $user->getAllPermissions();
+
+        if($role != 'super-admin') return Redirect::route('dashboard.index');
+
+        return Redirect::route('user.index');
     }
 
-    function destroy(Request $request, Company $company){
-        foreach ($company->departments as $department) {
-            (new DepartmentController())->destroy(null, $department);
+    function passwordUpdate(Request $request, User $user) {
+        $attrs = $request->all();
+
+        if($attrs['password'] === $attrs['retype']){
+            $user->password = Hash::make($attrs['password']);
+            $user->save();
         }
 
-        foreach ($company->products as $product) {
-            (new ProductController())->destroy(null, $product);
-        }
+        return Redirect::route('user.index');
+    }
 
-        $company->delete();
-        return Redirect::route('company.index');
+    function destroy(Request $request, User $user){
+        $user->delete();
+        return Redirect::route('user.index');
     }
 }

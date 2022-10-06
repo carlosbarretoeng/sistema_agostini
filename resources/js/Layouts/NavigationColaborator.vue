@@ -8,6 +8,5 @@
                 <span>Início</span>
             </a>
         </li>
-        navigation colaborator
     </div>
 </template>

@@ -26,7 +26,7 @@ const submit = () => {
             setTimeout(() => errorMessage.value = null, 5000);
         },
         onFinish: (el) => {
-            form.reset('password')
+            form.reset(['identify', 'password'])
         }
     });
 };

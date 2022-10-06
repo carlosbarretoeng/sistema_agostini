@@ -2,12 +2,14 @@
 
 namespace Database\Seeders;
 
+use App\Models\Action;
 use App\Models\Company;
 use App\Models\Department;
 use App\Models\Machinery;
 use App\Models\Part;
 use App\Models\Product;
 use App\Models\ProductionOrder;
+use App\Models\ProductionOrderAction;
 use App\Models\ProductionOrderPart;
 use App\Models\ProductionOrderProduct;
 use App\Models\ProductRecipe;
@@ -60,7 +62,7 @@ class DatabaseSeeder extends Seeder
 
         $app_times = Permission::create(['name' => 'apps.times']);
         $app_budget = Permission::create(['name' => 'apps.budget']);
-        $app_selles = Permission::create(['name' => 'apps.selles']);
+        $app_selles = Permission::create(['name' => 'apps.sales']);
         $app_ships = Permission::create(['name' => 'apps.ships']);
         $app_courses = Permission::create(['name' => 'apps.courses']);
 
@@ -84,15 +86,16 @@ class DatabaseSeeder extends Seeder
             $production_order_create, $production_order_read, $production_order_update, $production_order_delete
         ]);
 
-        $colaborator->syncPermissions([
-            $app_times
-        ]);
+        $colaborator->syncPermissions([]);
 
         User::factory()->create(['name' => 'Carlos Barreto', 'username' => 'carlosbarretoeng', 'email' => 'carlosbarreto.eng@gmail.com', 'password' => Hash::make('C@rlos0303')])->assignRole('super-admin');
 
+        Action::create(['name' => 'ORDER_CREATED_DRAFT', 'description' => 'Ordem criada em Rascunho']);
+        Action::create(['name' => 'ORDER_PRODUCT_ADDED', 'description' => 'Produto adicionado à ordem']);
+
         // COMMENTAR DAQUI PRA BAIXO -----------------------------------------------------------------------------------
 
-        /*
+
         Company::create(['name' => 'Agostini Tecnologia']);
         User::factory()->create(['company_id' => 1, 'name' => 'Administrator', 'username' => 'admin', 'email' => 'admin@gmail.com', 'password' => Hash::make('C@rlos0303')])->assignRole('admin');
         User::factory()->create(['company_id' => 1, 'name' => 'Colaborator', 'username' => 'colab', 'email' => 'colab@gmail.com', 'password' => Hash::make('C@rlos0303')])->assignRole('colaborator');
@@ -137,8 +140,8 @@ class DatabaseSeeder extends Seeder
         ProductRecipe::create(['product_id' => 1, 'part_id' => 3, 'order' => 3, 'quantity' => 1]);
         ProductRecipe::create(['product_id' => 1, 'part_id' => 4, 'order' => 4, 'quantity' => 2]);
         ProductRecipe::create(['product_id' => 1, 'part_id' => 5, 'order' => 5, 'quantity' => 2]);
-        ProductRecipe::create(['product_id' => 1, 'machinery_id' => 12, 'part_id' => 6, 'order' => 6, 'quantity' => 1]);
-        ProductRecipe::create(['product_id' => 1, 'machinery_id' => 12, 'part_id' => 7, 'order' => 7, 'quantity' => 1]);
+        ProductRecipe::create(['product_id' => 1, 'part_id' => 6, 'order' => 6, 'quantity' => 1]);
+        ProductRecipe::create(['product_id' => 1, 'part_id' => 7, 'order' => 7, 'quantity' => 1]);
 
         ProductionOrder::create([
             'company_id' => 1,
@@ -146,6 +149,13 @@ class DatabaseSeeder extends Seeder
             'status' => 'draft',
             'date_start' => '2022-10-01',
             'date_finish' => '2022-10-01',
+        ]);
+
+        ProductionOrderAction::create([
+            'production_order_id' => 1,
+            'user_id' => 1,
+            'action_id' => 1,
+            'description' => 'AÇÃO TESTE'
         ]);
 
         ProductionOrderProduct::create(['production_order_id' => 1, 'product_id' => 1, 'quantity' => 5]);
@@ -199,6 +209,12 @@ class DatabaseSeeder extends Seeder
             'quantity' => 5,
             'done' => 0
         ]);
-        */
+
+        ProductionOrderAction::create([
+            'production_order_id' => 1,
+            'user_id' => 1,
+            'action_id' => 2,
+            'description' => 'PRODUTO 1'
+        ]);
     }
 }

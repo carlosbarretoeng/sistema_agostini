@@ -39,7 +39,7 @@ const form = useForm({
     company_id: props.company_id ?? null,
     date_start: TimeUtil.YYYYMMDDtoDDMMYYYY(props.date_start) ?? null,
     date_finish: TimeUtil.YYYYMMDDtoDDMMYYYY(props.date_finish) ?? null,
-    status: props.status ?? null,
+    status: props.status ?? 'draft',
 })
 
 const formNewProduct = useForm({
@@ -99,13 +99,13 @@ const consoleLog = (data) => {
                 <span class="hidden sm:inline-block">Voltar</span>
             </a>
             <template v-if="isCreateContext">
-                <a v-if="AuthUtil.canView($page.props.user, {permission: 'production_order.create'})" @click="saveNewProduct()" class="btn btn-success gap-2">
+                <a v-if="AuthUtil.canView($page.props.user, {permission: 'production_order.create'})" @click="saveNewProductionOrder()" class="btn btn-success gap-2">
                     <font-awesome-icon icon="fa-solid fa-save" size="lg" />
                     <span class="hidden sm:inline-block">Salvar</span>
                 </a>
             </template>
             <template v-if="isEditContext">
-                <a v-if="AuthUtil.canView($page.props.user, {permission: 'production_order.update'})" @click="updateProduct()" class="btn btn-success gap-2">
+                <a v-if="AuthUtil.canView($page.props.user, {permission: 'production_order.update'})" @click="updateProductionOrder()" class="btn btn-success gap-2">
                     <font-awesome-icon icon="fa-solid fa-arrows-rotate" size="lg" />
                     <span class="hidden sm:inline-block">Atualizar</span>
                 </a>
@@ -139,7 +139,7 @@ const consoleLog = (data) => {
             <InputSelect label="Empresa" :options="companies" v-model="form.company_id" :disabled="isShowContext"/>
             <InputText label="Data de Início" v-model="form.date_start" :disabled="isShowContext" mask="##/##/####"/>
             <InputText label="Data de Término" v-model="form.date_finish" :disabled="isShowContext" mask="##/##/####"/>
-            <InputSelect label="Status" :options="statusOptions" v-model="form.status" :disabled="isShowContext"/>
+            <InputSelect label="Status" :options="statusOptions" v-model="form.status" :disabled="isShowContext || isCreateContext"/>
         </div>
         <div class="divider">Produtos</div>
         <div class="">
@@ -204,33 +204,53 @@ const consoleLog = (data) => {
                 </tbody>
             </table>
         </div>
-        <div class="divider">Etapas de Produção</div>
+        <div v-if="production_order_parts.length" class="divider">Etapas de Produção</div>
         <div class="grid sm:grid-cols-3 gap-2">
             <template v-for="(production_order_part, index) in production_order_parts" :key="index">
                 <div class="card card-compact bg-base-100 shadow-xl mb-2">
                     <div class="flex items-center space-x-2 h-12 p-2 border-b-2">
-                        <div class="font-bold">{{ production_order_part['quantity'] }}x {{ production_order_part['product_recipe']['part']['name'] }}</div>
+                        <div class="font-bold">{{ production_order_part.quantity }}x {{ production_order_part.product_recipe?.part.name }}</div>
                     </div>
                     <div class="flex items-center space-x-2 px-2">
                         <div class="w-full">
                             <div class="grid grid-cols-3 font-light">
                                 <div class="col-span-2 font-semibold">Quantidade já produzida:</div>
-                                <div class="text-right">{{ production_order_part['done'] }}/{{ production_order_part['quantity'] }} ( {{ NumberUtil.format(production_order_part['done'] * 100 / production_order_part['quantity']) }}%)</div>
+                                <div class="text-right">{{ production_order_part.done ?? 0 * 100 }}/{{ production_order_part.quantity }}</div>
                             </div>
-                            <div class="grid grid-cols-3 font-light">
-                                <div class="col-span-2 font-semibold">Estação de Trabalho:</div>
-                                <div class="text-right">{{ production_order_part['product_recipe']['machinery'] ? production_order_part['product_recipe']['machinery']['name'] : '---' }}</div>
-                            </div>
-                            <div class="grid grid-cols-3 font-light">
-                                <div class="col-span-2 font-semibold">Tempo Estimado:</div>
-                                <div class="text-right">{{ production_order_part['product_recipe']['part']['average_production_time'] ?? '---' }}</div>
-                            </div>
+<!--                            <div class="grid grid-cols-3 font-light">-->
+<!--                                <div class="col-span-2 font-semibold">Estação de Trabalho:</div>-->
+<!--                                <div class="text-right">{{ production_order_part['product_recipe']['machinery'] ? production_order_part['product_recipe']['machinery']['name'] : '-&#45;&#45;' }}</div>-->
+<!--                            </div>-->
+<!--                            <div class="grid grid-cols-3 font-light">-->
+<!--                                <div class="col-span-2 font-semibold">Tempo Estimado:</div>-->
+<!--                                <div class="text-right">{{ production_order_part['product_recipe']['part']['average_production_time'] ?? '-&#45;&#45;' }}</div>-->
+<!--                            </div>-->
                         </div>
                     </div>
                 </div>
             </template>
         </div>
-        <div class="divider">Resumo</div>
-        <div class="divider">Registros</div>
+        <div v-if="production_order_actions.length" class="divider">Registros</div>
+        <div v-if="production_order_actions.length" class="w-full">
+            <div v-for="(production_order_action, index) in production_order_actions" :key="index" class="card card-compact mb-2 w-full bg-base-100 shadow-xl sm:hidden">
+                <div class="card-body">
+                    <div class="font-bold">{{ TimeUtil.toFormatedString(production_order_action.created_at) }} - {{ production_order_action.user.name }}</div>
+                    <div class="font-semibold">{{ production_order_action.action.description }}</div>
+                    <div class="text-xs">{{ production_order_action.description }}</div>
+                </div>
+            </div>
+            <div  class="grid grid-cols-3 gap-2 bg-base-300 rounded-t-md">
+                <div class="p-2 font-bold">Data & Responsável</div>
+                <div class="p-2 font-bold">Evento</div>
+                <div class="p-2 font-bold">Descrição</div>
+            </div>
+            <template v-for="(production_order_action, index) in production_order_actions" :key="index">
+                <div  class="grid grid-cols-3 gap-2  bg-base-100  rounded-b-md">
+                    <div class="p-2">{{ TimeUtil.toFormatedString(production_order_action.created_at) }} - {{ production_order_action.user.name }}</div>
+                    <div class="p-2">{{ production_order_action.action.description }}</div>
+                    <div class="p-2">{{ production_order_action.description }}</div>
+                </div>
+            </template>
+        </div>
     </AppLayout>
 </template>

@@ -1,6 +1,7 @@
 <script setup>
     const props = defineProps({
         label: String,
+        type: String,
         modelValue: String | Number,
         disabled: {
             type: Boolean,
@@ -15,7 +16,7 @@
             <span class="label-text font-medium">{{ label }}</span>
         </label>
         <input
-            type="text"
+            :type="type"
             :placeholder="label"
             :value="modelValue"
             @input="$emit('update:modelValue', $event.target.value)"
