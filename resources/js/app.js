@@ -14,6 +14,7 @@ import { far } from '@fortawesome/free-regular-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 import { dom } from "@fortawesome/fontawesome-svg-core";
 import Maska from "maska";
+import 'flowbite';
 
 library.add(fas);
 library.add(far);
@@ -36,4 +37,4 @@ createInertiaApp({
     },
 }).then(r => {});
 
- InertiaProgress.init({ color: '#4B5563' });
+InertiaProgress.init({ color: '#4B5563' });

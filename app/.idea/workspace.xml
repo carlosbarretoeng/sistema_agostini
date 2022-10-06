@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="a6fc4776-779e-4e60-954e-c2c17516f331" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/Http/Controllers/DashboardController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Http/Controllers/DashboardController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Http/Controllers/ProductRecipeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Http/Controllers/ProductRecipeController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Http/Controllers/ProductionOrderController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Http/Controllers/ProductionOrderController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Http/Controllers/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Http/Controllers/UserController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Http/Kernel.php" beforeDir="false" afterPath="$PROJECT_DIR$/Http/Kernel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Http/Middleware/HandleInertiaRequests.php" beforeDir="false" afterPath="$PROJECT_DIR$/Http/Middleware/HandleInertiaRequests.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/ProductRecipe.php" beforeDir="false" afterPath="$PROJECT_DIR$/Models/ProductRecipe.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/ProductionOrderAction.php" beforeDir="false" afterPath="$PROJECT_DIR$/Models/ProductionOrderAction.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/Models/User.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../database/migrations/2022_09_01_000002_update_users_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/../database/migrations/2022_09_01_000002_update_users_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../database/migrations/2022_09_22_183255_create_products_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/../database/migrations/2022_09_22_183255_create_products_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../database/migrations/2022_09_22_200531_create_parts_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/../database/migrations/2022_09_22_200531_create_parts_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../database/migrations/2022_09_27_011247_create_product_recipes_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/../database/migrations/2022_09_27_011247_create_product_recipes_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../database/migrations/2022_09_29_023305_create_production_order_actions_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/../database/migrations/2022_09_29_023305_create_production_order_actions_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../database/seeders/DatabaseSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/../database/seeders/DatabaseSeeder.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../resources/js/Components/InputSelect.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../resources/js/Components/InputSelect.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../resources/js/Components/InputText.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../resources/js/Components/InputText.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../resources/js/Layouts/Navigation.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../resources/js/Layouts/Navigation.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../resources/js/Layouts/NavigationColaborator.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../resources/js/Layouts/NavigationColaborator.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../resources/js/Pages/Auth/Login.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../resources/js/Pages/Auth/Login.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../resources/js/Pages/Dashboard/Index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../resources/js/Pages/Dashboard/SuperAdmin.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../resources/js/Pages/Dashboard/SuperAdminDashboard.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../resources/js/Pages/Product/Info.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../resources/js/Pages/Product/Info.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../resources/js/Pages/ProductionOrder/Info.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../resources/js/Pages/ProductionOrder/Info.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../resources/js/Pages/ProductionOrder/Print.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../resources/js/Pages/ProductionOrder/Print.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../resources/js/Pages/User/Index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../resources/js/Pages/User/Index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../resources/js/Pages/User/Info.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../resources/js/Pages/User/Info.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../resources/util/time.util.js" beforeDir="false" afterPath="$PROJECT_DIR$/../resources/util/time.util.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/../routes/web.php" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="2FgDMf1hJDroNIHDvX3aYkIwyIq" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a6fc4776-779e-4e60-954e-c2c17516f331" name="Changes" comment="" />
+      <created>1664904790965</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1664904790965</updated>
+      <workItem from="1664904792482" duration="8000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
