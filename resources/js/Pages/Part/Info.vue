@@ -9,8 +9,10 @@ const props = defineProps({
     context: String,
     id: Number,
     company_id: Number | null,
+    machinery_id: Number | null,
     name: String,
-    companies: Array
+    companies: Array,
+    machineries: Array,
 })
 
 const isCreateContext = props.context === 'create'
@@ -20,6 +22,7 @@ const isEditContext = props.context === 'edit'
 const form = useForm({
     id: props.id ?? null,
     company_id: props.company_id ?? null,
+    machinery_id: props.machinery_id ?? null,
     name: props.name ?? null
 })
 
@@ -87,6 +90,7 @@ const updatePart = () => {
         </template>
         <div class="grid sm:grid-cols-4 gap-2">
             <InputSelect label="Empresa" :options="companies" v-model="form.company_id" :disabled="isShowContext" />
+            <InputSelect label="Estação de Trabalho" :options="machineries" v-model="form.machinery_id" :disabled="isShowContext" />
             <InputText label="Nome" v-model="form.name" :disabled="isShowContext" />
         </div>
     </AppLayout>

@@ -12,6 +12,12 @@ class Part extends Model
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
+    protected $with = ['machinery'];
+
+    public function machinery(){
+        return $this->belongsTo(Machinery::class);
+    }
+
     public function scopeInCompany($query, $user)
     {
         if(!$user->hasRole('super-admin')){

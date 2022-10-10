@@ -19,12 +19,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 class DatabaseSeeder extends Seeder
 {
     public function run()
     {
-        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         $superAdmin = Role::create(['name' => 'super-admin']);
         $admin = Role::create(['name' => 'admin']);
@@ -83,20 +84,24 @@ class DatabaseSeeder extends Seeder
             $machinery_create, $machinery_read, $machinery_update, $machinery_delete,
             $part_create, $part_read, $part_update, $part_delete,
             $product_create, $product_read, $product_update, $product_delete,
-            $production_order_create, $production_order_read, $production_order_update, $production_order_delete
+            $production_order_create, $production_order_read, $production_order_update, $production_order_delete,
+
+            $app_times, $app_budget, $app_selles, $app_ships, $app_courses
         ]);
 
-        $colaborator->syncPermissions([]);
+        $colaborator->syncPermissions([
+            $app_times
+        ]);
 
         User::factory()->create(['name' => 'Carlos Barreto', 'username' => 'carlosbarretoeng', 'email' => 'carlosbarreto.eng@gmail.com', 'password' => Hash::make('C@rlos0303')])->assignRole('super-admin');
 
-        Action::create(['name' => 'ORDER_CREATED_DRAFT', 'description' => 'Ordem criada em Rascunho']);
-        Action::create(['name' => 'ORDER_PRODUCT_ADDED', 'description' => 'Produto adicionado à ordem']);
+//        Action::create(['name' => 'ORDER_CREATED_DRAFT', 'description' => 'Ordem criada em Rascunho']);
+//        Action::create(['name' => 'ORDER_PRODUCT_ADDED', 'description' => 'Produto adicionado à ordem']);
 
         // COMMENTAR DAQUI PRA BAIXO -----------------------------------------------------------------------------------
 
-
         Company::create(['name' => 'Agostini Tecnologia']);
+
         User::factory()->create(['company_id' => 1, 'name' => 'Administrator', 'username' => 'admin', 'email' => 'admin@gmail.com', 'password' => Hash::make('C@rlos0303')])->assignRole('admin');
         User::factory()->create(['company_id' => 1, 'name' => 'Colaborator', 'username' => 'colab', 'email' => 'colab@gmail.com', 'password' => Hash::make('C@rlos0303')])->assignRole('colaborator');
 
@@ -127,13 +132,13 @@ class DatabaseSeeder extends Seeder
 
         Product::create(['company_id' => 1, 'name' => 'Sofá de Testes']);
 
-        Part::create(['company_id' => 1, 'name' => 'Pés de sofá padrão']);
-        Part::create(['company_id' => 1, 'name' => 'Estrutura de braços esquerdo de sofá padrão']);
-        Part::create(['company_id' => 1, 'name' => 'Estrutura de braços direito de sofá padrão']);
-        Part::create(['company_id' => 1, 'name' => 'Estrutura de acentos de sofá padrão']);
-        Part::create(['company_id' => 1, 'name' => 'Estrutura de encostos de sofá padrão']);
-        Part::create(['company_id' => 1, 'name' => 'Espumas de braço esquerdo de sofá padrão']);
-        Part::create(['company_id' => 1, 'name' => 'Espumas de braço direito de sofá padrão']);
+        Part::create(['company_id' => 1, 'machinery_id' => 1, 'name' => 'Pés de sofá padrão']);
+        Part::create(['company_id' => 1, 'machinery_id' => 2, 'name' => 'Estrutura de braços esquerdo de sofá padrão']);
+        Part::create(['company_id' => 1, 'machinery_id' => 3, 'name' => 'Estrutura de braços direito de sofá padrão']);
+        Part::create(['company_id' => 1, 'machinery_id' => 4, 'name' => 'Estrutura de acentos de sofá padrão']);
+        Part::create(['company_id' => 1, 'machinery_id' => 5, 'name' => 'Estrutura de encostos de sofá padrão']);
+        Part::create(['company_id' => 1, 'machinery_id' => 4, 'name' => 'Espumas de braço esquerdo de sofá padrão']);
+        Part::create(['company_id' => 1, 'machinery_id' => 3, 'name' => 'Espumas de braço direito de sofá padrão']);
 
         ProductRecipe::create(['product_id' => 1, 'part_id' => 1, 'order' => 1, 'quantity' => 4]);
         ProductRecipe::create(['product_id' => 1, 'part_id' => 2, 'order' => 2, 'quantity' => 1]);
@@ -149,72 +154,6 @@ class DatabaseSeeder extends Seeder
             'status' => 'draft',
             'date_start' => '2022-10-01',
             'date_finish' => '2022-10-01',
-        ]);
-
-        ProductionOrderAction::create([
-            'production_order_id' => 1,
-            'user_id' => 1,
-            'action_id' => 1,
-            'description' => 'AÇÃO TESTE'
-        ]);
-
-        ProductionOrderProduct::create(['production_order_id' => 1, 'product_id' => 1, 'quantity' => 5]);
-
-        ProductionOrderPart::create([
-            'production_order_id' => 1,
-            'production_order_product_id' => 1,
-            'product_recipe_id' => 1,
-            'quantity' => 20,
-            'done' => 0
-        ]);
-        ProductionOrderPart::create([
-            'production_order_id' => 1,
-            'production_order_product_id' => 1,
-            'product_recipe_id' => 2,
-            'quantity' => 5,
-            'done' => 0
-        ]);
-        ProductionOrderPart::create([
-            'production_order_id' => 1,
-            'production_order_product_id' => 1,
-            'product_recipe_id' => 3,
-            'quantity' => 5,
-            'done' => 0
-        ]);
-        ProductionOrderPart::create([
-            'production_order_id' => 1,
-            'production_order_product_id' => 1,
-            'product_recipe_id' => 4,
-            'quantity' => 10,
-            'done' => 0
-        ]);
-        ProductionOrderPart::create([
-            'production_order_id' => 1,
-            'production_order_product_id' => 1,
-            'product_recipe_id' => 5,
-            'quantity' => 10,
-            'done' => 0
-        ]);
-        ProductionOrderPart::create([
-            'production_order_id' => 1,
-            'production_order_product_id' => 1,
-            'product_recipe_id' => 6,
-            'quantity' => 5,
-            'done' => 0
-        ]);
-        ProductionOrderPart::create([
-            'production_order_id' => 1,
-            'production_order_product_id' => 1,
-            'product_recipe_id' => 7,
-            'quantity' => 5,
-            'done' => 0
-        ]);
-
-        ProductionOrderAction::create([
-            'production_order_id' => 1,
-            'user_id' => 1,
-            'action_id' => 2,
-            'description' => 'PRODUTO 1'
         ]);
     }
 }

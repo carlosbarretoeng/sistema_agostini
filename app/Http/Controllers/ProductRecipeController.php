@@ -49,6 +49,7 @@ class ProductRecipeController extends Controller
     function getPartsByProduct(Product $product)
     {
         $productRecipes = ProductRecipe::where('product_id', $product->id)->orderBy('order')->get()->toArray();
+
         $productRecipes = array_map(function ($entry) {
             return [
                 "id" => $entry['id'],
@@ -58,8 +59,8 @@ class ProductRecipeController extends Controller
                 "partId" => $entry['part']['id'],
                 "partName" => $entry['part']['name'],
                 "partAverageProductionTime" => $entry['part']['average_production_time'] ?? null,
-                "machineryId" => $entry['machinery']['id'] ?? null,
-                "machineryName" => $entry['machinery']['name'] ?? null,
+                "machineryId" => $entry['part']['machinery']['id'] ?? null,
+                "machineryName" => $entry['part']['machinery']['name'] ?? null,
                 "quantity" => $entry['quantity'],
             ];
         }, $productRecipes);

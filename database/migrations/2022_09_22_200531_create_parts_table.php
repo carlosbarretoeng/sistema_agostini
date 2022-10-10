@@ -16,7 +16,9 @@ return new class extends Migration
         Schema::create('parts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('company_id')->constrained('companies')->onDelete('cascade');
+            $table->foreignId('machinery_id')->constrained('machineries')->onDelete('cascade');
             $table->string('name');
+            $table->integer('partAverageProductionTime')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

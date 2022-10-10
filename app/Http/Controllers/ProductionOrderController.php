@@ -65,6 +65,24 @@ class ProductionOrderController extends Controller
     }
 
     function createOrShowOrEdit(Request $request, ProductionOrder | null $productionOrder, String $context) {
+        $production_order_products = [];
+
+        if(isset($productionOrder->id)){
+            $production_order_products = ProductionOrderProduct::inCompany(auth()->user())->where('production_order_id', $productionOrder->id)->get()->toArray();
+            usort($production_order_products, function ($a, $b){
+                return strcmp($a['product']['name'], $b['product']['name']);
+            });
+        }
+
+        $production_order_parts = [];
+
+        if(isset($productionOrder->id)){
+            $production_order_parts = ProductionOrderPart::inCompany(auth()->user())->where('production_order_id', $productionOrder->id)->get()->toArray();
+            usort($production_order_parts, function ($a, $b){
+                return strcmp($a['product_recipe']['part']['name'], $b['product_recipe']['part']['name']);
+            });
+        }
+
         $data = [
             'context' => $context,
             'id' => $productionOrder->id ?? null,
@@ -74,12 +92,9 @@ class ProductionOrderController extends Controller
             'status' => $productionOrder->status ?? null,
             'companies' => Company::inCompany(auth()->user())->get(['id','name']),
             'products' => Product::inCompany(auth()->user())->get(['id','name']),
-            'production_order_products' => isset($productionOrder->id) ? ProductionOrderProduct::inCompany(auth()->user())
-                ->where('production_order_id', $productionOrder->id)->get()->toArray() : [],
-            'production_order_parts' => isset($productionOrder->id) ? ProductionOrderPart::inCompany(auth()->user())
-                ->where('production_order_id', $productionOrder->id)->get()->toArray() : [],
-            'production_order_actions' => isset($productionOrder->id) ? ProductionOrderAction::inCompany(auth()->user())
-                ->where('production_order_id', $productionOrder->id)->get()->toArray() : [],
+            'production_order_products' => $production_order_products,
+            'production_order_parts' => $production_order_parts,
+            'production_order_actions' => [],
         ];
 
         return Inertia::render('ProductionOrder/Info', $data);
@@ -92,8 +107,7 @@ class ProductionOrderController extends Controller
                 ->where('production_order_id', $productionOrder->id)->get()->toArray() : [],
             'production_order_parts' => isset($productionOrder->id) ? ProductionOrderPart::inCompany(auth()->user())
                 ->where('production_order_id', $productionOrder->id)->get()->toArray() : [],
-            'production_order_actions' => isset($productionOrder->id) ? ProductionOrderAction::inCompany(auth()->user())
-                ->where('production_order_id', $productionOrder->id)->get()->toArray() : [],
+            'production_order_actions' => [],
         ]);
     }
 }

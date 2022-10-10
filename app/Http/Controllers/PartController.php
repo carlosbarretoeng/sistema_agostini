@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\Machinery;
 use App\Models\Part;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Request;
@@ -35,8 +36,10 @@ class PartController extends Controller
             'context' => $context,
             'id' => $part->id ?? null,
             'company_id' => $part->company_id ?? null,
+            'machinery_id' => $part->machinery_id ?? null,
             'name' => $part->name ?? null,
             'companies' => Company::inCompany(auth()->user())->get(['id','name']),
+            'machineries' => Machinery::inCompany(auth()->user())->get(['id','name']),
         ];
         return Inertia::render('Part/Info', $data);
     }
@@ -44,6 +47,7 @@ class PartController extends Controller
     function store(Request $request) {
         $rules = [
             'company_id' => 'required',
+            'machinery_id' => 'required',
             'name' => 'required'
         ];
 
@@ -57,6 +61,7 @@ class PartController extends Controller
             $part = new Part();
 
             $part->company_id = $attrs['company_id'];
+            $part->machinery_id = $attrs['machinery_id'];
             $part->name = $attrs['name'];
 
             $part->save();
@@ -69,6 +74,7 @@ class PartController extends Controller
         $rules = [
             'id' => 'required',
             'company_id' => 'required',
+            'machinery_id' => 'required',
             'name' => 'required'
         ];
 
@@ -82,6 +88,7 @@ class PartController extends Controller
             $part = Part::find($attrs['id']);
 
             $part->company_id = $attrs['company_id'];
+            $part->machinery_id = $attrs['machinery_id'];
             $part->name = $attrs['name'];
 
             $part->save();
