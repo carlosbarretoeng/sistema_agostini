@@ -1,0 +1,1 @@
+import{_ as o}from"./AppLayout.f70166d9.js";import{g as s,h as a,o as n,d as e}from"./app.775a790a.js";const r=["href"],_=e("span",null,"Departamentos",-1),c=[_],m={__name:"Admin",props:{},setup(i){return(t,p)=>(n(),s(o,{title:"In\xEDcio"},{default:a(()=>[e("li",null,[e("a",{href:t.route("department.index")},c,8,r)])]),_:1}))}};export{m as default};

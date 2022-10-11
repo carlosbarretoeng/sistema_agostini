@@ -1,0 +1,1 @@
+import{_ as e}from"./AppLayout.f70166d9.js";import{g as t,h as o,o as a,j as r}from"./app.775a790a.js";const s=r(" super admin "),m={__name:"SuperAdmin",props:{},setup(_){return(c,n)=>(a(),t(e,{title:"In\xEDcio"},{default:o(()=>[s]),_:1}))}};export{m as default};
