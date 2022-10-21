@@ -8,10 +8,12 @@ use App\Models\ProductionOrder;
 use App\Models\ProductionOrderAction;
 use App\Models\ProductionOrderPart;
 use App\Models\ProductionOrderProduct;
+use App\Models\Times;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
+use function PHPUnit\Framework\isEmpty;
 
 class ProductionOrderController extends Controller
 {
@@ -109,5 +111,88 @@ class ProductionOrderController extends Controller
                 ->where('production_order_id', $productionOrder->id)->get()->toArray() : [],
             'production_order_actions' => [],
         ]);
+    }
+
+    function stop(Request $request, ProductionOrder $productionOrder) {
+        $data = [
+            ...$productionOrder->toArray(),
+            'production_order_parts' => ProductionOrderPart::query()
+                ->join('times', 'times.production_order_part_id', '=', 'production_order_parts.id')
+                ->where('production_order_id', $productionOrder->id)
+                ->whereNull('times.finish')
+                ->get('production_order_parts.*')->toArray()
+            ,
+            'motivos'=> [
+                ['id' => Times::TYPE_BANHEIRO, 'name' => Times::TYPE_BANHEIRO],
+                ['id' => Times::TYPE_ALMOCO, 'name' => Times::TYPE_ALMOCO],
+                ['id' => Times::TYPE_CAFE, 'name' => Times::TYPE_CAFE],
+                ['id' => Times::TYPE_LIMPEZA, 'name' => Times::TYPE_LIMPEZA],
+                ['id' => Times::TYPE_REGULAGEM, 'name' => Times::TYPE_REGULAGEM],
+                ['id' => Times::TYPE_INSUMOS, 'name' => Times::TYPE_INSUMOS]
+            ]
+        ];
+        // dd($data['production_order_parts']);
+        return Inertia::render('ProductionOrder/Stop', $data);
+    }
+
+    function start(Request $request, ProductionOrder $productionOrder) {
+        $data = [
+            ...$productionOrder->toArray(),
+            'production_order_products' => ProductionOrderProduct::inCompany(auth()->user())
+                ->where('production_order_id', $productionOrder->id)->get()->toArray(),
+            'production_order_parts' => ProductionOrderPart::inCompany(auth()->user())
+                ->where('production_order_id', $productionOrder->id)->get()->toArray(),
+        ];
+        return Inertia::render('ProductionOrder/Start', $data);
+    }
+
+    function confirmMachinery(Request $request, ProductionOrder $productionOrder){
+        $qrcodes = [];
+        $production_order_parts = ProductionOrderPart::inCompany(auth()->user())->where('production_order_id', $productionOrder->id)->get()->toArray();
+
+        foreach ($production_order_parts as $production_order_part) {
+            $quantity = $production_order_part['quantity'];
+            $done = $production_order_part['done'];
+            $toProduct = $quantity - $done;
+
+            $product = $production_order_part['product_recipe']['product']['name'];
+            $company = $production_order_part['product_recipe']['product']['company_id'];
+            $department = $production_order_part['product_recipe']['part']['machinery']['department_id'];
+            $machinery = $production_order_part['product_recipe']['part']['machinery']['id'];
+            $part = $production_order_part['product_recipe']['part']['name'];
+
+            $codeString = 'company.' . $company . '.department.' . $department . '.machinery.' . $machinery;
+            $textDescription = $toProduct. 'x '. $part . ' para ' . $product;
+
+            $qrcodes[] = [
+                $codeString,
+                $textDescription,
+                $production_order_part['id']
+            ];
+        }
+
+        $data = [
+            ...$productionOrder->toArray(),
+            'qrcodes' => $qrcodes,
+        ];
+        return Inertia::render('ProductionOrder/ConfirmMachinery', $data);
+    }
+
+    function current(Request $request, ProductionOrder $productionOrder){
+
+
+        $data = [
+            ...$productionOrder->toArray(),
+        ];
+        return Inertia::render('ProductionOrder/Current', $data);
+    }
+
+    public function moveStatus(int $production_order_id, string $newStatus)
+    {
+        $production_order = ProductionOrder::find($production_order_id);
+        if($production_order->status != $newStatus){
+            $production_order->status = $newStatus;
+            $production_order->save();
+        }
     }
 }

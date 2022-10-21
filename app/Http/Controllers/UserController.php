@@ -55,7 +55,7 @@ class UserController extends Controller
 
         $newUser->name = $attrs['name'];
         $newUser->username = $attrs['username'];
-        $newUser->email = $attrs['email'];
+        $newUser->email = $attrs['email'] ?? '-';
         $newUser->password = Hash::make($attrs['password']);
 
         if($attrs['company_id'] &&  $attrs['company_id'] != 'null') $newUser->company_id = $attrs['company_id'];

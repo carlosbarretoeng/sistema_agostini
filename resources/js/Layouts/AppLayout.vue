@@ -10,6 +10,8 @@ defineProps({
 
 const showingNavigationDropdown = ref(false);
 
+const showSubmenu = ref(false);
+
 const switchToTeam = (team) => {
     Inertia.put(route('current-team.update'), {
         team_id: team.id,
@@ -52,19 +54,24 @@ const logout = () => {
                     <div class="flex-1">
                         <a class="font-bold text-3xl uppercase text-base-100">Agostini</a>
                     </div>
-                    <div class="flex-none gap-2">
-                        <div class="dropdown dropdown-end">
-                            <label tabindex="0" class="btn btn-ghost btn-circle avatar">
-                                <div class="w-10 rounded-full">
-                                    <img :src="$page.props.user.profile_photo_url" alt="User Avatar" />
-                                </div>
-                            </label>
-                            <ul tabindex="0"
-                                class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
-                                <li><a @click="logout">Sair</a></li>
-                            </ul>
+<!--                    <div class="flex-none gap-2">-->
+<!--                        <div class="dropdown dropdown-end">-->
+<!--                            <label tabindex="0" class="btn btn-ghost btn-circle avatar">-->
+<!--                                <div class="w-10 rounded-full">-->
+<!--                                    <img :src="$page.props.user.profile_photo_url" alt="User Avatar" />-->
+<!--                                </div>-->
+<!--                            </label>-->
+<!--                            <ul tabindex="0"-->
+<!--                                class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">-->
+<!--                                <li class=""><a @click="logout">Sair</a></li>-->
+<!--                            </ul>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                    <label tabindex="0" class="btn btn-ghost btn-circle avatar" @click="evt => showSubmenu = !showSubmenu">
+                        <div class="w-10 rounded-full">
+                            <img :src="$page.props.user.profile_photo_url" alt="User Avatar" />
                         </div>
-                    </div>
+                    </label>
                 </div>
 
                 <div class="flex overflow-y-auto h-full">
@@ -72,6 +79,13 @@ const logout = () => {
                         <Navigation />
                     </div>
                     <div class="flex-1 sm:pl-56">
+                        <div class="mx-2 mt-2" v-if="showSubmenu">
+                            <ul tabindex="0"
+                                class="p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-full">
+                                <li class=""><a @click="logout">Sair</a></li>
+                            </ul>
+                        </div>
+
                         <header v-if="$slots.header">
                             <div class="flex mx-auto p-4 bg-base-300">
                                 <h1 class="flex-1 py-3 font-semibold text-xl text-gray-800 leading-tight">

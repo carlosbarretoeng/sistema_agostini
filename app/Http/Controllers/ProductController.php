@@ -6,7 +6,9 @@ use App\Models\Company;
 use App\Models\Machinery;
 use App\Models\Part;
 use App\Models\Product;
+use App\Models\TimesPerProduct;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
@@ -38,10 +40,21 @@ class ProductController extends Controller
             'id' => $product->id ?? null,
             'company_id' => $product->company_id ?? null,
             'name' => $product->name ?? null,
+            'productAverageProductionTime' => $product->productAverageProductionTime ?? null,
             'productRecipe' => $product !== null ? (new ProductRecipeController())->getPartsByProduct($product) : [],
             'companies' => Company::inCompany(auth()->user())->get(['id','name']),
             'machineries' => Machinery::inCompany(auth()->user())->get(['id','name']),
             'parts' => Part::inCompany(auth()->user())->get(['id','name']),
+            'times_per_products' => array_map(function($el){
+                return [
+                    "datetime" => $el['created_at'],
+                    "value" => $el['productAverageProductionTime']
+                ];
+            },
+                TimesPerProduct::query()
+                    ->where('product_id', $product->id)
+                    ->where('created_at', '>', Carbon::today()->subDays(365))
+                    ->get(['created_at', 'productAverageProductionTime'])->toArray())
         ];
         return Inertia::render('Product/Info', $data);
     }

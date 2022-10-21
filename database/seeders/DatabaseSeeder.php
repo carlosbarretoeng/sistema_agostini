@@ -2,20 +2,22 @@
 
 namespace Database\Seeders;
 
-use App\Models\Action;
+use App\Http\Controllers\TimesPerPartController;
+use App\Http\Controllers\TimesPerProductController;
 use App\Models\Company;
 use App\Models\Department;
 use App\Models\Machinery;
 use App\Models\Part;
 use App\Models\Product;
 use App\Models\ProductionOrder;
-use App\Models\ProductionOrderAction;
 use App\Models\ProductionOrderPart;
 use App\Models\ProductionOrderProduct;
 use App\Models\ProductRecipe;
+use App\Models\TimesPerPart;
+use App\Models\TimesPerProduct;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -75,7 +77,7 @@ class DatabaseSeeder extends Seeder
             $product_create, $product_read, $product_update, $product_delete,
             $production_order_create, $production_order_read, $production_order_update, $production_order_delete,
 
-            $app_times, $app_budget, $app_selles, $app_ships, $app_courses
+            $app_times
         ]);
 
         $admin->syncPermissions([
@@ -86,24 +88,36 @@ class DatabaseSeeder extends Seeder
             $product_create, $product_read, $product_update, $product_delete,
             $production_order_create, $production_order_read, $production_order_update, $production_order_delete,
 
-            $app_times, $app_budget, $app_selles, $app_ships, $app_courses
+            $app_times
         ]);
 
         $colaborator->syncPermissions([
             $app_times
         ]);
 
-        User::factory()->create(['name' => 'Carlos Barreto', 'username' => 'carlosbarretoeng', 'email' => 'carlosbarreto.eng@gmail.com', 'password' => Hash::make('C@rlos0303')])->assignRole('super-admin');
-
-//        Action::create(['name' => 'ORDER_CREATED_DRAFT', 'description' => 'Ordem criada em Rascunho']);
-//        Action::create(['name' => 'ORDER_PRODUCT_ADDED', 'description' => 'Produto adicionado à ordem']);
+        User::factory()->create([
+            'name' => 'Carlos Barreto',
+            'username' => 'caju',
+            'email' => 'carlosbarreto.eng@gmail.com',
+            'password' => Hash::make('caju')
+        ])->assignRole('super-admin');
 
         // COMMENTAR DAQUI PRA BAIXO -----------------------------------------------------------------------------------
 
         Company::create(['name' => 'Agostini Tecnologia']);
 
-        User::factory()->create(['company_id' => 1, 'name' => 'Administrator', 'username' => 'admin', 'email' => 'admin@gmail.com', 'password' => Hash::make('C@rlos0303')])->assignRole('admin');
-        User::factory()->create(['company_id' => 1, 'name' => 'Colaborator', 'username' => 'colab', 'email' => 'colab@gmail.com', 'password' => Hash::make('C@rlos0303')])->assignRole('colaborator');
+        User::factory()->create([
+            'company_id' => 1,
+            'name' => 'Administrator',
+            'username' => 'admin',
+            'email' => 'admin@admin.com',
+            'password' => Hash::make('admin')])->assignRole('admin');
+        User::factory()->create([
+            'company_id' => 1,
+            'name' => 'Colaborator',
+            'username' => 'colab',
+            'email' => 'colab@colab.com',
+            'password' => Hash::make('colab')])->assignRole('colaborator');
 
         Department::create(['company_id' => 1, 'name' => 'Corte de Espuma']);
         Department::create(['company_id' => 1, 'name' => 'Corte de Tecido']);
@@ -131,14 +145,22 @@ class DatabaseSeeder extends Seeder
         Machinery::create(['department_id' => 7, 'name' => 'Coladeira 1']);
 
         Product::create(['company_id' => 1, 'name' => 'Sofá de Testes']);
+        Product::create(['company_id' => 1, 'name' => 'Poltrona de Testes']);
 
-        Part::create(['company_id' => 1, 'machinery_id' => 1, 'name' => 'Pés de sofá padrão']);
+        Part::create(['company_id' => 1, 'machinery_id' => 1, 'name' => 'Pés padrão']);
         Part::create(['company_id' => 1, 'machinery_id' => 2, 'name' => 'Estrutura de braços esquerdo de sofá padrão']);
         Part::create(['company_id' => 1, 'machinery_id' => 3, 'name' => 'Estrutura de braços direito de sofá padrão']);
         Part::create(['company_id' => 1, 'machinery_id' => 4, 'name' => 'Estrutura de acentos de sofá padrão']);
         Part::create(['company_id' => 1, 'machinery_id' => 5, 'name' => 'Estrutura de encostos de sofá padrão']);
         Part::create(['company_id' => 1, 'machinery_id' => 4, 'name' => 'Espumas de braço esquerdo de sofá padrão']);
         Part::create(['company_id' => 1, 'machinery_id' => 3, 'name' => 'Espumas de braço direito de sofá padrão']);
+
+        Part::create(['company_id' => 1, 'machinery_id' => 2, 'name' => 'Estrutura de braços esquerdo de poltrona padrão']);
+        Part::create(['company_id' => 1, 'machinery_id' => 3, 'name' => 'Estrutura de braços direito de poltrona padrão']);
+        Part::create(['company_id' => 1, 'machinery_id' => 4, 'name' => 'Estrutura de acentos de poltrona padrão']);
+        Part::create(['company_id' => 1, 'machinery_id' => 5, 'name' => 'Estrutura de encostos de poltrona padrão']);
+        Part::create(['company_id' => 1, 'machinery_id' => 4, 'name' => 'Espumas de braço esquerdo de poltrona padrão']);
+        Part::create(['company_id' => 1, 'machinery_id' => 3, 'name' => 'Espumas de braço direito de poltrona padrão']);
 
         ProductRecipe::create(['product_id' => 1, 'part_id' => 1, 'order' => 1, 'quantity' => 4]);
         ProductRecipe::create(['product_id' => 1, 'part_id' => 2, 'order' => 2, 'quantity' => 1]);
@@ -148,12 +170,146 @@ class DatabaseSeeder extends Seeder
         ProductRecipe::create(['product_id' => 1, 'part_id' => 6, 'order' => 6, 'quantity' => 1]);
         ProductRecipe::create(['product_id' => 1, 'part_id' => 7, 'order' => 7, 'quantity' => 1]);
 
+        ProductRecipe::create(['product_id' => 2, 'part_id' => 1, 'order' => 1, 'quantity' => 4]);
+        ProductRecipe::create(['product_id' => 2, 'part_id' => 8, 'order' => 2, 'quantity' => 1]);
+        ProductRecipe::create(['product_id' => 2, 'part_id' => 9, 'order' => 3, 'quantity' => 1]);
+        ProductRecipe::create(['product_id' => 2, 'part_id' => 10, 'order' => 4, 'quantity' => 2]);
+        ProductRecipe::create(['product_id' => 2, 'part_id' => 11, 'order' => 5, 'quantity' => 2]);
+        ProductRecipe::create(['product_id' => 2, 'part_id' => 12, 'order' => 6, 'quantity' => 1]);
+        ProductRecipe::create(['product_id' => 2, 'part_id' => 13, 'order' => 7, 'quantity' => 1]);
+
         ProductionOrder::create([
             'company_id' => 1,
             'progress' => 0,
-            'status' => 'draft',
-            'date_start' => '2022-10-01',
-            'date_finish' => '2022-10-01',
+            'status' => 'waiting',
+            'date_start' => Carbon::yesterday()->toDate(),
+            'date_finish' => Carbon::tomorrow()->toDate(),
         ]);
+
+        ProductionOrderProduct::create([
+            'production_order_id' => 1,
+            'product_id' => 1,
+            'quantity' => 15
+        ]);
+
+        ProductionOrderProduct::create([
+            'production_order_id' => 1,
+            'product_id' => 2,
+            'quantity' => 5
+        ]);
+
+        ProductionOrderPart::create([
+            'production_order_id' => 1,
+            'production_order_product_id' => 1,
+            'product_recipe_id' => 1,
+            'quantity' => 60,
+            'done' => 0
+        ]);
+
+//        ProductionOrderPart::create([
+//            'production_order_id' => 1,
+//            'production_order_product_id' => 1,
+//            'product_recipe_id' => 2,
+//            'quantity' => 15,
+//            'done' => 0
+//        ]);
+//
+//        ProductionOrderPart::create([
+//            'production_order_id' => 1,
+//            'production_order_product_id' => 1,
+//            'product_recipe_id' => 3,
+//            'quantity' => 15,
+//            'done' => 0
+//        ]);
+//
+//        ProductionOrderPart::create([
+//            'production_order_id' => 1,
+//            'production_order_product_id' => 1,
+//            'product_recipe_id' => 4,
+//            'quantity' => 30,
+//            'done' => 0
+//        ]);
+//
+//        ProductionOrderPart::create([
+//            'production_order_id' => 1,
+//            'production_order_product_id' => 1,
+//            'product_recipe_id' => 5,
+//            'quantity' => 30,
+//            'done' => 0
+//        ]);
+//
+//        ProductionOrderPart::create([
+//            'production_order_id' => 1,
+//            'production_order_product_id' => 1,
+//            'product_recipe_id' => 6,
+//            'quantity' => 15,
+//            'done' => 0
+//        ]);
+//
+//        ProductionOrderPart::create([
+//            'production_order_id' => 1,
+//            'production_order_product_id' => 1,
+//            'product_recipe_id' => 7,
+//            'quantity' => 15,
+//            'done' => 0
+//        ]);
+
+        ProductionOrderPart::create([
+            'production_order_id' => 1,
+            'production_order_product_id' => 2,
+            'product_recipe_id' => 8,
+            'quantity' => 20,
+            'done' => 0
+        ]);
+
+//        ProductionOrderPart::create([
+//            'production_order_id' => 1,
+//            'production_order_product_id' => 2,
+//            'product_recipe_id' => 9,
+//            'quantity' => 5,
+//            'done' => 0
+//        ]);
+//
+//        ProductionOrderPart::create([
+//            'production_order_id' => 1,
+//            'production_order_product_id' => 2,
+//            'product_recipe_id' => 10,
+//            'quantity' => 5,
+//            'done' => 0
+//        ]);
+//
+//        ProductionOrderPart::create([
+//            'production_order_id' => 1,
+//            'production_order_product_id' => 2,
+//            'product_recipe_id' => 11,
+//            'quantity' => 10,
+//            'done' => 0
+//        ]);
+//
+//        ProductionOrderPart::create([
+//            'production_order_id' => 1,
+//            'production_order_product_id' => 2,
+//            'product_recipe_id' => 12,
+//            'quantity' => 10,
+//            'done' => 0
+//        ]);
+//
+//        ProductionOrderPart::create([
+//            'production_order_id' => 1,
+//            'production_order_product_id' => 2,
+//            'product_recipe_id' => 13,
+//            'quantity' => 5,
+//            'done' => 0
+//        ]);
+//
+//        ProductionOrderPart::create([
+//            'production_order_id' => 1,
+//            'production_order_product_id' => 2,
+//            'product_recipe_id' => 14,
+//            'quantity' => 5,
+//            'done' => 0
+//        ]);
+
+        /**/
     }
 }

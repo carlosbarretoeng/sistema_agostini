@@ -1,1 +1,0 @@
-import{_ as o}from"./AppLayout.f70166d9.js";import{g as t,h as a,o as e,j as r}from"./app.775a790a.js";const s=r(" colaborator "),l={__name:"Colaborator",props:{},setup(_){return(c,n)=>(e(),t(o,{title:"In\xEDcio"},{default:a(()=>[s]),_:1}))}};export{l as default};

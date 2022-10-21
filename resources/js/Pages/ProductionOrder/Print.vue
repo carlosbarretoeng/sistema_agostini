@@ -1,4 +1,5 @@
 <script setup>
+import _ from 'lodash';
 import TimeUtil from "@/../util/time.util";
 import VueQrcode from '@chenfengyuan/vue-qrcode';
 import InputText from "@/Components/InputText.vue";
@@ -19,32 +20,65 @@ const props = defineProps({
 const date_start_formated = TimeUtil.toFormatedString( props.date_start, "DD/MM/YYYY" );
 const date_finish_formated = TimeUtil.toFormatedString( props.date_finish, "DD/MM/YYYY" );
 
-const estacoesDeTrabalho = props.production_order_parts.reduce((older, newer) => {
-    let department = newer.product_recipe.part.machinery.department.name;
-    let machinery = newer.product_recipe.part.machinery.name;
-    let part = newer.product_recipe.part.name;
+const workStations = props.production_order_parts.reduce((older, newer) => {
+    let departmentName = newer.product_recipe.part.machinery.department.name;
+    let machineryName = newer.product_recipe.part.machinery.name;
+    let partName = newer.product_recipe.part.name;
 
-    if(Object.keys(older).indexOf(department) < 0){
-        older[department] = {}
+    let companyId = newer.product_recipe.product.company_id;
+    let departmentId = newer.product_recipe.part.machinery.department.id;
+    let machineryId = newer.product_recipe.part.machinery.id;
+    let partId = newer.product_recipe.part.id;
+
+    let departmentPos = 0;
+    let machineryPos = 0;
+    let partPos = 0;
+
+    if(!older.filter(el => el.departmentId === departmentId).length){
+        older.push({
+            departmentId,
+            departmentName,
+            machineries: []
+        })
     }
 
-    if(Object.keys(older[department]).indexOf(machinery) < 0){
-        older[department][machinery] = {}
-    }
+    older.forEach(el => {
+        if(el.departmentId === departmentId){
+            if(!el.machineries.filter(ell => ell.machineryId === machineryId).length){
+                el.machineries.push({
+                    machineryId,
+                    machineryName,
+                    machineryQrcode: 'company.' + companyId + '.department.' + departmentId + '.machinery.' + machineryId,
+                    parts: []
+                })
+            }
 
-    if(Object.keys(older[department][machinery]).indexOf(part) < 0){
-        older[department][machinery][part] = {
-            quantity: 0,
-            done: 0
+            el.machineries.forEach(ell => {
+                if(ell.machineryId === machineryId){
+                    if(!ell.parts.filter(elll => elll.partId === partId).length){
+                        ell.parts.push({
+                            partId,
+                            partName,
+                            partQrcode: 'company.' + companyId + '.department.' + departmentId + '.machinery.' + machineryId + '.part.' + partId,
+                            quantity: 0,
+                            done: 0
+                        })
+                    }
+                }
+            })
         }
-    }
+    })
 
-    older[department][machinery][part]['quantity'] += newer.quantity
-    older[department][machinery][part]['done'] += newer.done
+    departmentPos = _.findIndex(older, el => el.departmentId === departmentId)
+    machineryPos = _.findIndex(older[departmentPos].machineries, el => el.machineryId === machineryId)
+    partPos = _.findIndex(older[departmentPos].machineries[machineryPos].parts, el => el.partId === partId)
+
+    older[departmentPos].machineries[machineryPos].parts[partPos].quantity += newer.quantity;
+    older[departmentPos].machineries[machineryPos].parts[partPos].done += newer.done;
 
     console.log(older)
     return older
-}, {})
+}, [])
 
 </script>
 
@@ -63,28 +97,6 @@ const estacoesDeTrabalho = props.production_order_parts.reduce((older, newer) =>
                 </thead>
                 <tbody class="report-content">
                 <tr>
-                    <td class="report-content-cell">
-                        <div class="grid grid-cols-5 gap-2 px-2 mb-2">
-                            <div>
-                                <InputText label="Identificador" v-model="id" disabled/>
-                            </div>
-                            <div>
-                                <InputText label="Data de Início" v-model="date_start_formated" disabled/>
-                            </div>
-                            <div>
-                                <InputText label="Data de Início" v-model="date_finish_formated" disabled/>
-                            </div>
-                            <div>
-                                <InputText label="Status" v-model="status" disabled/>
-                            </div>
-                            <div>
-                                <InputText label="Progresso" v-model="progress" disabled/>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-
-                <tr>
                     <td class="px-2 report-content-cell">
                         <div class="grid grid-cols-7 gap-2 bg-base-300 rounded-t-md">
                             <div class="col-span-6 p-2 font-semibold">
@@ -99,10 +111,10 @@ const estacoesDeTrabalho = props.production_order_parts.reduce((older, newer) =>
                 <tr v-for="(product) in production_order_products" :key="product.id">
                     <td class="px-2 report-content-cell">
                         <div class="grid grid-cols-7 border-base-300">
-                            <div class="col-span-6 p-2">
+                            <div class="col-span-6 p-2 text-sm">
                                 {{product.product.name}}
                             </div>
-                            <div class="p-2 text-center">
+                            <div class="p-2 text-center text-sm">
                                 {{product.quantity}}
                             </div>
                         </div>
@@ -117,8 +129,11 @@ const estacoesDeTrabalho = props.production_order_parts.reduce((older, newer) =>
                 <tr>
                     <td class="px-2 report-content-cell">
                         <div class="grid grid-cols-7 gap-2 bg-base-300 rounded-t-md">
-                            <div class="col-span-5 p-2 font-semibold">
+                            <div class="col-span-3 p-2 font-semibold">
                                 Etapa de Trabalho
+                            </div>
+                            <div class="col-span-2 p-2 font-semibold text-center">
+                                Produto
                             </div>
                             <div class="p-2 font-semibold text-center">
                                 Quantidade
@@ -132,8 +147,11 @@ const estacoesDeTrabalho = props.production_order_parts.reduce((older, newer) =>
                 <tr v-for="(part) in production_order_parts" :key="part.id">
                     <td class="px-2 report-content-cell">
                         <div class="grid grid-cols-7 gap-2">
-                            <div class="col-span-5 p-2">
+                            <div class="col-span-3 p-2 text-sm">
                                 {{part.product_recipe?.part.name}}
+                            </div>
+                            <div class="col-span-2 p-2 text-sm text-center">
+                                {{part.product_recipe?.product.name}}
                             </div>
                             <div class="p-2 text-center">
                                 {{part.quantity}}
@@ -163,8 +181,8 @@ const estacoesDeTrabalho = props.production_order_parts.reduce((older, newer) =>
             </table>
         </div>
 
-        <template v-for="(estacaoDeTrabalho, departamento, indice) in estacoesDeTrabalho" :key="indice">
-            <template v-for="(partDeOrdem, estDeTrabalho, indice2) in estacaoDeTrabalho" :key="indice2">
+        <template v-for="(workStation, idx) in workStations" :key="idx">
+            <template v-for="(machinery, idxx) in workStation.machineries" :key="idxx">
                 <div class="w-[21cm] bg-white mt-2">
                     <table class="report-container w-full">
                         <thead class="report-header">
@@ -181,50 +199,41 @@ const estacoesDeTrabalho = props.production_order_parts.reduce((older, newer) =>
                             <td class="report-content-cell px-2">
                                 <div class="main">
                                     <div class="">
-                                        <div class="flex gap-2 bg-base-300 rounded-t-md">
+                                        <div class="flex gap-2 bg-base-300 rounded-md">
                                             <div class="flex-none p-2">
-                                                <vue-qrcode :value="'company.' + company.id + '.production_order.' + id" :options="{ width: 50 }"></vue-qrcode>
+                                                <vue-qrcode  :value="machinery.machineryQrcode" :options="{ width: 100 }"></vue-qrcode>
                                             </div>
-                                            <div class="flex grow items-center font-semibold">
-                                                {{ departamento }} - {{ estDeTrabalho }}
+                                            <div class="flex flex-col grow justify-center items-left font-semibold">
+                                                <div class="py-4 border-b-4 border-base-200">{{ workStation.departmentName }} - {{ machinery.machineryName }}</div>
+                                                <div class="grid grid-cols-7 gap-2 bg-base-300">
+                                                    <div class="col-span-5 p-2 font-semibold">
+                                                        Etapa de Trabalho
+                                                    </div>
+                                                    <div class="p-2 font-semibold text-center">
+                                                        Quantidade
+                                                    </div>
+                                                    <div class="p-2 font-semibold text-center">
+                                                        Realizado
+                                                    </div>
+                                                </div>
+                                                <div v-for="(part, idxxx) in machinery.parts" :key="idxxx" class="font-normal">
+                                                    <div class="report-content-cell">
+                                                        <div class="main">
+                                                            <div class="grid grid-cols-7 gap-2">
+                                                                <div class="col-span-5 p-2">
+                                                                    {{ part.partName }}
+                                                                </div>
+                                                                <div class="p-2 text-center">
+                                                                    {{ part.quantity }}
+                                                                </div>
+                                                                <div class="p-2 text-center">
+                                                                    {{ part.done }}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="report-content-cell px-2">
-                                <div class="main">
-                                    <div class="grid grid-cols-7 gap-2 bg-base-300">
-                                        <div class="col-span-5 p-2 font-semibold">
-                                            Etapa de Trabalho
-                                        </div>
-                                        <div class="p-2 font-semibold text-center">
-                                            Quantidade
-                                        </div>
-                                        <div class="p-2 font-semibold text-center">
-                                            Realizado
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr v-for="(data, part, indice3) in partDeOrdem" :key="indice3">
-                            <td class="report-content-cell px-2">
-                                <div class="main">
-                                    <div class="grid grid-cols-7 gap-2">
-                                        <div class="p-2">
-                                            <vue-qrcode :value="'company.' + company.id + '.production_order.' + id" :options="{ width: 50 }"></vue-qrcode>
-                                        </div>
-                                        <div class="col-span-4 leading-[50px] p-2">
-                                            {{ part }}
-                                        </div>
-                                        <div class="p-2 leading-[50px] text-center">
-                                            {{ data.quantity }}
-                                        </div>
-                                        <div class="p-2 leading-[50px] text-center">
-                                            {{ data.done }}
                                         </div>
                                     </div>
                                 </div>

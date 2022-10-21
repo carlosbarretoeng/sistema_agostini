@@ -10,8 +10,8 @@ defineProps({
 let errorMessage = ref(null);
 
 const form = useForm({
-    identify: 'carlosbarreto.eng@gmail.com',
-    password: 'C@rlos0303'
+    identify: '',
+    password: ''
 });
 
 const submit = () => {

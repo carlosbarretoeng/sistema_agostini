@@ -58,7 +58,7 @@ class ProductRecipeController extends Controller
                 "productName" => $entry['product']['name'],
                 "partId" => $entry['part']['id'],
                 "partName" => $entry['part']['name'],
-                "partAverageProductionTime" => $entry['part']['average_production_time'] ?? null,
+                "partAverageProductionTime" => $entry['part']['partAverageProductionTime'] ?? null,
                 "machineryId" => $entry['part']['machinery']['id'] ?? null,
                 "machineryName" => $entry['part']['machinery']['name'] ?? null,
                 "quantity" => $entry['quantity'],

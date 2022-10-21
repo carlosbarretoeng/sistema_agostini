@@ -4,6 +4,7 @@ import { useForm } from '@inertiajs/inertia-vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import InputText from '@/Components/InputText.vue';
 import InputSelect from "@/Components/InputSelect.vue";
+import ChartLineTimeSerie from "@/Components/ChartLineTimeSerie.vue";
 import AuthUtil from '@/../util/auth.util'
 import TextUtil from '@/../util/text.util'
 import TimeUtil from "@/../util/time.util";
@@ -13,11 +14,15 @@ const props = defineProps({
     id: Number,
     company_id: Number | null,
     name: String,
+    productAverageProductionTime: Number | null,
     productRecipe: Array,
     companies: Array,
     machineries: Array,
     parts: Array,
+    times_per_products: Array,
 })
+
+const productAverageProductionTimeFormated = TimeUtil.secondsToTimestamp(props.productAverageProductionTime)
 
 const isCreateContext = props.context === 'create'
 const isShowContext = props.context === 'show'
@@ -129,6 +134,7 @@ const addProductRecipeItem = () => {
         <div class="grid sm:grid-cols-4 gap-2">
             <InputSelect label="Empresa" :options="companies" v-model="form.company_id" :disabled="isShowContext" />
             <InputText label="Nome" v-model="form.name" :disabled="isShowContext" />
+            <InputText label="Tempo Médio de Produção" v-model="productAverageProductionTimeFormated" disabled/>
         </div>
 
         <div class="divider">Etapa de Produto</div>
@@ -174,7 +180,7 @@ const addProductRecipeItem = () => {
                             </div>
                             <div class="grid grid-cols-2 font-light">
                                 <div class="font-semibold">Tempo Médio:</div>
-                                <div class="text-right">{{ productRecipeItem['partAverageProductionTime'] ?? '---' }}</div>
+                                <div class="text-right">{{ TimeUtil.secondsToTimestamp(productRecipeItem['partAverageProductionTime']) ?? '---' }}</div>
                             </div>
                         </div>
                     </div>
@@ -193,5 +199,10 @@ const addProductRecipeItem = () => {
                 </div>
             </template>
         </div>
+
+        <div>
+            <ChartLineTimeSerie label="Tempo médio YTD" :chartData="times_per_products"/>
+        </div>
+
     </AppLayout>
 </template>

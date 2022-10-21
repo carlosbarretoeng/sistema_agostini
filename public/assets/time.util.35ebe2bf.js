@@ -1,1 +1,0 @@
-import{h as r}from"./pt-br.b727be27.js";const s={secondsToTimestamp(t){let Y=new Date(null);return Y.setSeconds(t),Y.toISOString().substr(11,8)},toFormatedString(t,Y="DD/MM/YYYY HH:mm:ss"){return r.locale("pt-br"),r(t).format(Y)},YYYYMMDDtoDDMMYYYY(t){return r(t,"YYYY-MM-DD").format("DDMMYYYY")}};export{s as T};

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Models\Machinery;
 use App\Models\Part;
+use App\Models\TimesPerPart;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -38,8 +40,19 @@ class PartController extends Controller
             'company_id' => $part->company_id ?? null,
             'machinery_id' => $part->machinery_id ?? null,
             'name' => $part->name ?? null,
+            'partAverageProductionTime' => $part->partAverageProductionTime ?? null,
             'companies' => Company::inCompany(auth()->user())->get(['id','name']),
             'machineries' => Machinery::inCompany(auth()->user())->get(['id','name']),
+            'times_per_parts' => array_map(function($el){
+                return [
+                    "datetime" => $el['created_at'],
+                    "value" => $el['partAverageProductionTime']
+                ];
+            },
+                TimesPerPart::query()
+                    ->where('part_id', $part->id)
+                    ->where('created_at', '>', Carbon::today()->subDays(365))
+                    ->get(['created_at', 'partAverageProductionTime'])->toArray())
         ];
         return Inertia::render('Part/Info', $data);
     }

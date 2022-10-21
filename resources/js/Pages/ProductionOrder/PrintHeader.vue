@@ -15,7 +15,7 @@ const date_finish_formated = TimeUtil.toFormatedString( props.date_finish, "DD/M
 </script>
 
 <template>
-    <div class="flex gap-2 pb-2 border-b-2 border-black w-full">
+    <div class="flex gap-2 pb-8 w-full">
         <div class="flex-none">
             <vue-qrcode :value="'company.' + company.id + '.production_order.' + id" :options="{ width: 100 }"></vue-qrcode>
         </div>

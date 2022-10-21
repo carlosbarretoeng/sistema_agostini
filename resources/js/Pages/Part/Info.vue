@@ -4,6 +4,8 @@ import { useForm } from '@inertiajs/inertia-vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import InputText from '@/Components/InputText.vue';
 import InputSelect from "@/Components/InputSelect.vue";
+import TimeUtil from "@/../util/time.util";
+import ChartLineTimeSerie from "@/Components/ChartLineTimeSerie.vue";
 
 const props = defineProps({
     context: String,
@@ -11,13 +13,17 @@ const props = defineProps({
     company_id: Number | null,
     machinery_id: Number | null,
     name: String,
+    partAverageProductionTime: Number | null,
     companies: Array,
     machineries: Array,
+    times_per_parts: Array,
 })
 
 const isCreateContext = props.context === 'create'
 const isShowContext = props.context === 'show'
 const isEditContext = props.context === 'edit'
+
+const partAverageProductionTimeFormated = TimeUtil.secondsToTimestamp(props.partAverageProductionTime)
 
 const form = useForm({
     id: props.id ?? null,
@@ -92,6 +98,11 @@ const updatePart = () => {
             <InputSelect label="Empresa" :options="companies" v-model="form.company_id" :disabled="isShowContext" />
             <InputSelect label="Estação de Trabalho" :options="machineries" v-model="form.machinery_id" :disabled="isShowContext" />
             <InputText label="Nome" v-model="form.name" :disabled="isShowContext" />
+            <InputText label="Tempo Médio de Produção" v-model="partAverageProductionTimeFormated" disabled/>
+        </div>
+
+        <div>
+            <ChartLineTimeSerie label="Tempo médio YTD" :chartData="times_per_parts"/>
         </div>
     </AppLayout>
 </template>
