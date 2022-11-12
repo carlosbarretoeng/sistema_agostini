@@ -13,6 +13,9 @@ class ProductRecipeController extends Controller
     function destroy(Request | null $request, ProductRecipe $productRecipe){
         $product_id = $productRecipe->product_id;
         $productRecipe->delete();
+
+        (new ProductionOrderProductController())->refillProductionOrderPartsByProductRecipe($productRecipe);
+
         return Redirect::route('product.show', $product_id);
     }
 
@@ -24,8 +27,6 @@ class ProductRecipeController extends Controller
 
         $productRecipe->product_id = $attrs['product_id'];
         $productRecipe->part_id = $attrs['part_id'];
-        // if($attrs['machinery_id'] !== "-")
-            // $productRecipe->machinery_id = $attrs['machinery_id'];
         $productRecipe->quantity = $attrs['quantity'];
         $productRecipe->order = $attrs['order'];
 

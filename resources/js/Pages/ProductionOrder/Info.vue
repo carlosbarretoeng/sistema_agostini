@@ -163,7 +163,7 @@ const consoleLog = (data) => {
                                 <h3 class="font-bold text-lg">Adicionar Produto</h3>
                                 <div>
                                     <InputSelect label="Produto" :options="products" v-model="formNewProduct.product_id" />
-                                    <InputText label="Quantidade" v-model="formNewProduct.quantity" mask="##"/>
+                                    <InputText label="Quantidade" v-model="formNewProduct.quantity" mask="#######"/>
                                 </div>
                                 <div class="modal-action">
                                     <a href="#" class="btn">Cancelar</a>

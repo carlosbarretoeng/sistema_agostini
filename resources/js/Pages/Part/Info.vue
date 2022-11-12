@@ -98,10 +98,10 @@ const updatePart = () => {
             <InputSelect label="Empresa" :options="companies" v-model="form.company_id" :disabled="isShowContext" />
             <InputSelect label="Estação de Trabalho" :options="machineries" v-model="form.machinery_id" :disabled="isShowContext" />
             <InputText label="Nome" v-model="form.name" :disabled="isShowContext" />
-            <InputText label="Tempo Médio de Produção" v-model="partAverageProductionTimeFormated" disabled/>
+            <InputText v-if="isShowContext" label="Tempo Médio de Produção" v-model="partAverageProductionTimeFormated" disabled/>
         </div>
 
-        <div>
+        <div v-if="isShowContext">
             <ChartLineTimeSerie label="Tempo médio YTD" :chartData="times_per_parts"/>
         </div>
     </AppLayout>

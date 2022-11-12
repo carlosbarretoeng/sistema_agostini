@@ -75,15 +75,19 @@ const workStations = props.production_order_parts.reduce((older, newer) => {
 
     older[departmentPos].machineries[machineryPos].parts[partPos].quantity += newer.quantity;
     older[departmentPos].machineries[machineryPos].parts[partPos].done += newer.done;
-
-    console.log(older)
     return older
 }, [])
+
+const printPage = () => {
+    let w=window.print();
+    console.log(w)
+}
 
 </script>
 
 <template>
     <div class="bodyToPrint">
+        <button @click="printPage()" class="btn btn-block print:hidden">Clique aqui para imprimir</button>
         <div class="w-[21cm] bg-white">
             <table class="report-container w-full">
                 <thead class="report-header">

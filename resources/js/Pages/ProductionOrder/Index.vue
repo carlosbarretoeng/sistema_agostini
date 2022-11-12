@@ -8,7 +8,7 @@ const props = defineProps({
     production_orders: Array
 })
 
-const tabActive = ref('in_production')
+const tabActive = ref('draft')
 
 </script>
 
@@ -24,9 +24,9 @@ const tabActive = ref('in_production')
             </a>
         </template>
         <div class="grid grid-cols-5 mb-2 tabs">
-            <a class="tab tab-bordered tab-xs h-12 sm:h-8" :class="{'tab-active': tabActive === 'in_production'}" @click="() => tabActive = 'in_production'">Em Produção</a>
             <a class="tab tab-bordered tab-xs h-12 sm:h-8" :class="{'tab-active': tabActive === 'draft'}" @click="() => tabActive = 'draft'">Rascunho</a>
             <a class="tab tab-bordered tab-xs h-12 sm:h-8" :class="{'tab-active': tabActive === 'waiting'}" @click="() => tabActive = 'waiting'">Prontos para Produção</a>
+            <a class="tab tab-bordered tab-xs h-12 sm:h-8" :class="{'tab-active': tabActive === 'in_production'}" @click="() => tabActive = 'in_production'">Em Produção</a>
             <a class="tab tab-bordered tab-xs h-12 sm:h-8" :class="{'tab-active': tabActive === 'done'}" @click="() => tabActive = 'done'">Finalizados</a>
             <a class="tab tab-bordered tab-xs h-12 sm:h-8" :class="{'tab-active': tabActive === 'canceled'}" @click="() => tabActive = 'canceled'">Cancelados</a>
         </div>

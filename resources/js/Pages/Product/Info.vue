@@ -134,22 +134,22 @@ const addProductRecipeItem = () => {
         <div class="grid sm:grid-cols-4 gap-2">
             <InputSelect label="Empresa" :options="companies" v-model="form.company_id" :disabled="isShowContext" />
             <InputText label="Nome" v-model="form.name" :disabled="isShowContext" />
-            <InputText label="Tempo Médio de Produção" v-model="productAverageProductionTimeFormated" disabled/>
+            <InputText v-if="isShowContext" label="Tempo Médio de Produção" v-model="productAverageProductionTimeFormated" disabled/>
         </div>
 
-        <div class="divider">Etapa de Produto</div>
+        <div class="divider" v-if="productRecipe.length">Etapa de Produto</div>
 
-        <div v-if="isEditContext" class="grid sm:grid-cols-4 gap-2 mb-2">
+        <div v-if="isEditContext" class="grid sm:grid-cols-4 gap-2 my-2">
             <a href="#addProductModal" class="btn w-full sm:col-span-4 gap-2">
                 <font-awesome-icon icon="fa-solid fa-add" size="lg" />
-                <span class="hidden sm:inline-block">Adicionar Produto</span>
+                <span class="hidden sm:inline-block">Adicionar Etapa de Produto</span>
             </a>
             <div class="modal" id="addProductModal">
                 <div class="modal-box">
                     <h3 class="font-bold text-lg">Adicionar Etapa de Produto</h3>
                     <div>
                         <InputSelect label="Etapa" :options="parts"  v-model="formRecipe.part_id"/>
-                        <InputText label="Quantidade" mask="##" v-model="formRecipe.quantity"/>
+                        <InputText label="Quantidade" mask="#######" v-model="formRecipe.quantity"/> d
                     </div>
                     <div class="modal-action">
                         <a href="#" class="btn">Cancelar</a>
@@ -200,7 +200,7 @@ const addProductRecipeItem = () => {
             </template>
         </div>
 
-        <div>
+        <div v-if="isShowContext">
             <ChartLineTimeSerie label="Tempo médio YTD" :chartData="times_per_products"/>
         </div>
 

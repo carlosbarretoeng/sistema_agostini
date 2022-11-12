@@ -45,7 +45,7 @@ class ProductController extends Controller
             'companies' => Company::inCompany(auth()->user())->get(['id','name']),
             'machineries' => Machinery::inCompany(auth()->user())->get(['id','name']),
             'parts' => Part::inCompany(auth()->user())->get(['id','name']),
-            'times_per_products' => array_map(function($el){
+            'times_per_products' => $product ? array_map(function($el){
                 return [
                     "datetime" => $el['created_at'],
                     "value" => $el['productAverageProductionTime']
@@ -54,7 +54,7 @@ class ProductController extends Controller
                 TimesPerProduct::query()
                     ->where('product_id', $product->id)
                     ->where('created_at', '>', Carbon::today()->subDays(365))
-                    ->get(['created_at', 'productAverageProductionTime'])->toArray())
+                    ->get(['created_at', 'productAverageProductionTime'])->toArray()) : []
         ];
         return Inertia::render('Product/Info', $data);
     }

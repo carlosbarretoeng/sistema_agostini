@@ -43,7 +43,7 @@ class PartController extends Controller
             'partAverageProductionTime' => $part->partAverageProductionTime ?? null,
             'companies' => Company::inCompany(auth()->user())->get(['id','name']),
             'machineries' => Machinery::inCompany(auth()->user())->get(['id','name']),
-            'times_per_parts' => array_map(function($el){
+            'times_per_parts' => $part ? array_map(function($el){
                 return [
                     "datetime" => $el['created_at'],
                     "value" => $el['partAverageProductionTime']
@@ -52,7 +52,7 @@ class PartController extends Controller
                 TimesPerPart::query()
                     ->where('part_id', $part->id)
                     ->where('created_at', '>', Carbon::today()->subDays(365))
-                    ->get(['created_at', 'partAverageProductionTime'])->toArray())
+                    ->get(['created_at', 'partAverageProductionTime'])->toArray()) : []
         ];
         return Inertia::render('Part/Info', $data);
     }

@@ -7,6 +7,8 @@ defineProps({
     status: String,
 });
 
+let showPassword = ref(false);
+
 let errorMessage = ref(null);
 
 const form = useForm({
@@ -59,7 +61,12 @@ const submit = () => {
                         <label class="label">
                             <span class="label-text">Senha</span>
                         </label>
-                        <input v-model="form.password" type="password" placeholder="Type here" class="input input-bordered w-full max-w-xs" />
+                        <div class="flex">
+                            <input v-model="form.password" :type="showPassword ? 'text' : 'password'" placeholder="Senha" class="input input-bordered w-full max-w-xs" />
+                            <button type="button" class="btn" @click="() => showPassword = !showPassword">
+                                <font-awesome-icon :icon="!showPassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'" />
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="card-actions justify-end">
