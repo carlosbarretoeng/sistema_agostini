@@ -83,6 +83,10 @@ const printPage = () => {
     console.log(w)
 }
 
+const showEtapa = (machinery) => {
+    return machinery.parts.filter(part => part.quantity != part.done).length > 0
+}
+
 </script>
 
 <template>
@@ -187,7 +191,7 @@ const printPage = () => {
 
         <template v-for="(workStation, idx) in workStations" :key="idx">
             <template v-for="(machinery, idxx) in workStation.machineries" :key="idxx">
-                <div class="w-[21cm] bg-white mt-2">
+                <div  v-if="showEtapa(machinery)" class="w-[21cm] bg-white mt-2">
                     <table class="report-container w-full">
                         <thead class="report-header">
                         <tr>
@@ -221,7 +225,7 @@ const printPage = () => {
                                                     </div>
                                                 </div>
                                                 <div v-for="(part, idxxx) in machinery.parts" :key="idxxx" class="font-normal">
-                                                    <div class="report-content-cell">
+                                                    <div class="report-content-cell" v-if="part.quantity">
                                                         <div class="main">
                                                             <div class="grid grid-cols-7 gap-2">
                                                                 <div class="col-span-5 p-2">

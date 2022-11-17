@@ -111,7 +111,7 @@ const consoleLog = (data) => {
                 </a>
             </template>
             <template v-if="isShowContext">
-                <a v-if="AuthUtil.canView($page.props.user, {permission: 'production_order.read'})" :href="route('production_order.print', id)" target="_blank" class="btn btn-accent mr-2 gap-2">
+                <a v-if="AuthUtil.canView($page.props.user, {permission: 'production_order.read'}) && form.status != 'draft'" :href="route('production_order.print', id)" target="_blank" class="btn btn-accent mr-2 gap-2">
                     <font-awesome-icon icon="fa-solid fa-print" size="lg" />
                     <span class="hidden sm:inline-block">Imprimir</span>
                 </a>
@@ -205,24 +205,24 @@ const consoleLog = (data) => {
             </table>
         </div>
         <div v-if="production_order_parts.length" class="divider">Etapas de Produção</div>
-        <div class="grid sm:grid-cols-3 gap-2">
+        <div class="grid sm:grid-cols-5 gap-2">
             <template v-for="(production_order_part, index) in production_order_parts" :key="index">
                 <div class="card card-compact bg-base-100 shadow-xl mb-2">
                     <div class="flex items-center px-2">
                         <div class="text-xs font-bold">{{ production_order_part.product_recipe?.product.name }}</div>
                     </div>
-                    <div class="flex px-2 border-b-2">
-                        <div class="font-bold">{{ production_order_part.quantity }}x {{ production_order_part.product_recipe?.part.name }}</div>
+                    <div class="flex px-2 border-b-2 h-14">
+                        <div class="font-bold text-sm">{{ production_order_part.quantity }}x {{ production_order_part.product_recipe?.part.name }}</div>
                     </div>
                     <div class="flex items-center space-x-2 px-2">
                         <div class="w-full">
-                            <div class="grid grid-cols-3 font-light">
-                                <div class="col-span-3 sm:col-span-2 font-semibold">Quantidade já produzida:</div>
-                                <div class="col-span-3 sm:col-span-1 sm:text-right pl-4 sm:pl-0">{{ production_order_part.done ?? 0  }} de {{ production_order_part.quantity }}</div>
+                            <div class="border-b-2 text-xs flex justify-between items-center">
+                                <font-awesome-icon icon="fas fa-percentage" />
+                                <div class="text-right">{{ production_order_part.done ?? 0  }} de {{ production_order_part.quantity }}</div>
                             </div>
-                            <div class="grid grid-cols-3 font-light">
-                                <div class="col-span-3 sm:col-span-2 font-semibold">Estação de Trabalho:</div>
-                                <div class="col-span-3 sm:col-span-1 sm:text-right pl-4 sm:pl-0">{{ production_order_part.product_recipe.part.machinery.name ?? '---' }}</div>
+                            <div class="border-b-2 text-xs flex justify-between items-center">
+                                <font-awesome-icon icon="fas fa-dharmachakra" />
+                                <div class="text-right">{{ production_order_part.product_recipe.part.machinery.name ?? '---' }}</div>
                             </div>
                         </div>
                     </div>

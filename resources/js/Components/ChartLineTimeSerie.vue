@@ -1,62 +1,52 @@
 <script setup>
-import { Line } from 'vue-chartjs'
-import _ from 'lodash'
-import {
-    Chart as ChartJS,
-    Title,
-    Tooltip,
-    Legend,
-    LineElement,
-    LinearScale,
-    PointElement,
-    TimeSeriesScale
-} from 'chart.js'
-
-import 'chartjs-adapter-moment';
-
-ChartJS.register(
-    Title,
-    Tooltip,
-    Legend,
-    LineElement,
-    PointElement,
-    LinearScale,
-    TimeSeriesScale
-)
+import moment from 'moment'
+import 'moment/locale/pt-br.js'
+import {Chart} from 'highcharts-vue'
 
 const props = defineProps({
     label: String,
-    chartData: Array
+    chartData: Array | Object
 })
 
-console.log()
-
-const cData = {
-    labels: props.chartData.map(el => el.datetime),
-    datasets: [ {
-        label: props.label,
-        data: props.chartData.map(el => el.value)
-    } ]
-}
-
-const cOptions = {
-    scales: {
-        x: {
-            type: 'timeseries',
-            time: {
-                unit: 'month'
-            }
+const chartOptions = {
+    chart: {
+        type: 'spline',
+        height: 250
+    },
+    credits:{
+        enabled: false
+    },
+    title: {
+        text: props.label
+    },
+    xAxis: {
+        categories: props.chartData.map((element) => {
+            return moment(element.datetime, 'YYYY-MM-DD HH:mm:ss').format('DD/MM/YYYY HH:mm')
+        })
+    },
+    yAxis: {
+        title: {
+            text: null
         }
     },
-    responsive: true,
-    maintainAspectRatio: false
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        data: props.chartData.map((element) => {
+            return element.value
+        }),
+    }]
 }
+
 </script>
 <template>
-    <Line
-        :width="100"
-        :height="300"
-        :chartData="cData"
-        :chartOptions="cOptions"
+    <Chart
+        :options="chartOptions"
     />
 </template>

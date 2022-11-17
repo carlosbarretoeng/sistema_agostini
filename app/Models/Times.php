@@ -24,7 +24,6 @@ class Times extends Model
             return $query
                 ->join('production_order_parts', 'production_order_part_id', '=', 'production_order_parts.id')
                 ->join('production_orders', 'production_order_id', '=', 'production_orders.id')
-                ->where('user_id', $user->id)
                 ->where('production_orders.company_id', $userCompanyId);
         }
         return $query;

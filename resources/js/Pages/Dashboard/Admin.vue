@@ -1,5 +1,6 @@
 <script setup>
 import {ref} from 'vue';
+import moment from 'moment';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import ChartLineTimeSerie from "@/Components/ChartLineTimeSerie.vue";
 import ChartPie from "@/Components/ChartPie.vue";
@@ -15,21 +16,27 @@ const props = defineProps({
 
 let temposDeProducao = ref([]);
 
-let motivosDePardas = ref({
-    'Almoço': 0, 
-    'Café': 0, 
-    'Limpeza': 0, 
-    'Regulagem da máquina': 0, 
-    'Banheiro': 0, 
-    'Busca de insumos, ferramentas, etc.': 0
-});
+let motivosDePardas = ref([
+    ['Almoço', 0],
+    ['Café', 0],
+    ['Limpeza', 0],
+    ['Regulagem da máquina', 0],
+    ['Banheiro', 0],
+    ['Busca de insumos, ferramentas, etc.', 0],
+]);
 
 props.tempos.forEach((el) => {
     if(el.type === 'Produção') {
-        temposDeProducao.value.push({'datetime': el.datetime, 'value': el.value})
+        let simplifiedDate = moment(el.datetime).format('DD/MM/YYYY HH:00')
+        let position = temposDeProducao.value.findIndex(element => element.datetime === simplifiedDate )
+        console.log(position)
+        if( position < 0){
+            temposDeProducao.value.push({ datetime: simplifiedDate, value: el.value });
+        } else {
+            temposDeProducao.value[position].value += el.value;
+        }
     } else {
-        console.log(el.type, motivosDePardas.value['' + el.type ]);
-        motivosDePardas.value['' + el.type ] += el.value
+        motivosDePardas.value[motivosDePardas.value.findIndex((element) => element[0] === el.type)][1] += el.value
     }
 })
 
@@ -37,7 +44,7 @@ props.tempos.forEach((el) => {
 
 <template>
     <AppLayout title="Início">
-        <div class="grid sm:grid-cols-5 gap-2">
+        <div class="grid sm:grid-cols-5 gap-2 mb-2">
             <div class="stats shadow">
                 <div class="stat">
                     <div class="stat-title">Departamentos</div>
@@ -69,13 +76,11 @@ props.tempos.forEach((el) => {
                 </div>
             </div>
         </div>
-        <div class="divider"></div>
         <div class="grid grid-cols-4 gap-2">
-            <div class="col-span-4 sm:col-span-1">
-                <ChartPie  label="Motivos de Parada" :chartData="motivosDePardas"/>
+            <div class="col-span-4 sm:col-span-1 shadow">
+                <ChartPie label="Motivos de Parada" :chartData="motivosDePardas"/>
             </div>
-            <div class="divider sm:hidden"></div>
-            <div class="col-span-4 sm:col-span-3">
+            <div class="col-span-4 sm:col-span-3 shadow">
                 <ChartLineTimeSerie label="Tempo médio de produção YTD" :chartData="temposDeProducao"/>
             </div>
         </div>

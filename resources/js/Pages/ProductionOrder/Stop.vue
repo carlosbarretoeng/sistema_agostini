@@ -21,7 +21,7 @@ const props = defineProps({
     motivos: Array
 })
 
-const flagInterrupcao = ref(false)
+const flagInterrupcao = ref(true)
 
 const form = useForm({
     production_order_id: props.id,
@@ -78,40 +78,30 @@ const interromper = () => {
         </div>
 
         <div v-else>
-            <h3 class="font-bold text-center text-lg">Adicione mais informações</h3>
-
             <InputSelect label="Motivo da Interrupção" :options="motivos" v-model="form.motivo"/>
 
+            <label class="label">
+                <span class="label-text font-medium">O que você já produziu?</span>
+            </label>
 
+            <div  v-for="(production_order_part, index) in production_order_parts" :key="index" class="card w-full mb-4 bg-base-100 shadow-xl">
+                <div class="card-body p-2">
+                    <div class="label-text font-medium">
+                        {{production_order_part.quantity - production_order_part.done}}x {{production_order_part.product_recipe.part.name}} para {{production_order_part.product_recipe.product.name}}
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-1">
+                    <button @click="decrementPart(index)" class="btn btn-sm btn-ghost" :disabled="form.quantidades[index].quantidade <= 0">
+                        <font-awesome-icon icon="fa-solid fa-minus" />
+                    </button>
+                    <span class="text-center"> {{ form.quantidades[index].quantidade }}</span>
+                    <button @click="incrementPart(index)" class="btn btn-sm btn-ghost" :disabled="form.quantidades[index].quantidade >= (production_order_part.quantity - production_order_part.done)">
+                        <font-awesome-icon icon="fa-solid fa-plus" />
+                    </button>
+                </div>
+            </div>
 
-            <table class="table table-compact w-full my-2">
-                <thead>
-                <tr>
-                    <th class="bg-base-300">O que você já produziu?</th>
-                    <th class="w-1/6 text-center bg-base-300">Quantidade</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="(production_order_part, index) in production_order_parts" :key="index">
-                    <td>{{production_order_part.quantity - production_order_part.done}}x {{production_order_part.product_recipe.part.name}} para {{production_order_part.product_recipe.product.name}}</td>
-                    <td class="text-center">
-                        <div class="form-control">
-                            <label class="input-group w-full justify-center">
-                                <button @click="decrementPart(index)" class="btn btn-sm btn-ghost" :disabled="form.quantidades[index].quantidade <= 0">
-                                    <font-awesome-icon icon="fa-solid fa-minus" />
-                                </button>
-                                <span> {{ form.quantidades[index].quantidade }}</span>
-                                <button @click="incrementPart(index)" class="btn btn-sm btn-ghost" :disabled="form.quantidades[index].quantidade >= (production_order_part.quantity - production_order_part.done)">
-                                    <font-awesome-icon icon="fa-solid fa-plus" />
-                                </button>
-                            </label>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-
-            <InputTextArea label="Observações importantes" v-model="form.obs"/>
+            <!-- <InputTextArea label="Observações importantes" v-model="form.obs"/> -->
 
             <div class="mt-4">
                 <button class="btn btn-primary gap-2 w-full" @click="interromper()" :disabled="form.motivo == null || form.motivo == 'null'">

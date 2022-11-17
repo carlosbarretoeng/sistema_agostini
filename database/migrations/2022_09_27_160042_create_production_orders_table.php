@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('production_orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('company_id')->constrained('companies')->onDelete('cascade');
-            $table->integer('progress')->unsigned()->default(0);
+            $table->float('progress')->unsigned()->default(0);
             $table->enum('status', ['draft','waiting','in_production','done','canceled']);
             $table->date('date_start');
             $table->date('date_finish');

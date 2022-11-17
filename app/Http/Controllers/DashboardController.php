@@ -18,12 +18,11 @@ class DashboardController extends Controller
     function index(){
         switch(auth()->user()->roles[0]->name) {
             case 'super-admin':
-                // return $this->indexColaborator();
                 return $this->indexSuperAdmin();
             case 'admin':
                 return $this->indexAdmin();
-            default:
-                return $this->indexColaborator();
+                case 'app_tempos':
+                return $this->indexAppTempos();
         }
     }
 
@@ -42,15 +41,17 @@ class DashboardController extends Controller
     function indexAdmin () {
         $tempos = array_map(function($el){
             return [
+                "id" => $el['id'],
                 "datetime" => $el['created_at'],
                 "type" => $el['type'],
                 "value" => $el['avgTime']
             ];
         },
         Times::inCompany(auth()->user())
-        ->where('times.created_at', '>', Carbon::today()->subDays(365))
-        ->whereNotNull('times.finish')
-        ->get(['times.type', 'times.created_at', DB::raw('TIMESTAMPDIFF(SECOND,times.start,times.finish) as avgTime')])->toArray()
+            ->where('times.created_at', '>', Carbon::today()->subDays(365))
+            ->whereNotNull('times.finish')
+            ->get(['times.id', 'times.type', 'times.created_at', DB::raw('TIMESTAMPDIFF(SECOND,times.start,times.finish) as avgTime')])
+            ->toArray()
         );
 
         $data = [
@@ -61,10 +62,11 @@ class DashboardController extends Controller
             'users_number' => User::where('company_id', auth()->user()->company_id)->count(),
             'tempos' => $tempos
         ];
+        
         return Inertia::render('Dashboard/Admin', $data);
     }
 
-    function indexColaborator () {
+    function indexAppTempos () {
         $data = [
             'production_orders' => ProductionOrder::inCompany(auth()->user())
                 ->whereIn('status', ['waiting', 'in_production'])
@@ -72,20 +74,23 @@ class DashboardController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->get(['id','company_id','progress','status','date_start','date_finish'])
                 ->toArray(),
-            'production_orders_started' => array_unique(
-                array_map(
-                    function($el){ return $el["production_order_id"]; },
-                    Times::query()
-                        ->where('user_id', auth()->user()->id)
-                        ->where('type', Times::TYPE_PRODUCAO)
-                        ->whereNull('finish')
-                        ->join('production_order_parts', 'production_order_part_id', '=', 'production_order_parts.id')
-                        ->get('production_order_id')
-                        ->toArray()
-                )
-            )
+            'productions_with_open_time' => Times::inCompany(auth()->user())
+                ->where('user_id', auth()->user()->id)
+                ->whereIn('status', ['in_production'])
+                ->whereNull('finish')
+                ->join('product_recipes', 'product_recipe_id', '=', 'product_recipes.id')
+                ->join('parts', 'parts.id', '=', 'part_id')
+                ->groupBy('production_order_id', 'name', 'type')
+                ->get([
+                    'production_order_id as id',
+                    'name',
+                    'type',
+                    DB::raw('CONCAT(sum(production_order_parts.quantity) - sum(production_order_parts.done), "x ", name) as item'),
+                    //DB::raw('CONCAT(production_order_parts.quantity - production_order_parts.done, "x ", name) as item')
+                ])
+                // ->get()
+                ->toArray(),
         ];
-        // dd($data);
-        return Inertia::render('Dashboard/Colaborator', $data);
+        return Inertia::render('Dashboard/AppTempos', $data);
     }
 }

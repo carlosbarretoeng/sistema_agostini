@@ -31,7 +31,8 @@ class DatabaseSeeder extends Seeder
 
         $superAdmin = Role::create(['name' => 'super-admin']);
         $admin = Role::create(['name' => 'admin']);
-        $colaborator = Role::create(['name' => 'colaborator']);
+        $app_tempos = Role::create(['name' => 'app_tempos']);
+        $app_custos = Role::create(['name' => 'app_custos']);
 
         $company_create = Permission::create(['name' => 'company.create']);
         $company_read = Permission::create(['name' => 'company.read']);
@@ -91,8 +92,12 @@ class DatabaseSeeder extends Seeder
             $app_times
         ]);
 
-        $colaborator->syncPermissions([
+        $app_tempos->syncPermissions([
             $app_times
+        ]);
+
+        $app_custos->syncPermissions([
+            $app_budget
         ]);
 
         User::factory()->create([
@@ -112,12 +117,20 @@ class DatabaseSeeder extends Seeder
             'username' => 'admin',
             'email' => 'admin@admin.com',
             'password' => Hash::make('admin')])->assignRole('admin');
+
         User::factory()->create([
             'company_id' => 1,
-            'name' => 'Colaborator',
-            'username' => 'colab',
-            'email' => 'colab@colab.com',
-            'password' => Hash::make('colab')])->assignRole('colaborator');
+            'name' => 'App Tempos',
+            'username' => 'tempos',
+            'email' => 'tempos@tempos.com',
+            'password' => Hash::make('tempos')])->assignRole('app_tempos');
+
+        User::factory()->create([
+            'company_id' => 1,
+            'name' => 'App Custos',
+            'username' => 'custos',
+            'email' => 'custos@custos.com',
+            'password' => Hash::make('custos')])->assignRole('app_custos');
 
         Department::create(['company_id' => 1, 'name' => 'Corte de Espuma']);
         Department::create(['company_id' => 1, 'name' => 'Corte de Tecido']);
@@ -178,13 +191,23 @@ class DatabaseSeeder extends Seeder
         ProductRecipe::create(['product_id' => 2, 'part_id' => 12, 'order' => 6, 'quantity' => 1]);
         ProductRecipe::create(['product_id' => 2, 'part_id' => 13, 'order' => 7, 'quantity' => 1]);
 
-        ProductionOrder::create([
-            'company_id' => 1,
-            'progress' => 0,
-            'status' => 'waiting',
-            'date_start' => Carbon::yesterday()->toDate(),
-            'date_finish' => Carbon::tomorrow()->toDate(),
-        ]);
+        // ProductionOrder::create([
+        //     'company_id' => 1,
+        //     'progress' => 0,
+        //     'status' => 'waiting',
+        //     'date_start' => Carbon::yesterday()->toDate(),
+        //     'date_finish' => Carbon::tomorrow()->toDate(),
+        // ]);
+
+        (new \App\Actions\ProductionOrder\CreateNewProductionOrder())->create(
+            1,
+            Carbon::yesterday()->toDateTimeString(),
+            Carbon::tomorrow()->toDateTimeString(),
+            [
+                [1, 150],
+                [2, 50]
+            ]
+        );
 
         /**/
     }

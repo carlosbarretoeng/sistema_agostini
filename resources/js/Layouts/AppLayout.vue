@@ -20,6 +20,10 @@ const switchToTeam = (team) => {
     });
 };
 
+const showDrawer = () => {
+    return !Inertia.page.props.user.roles[0].name.startsWith('app_');
+}
+
 const logout = () => {
     Inertia.post(route('logout'));
 };
@@ -46,7 +50,7 @@ const logout = () => {
             <div class="drawer-content flex flex-col">
                 <!-- Navbar -->
                 <div class="navbar bg-primary  sticky">
-                    <div class="flex-none pr-2 sm:hidden">
+                    <div v-if="showDrawer()" class="flex-none pr-2 sm:hidden">
                         <label for="drawerApp" class="btn btn-square btn-ghost">
                             <font-awesome-icon icon="fa-solid fa-bars" class="fa-2xl text-base-100" />
                         </label>
@@ -75,10 +79,10 @@ const logout = () => {
                 </div>
 
                 <div class="flex overflow-y-auto h-full">
-                    <div class="w-56 min-h-screen hidden sm:inline-flex bg-base-100 sm:fixed">
+                    <div v-if="showDrawer()" class="w-56 min-h-screen hidden sm:inline-flex bg-base-100 sm:fixed">
                         <Navigation />
                     </div>
-                    <div class="flex-1 sm:pl-56">
+                    <div class="flex-1" :class="{'sm:pl-56': showDrawer() }">
                         <div class="mx-2 mt-2" v-if="showSubmenu">
                             <ul tabindex="0"
                                 class="p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-full">
@@ -103,7 +107,7 @@ const logout = () => {
                     </div>
                 </div>
             </div>
-            <div class="drawer-side">
+            <div v-if="showDrawer()" class="drawer-side">
                 <label for="drawerApp" class="drawer-overlay"></label>
                 <Navigation />
             </div>

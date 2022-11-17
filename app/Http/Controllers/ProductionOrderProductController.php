@@ -86,13 +86,20 @@ class ProductionOrderProductController extends Controller
         }
     }
 
-    private function refillProductionOrderParts(mixed $productionOrderId)
+    public function refillProductionOrderParts(mixed $productionOrderId)
     {
         $productionOrderProducts = ProductionOrderProduct::query()->where('production_order_id', $productionOrderId)->get();
 
         foreach ($productionOrderProducts as $productionOrderProduct) {
             $quantityOfProducts = $productionOrderProduct->quantity;
             $productsRecipe = ProductRecipe::query()->where('product_id', $productionOrderProduct->product_id)->get();            
+
+            // apaga os outros
+            $productionPartsExtras = ProductionOrderPart::query()
+                ->where('production_order_id', $productionOrderId)
+                ->where('production_order_product_id', $productionOrderProduct->product_id)
+                ->whereNotIn('product_recipe_id', array_map(function($el){ return $el['id']; }, $productsRecipe->toArray()))
+                ->delete();
 
             foreach ($productsRecipe as $productRecipe) {
                 $quantityOfProductInRecipe = $productRecipe->quantity;
@@ -118,16 +125,6 @@ class ProductionOrderProductController extends Controller
                     $newProductionOrderPart->save();
                 }
             }
-
-            // apaga os outros
-            $productionPartsExtras = ProductionOrderPart::query()
-                ->where('production_order_id', $productionOrderId)
-                ->where('production_order_product_id', $productionOrderProduct->product_id)
-                ->whereNotIn('product_recipe_id', array_map(function($el){ return $el['id']; }, $productsRecipe->toArray()))
-                ->toSql();
-                //->get()->toArray();
-
-            if($productionOrderProduct->product_id == 2) dd($productionPartsExtras);
         }
     }
 }

@@ -32,6 +32,8 @@ class ProductRecipeController extends Controller
 
         $productRecipe->save();
 
+        (new ProductionOrderProductController())->refillProductionOrderPartsByProductRecipe($productRecipe);
+
         return Redirect::route('product.show', $attrs['product_id']);
     }
 
@@ -43,6 +45,8 @@ class ProductRecipeController extends Controller
         $productRecipe->order = $attrs['order'];
 
         $productRecipe->save();
+
+        (new ProductionOrderProductController())->refillProductionOrderPartsByProductRecipe($productRecipe);
 
         return Redirect::route('product.show', $attrs['product_id']);
     }

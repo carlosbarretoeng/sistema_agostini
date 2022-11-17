@@ -28,16 +28,15 @@
         "@fortawesome/free-regular-svg-icons": "^6.2.0",
         "@fortawesome/free-solid-svg-icons": "^6.2.0",
         "@fortawesome/vue-fontawesome": "^3.0.1",
-        "chart.js": "^3.9.1",
-        "chartjs-adapter-moment": "^1.0.0",
         "daisyui": "^2.24.0",
         "flowbite": "^1.5.3",
         "flowbite-datepicker": "^1.2.2",
+        "highcharts": "^10.3.1",
+        "highcharts-vue": "^1.4.0",
         "jsbarcode": "^3.11.5",
         "maska": "^1.5.0",
         "moment": "^2.29.4",
         "qrcode": "^1.5.1",
-        "vue-chartjs": "^4.1.1",
         "vue3-barcode-scanner": "^1.0.8",
         "vue3-qrcode-reader": "^0.0.1"
     }

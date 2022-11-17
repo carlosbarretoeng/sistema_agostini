@@ -72,6 +72,10 @@ const goToNextStep = () => {
     });
 }
 
+const goToPreviousStep = () => {
+    avancar.value = false;
+}
+
 </script>
 
 <template>
@@ -98,17 +102,24 @@ const goToNextStep = () => {
             </div>
         </div>
         <div v-else>
-            <h3 class="font-bold text-center text-lg">Verifique a sua lista de produção</h3>
-            <p class="py-4 text-center">Para realizar essa atividade, você precisará produzir:</p>
-            <div>
-                <template v-for="(lista, index) in listaDeProducao" :key="index">
-                    <div class="text-center" v-if="lista[0] > 0">{{ lista }}</div>
-                </template>
-            </div>
-            <p class="py-4 text-center">Ao clicar em 'Avançar', abaixo, o tempo de produção começará a contar.</p>
-            <div class="flex flex-col">
+            <template v-if="listaDeProducao.reduce((older, newer) => older + newer[0], 0) > 0">
+                <h3 class="font-bold text-center text-lg">Verifique a sua lista de produção</h3>
+                <p class="py-4 text-center">Para realizar essa atividade, você precisará produzir:</p>
+                <div>
+                    <template v-for="(lista, index) in listaDeProducao" :key="index">
+                        <div class="text-center" v-if="lista[0] > 0">{{ lista }}</div>
+                    </template>
+                </div>
+                <p class="py-4 text-center">Ao clicar em 'Avançar', abaixo, o tempo de produção começará a contar.</p>
+            </template>
+            <template v-else>
+                <h3 class="font-bold text-center text-lg">A Etapa de Produção já foi concluída</h3>
+                <p class="py-4 text-center">Ao clicar em 'Voltar', abaixo, para selecionar uma nova etapa.</p>
+            </template>
+            <div class="flex flex-col" v-if="listaDeProducao.reduce((older, newer) => older + newer[0], 0) > 0">
                 <button @click="goToNextStep()" class="btn btn-primary btn-block my-2">Avançar</button>
             </div>
+            <button @click="goToPreviousStep()" class="btn btn-secondary btn-block my-2">Voltar</button>
         </div>
     </AppLayout>
 </template>

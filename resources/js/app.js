@@ -13,14 +13,24 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 import { dom } from "@fortawesome/fontawesome-svg-core";
+
 import Maska from "maska";
+
 import 'flowbite';
+
+import Highcharts from 'highcharts'
+import accessibilityInit from 'highcharts/modules/accessibility'
+import exportingInit from 'highcharts/modules/exporting'
+import HighchartsVue from 'highcharts-vue'
 
 library.add(fas);
 library.add(far);
 library.add(fab);
 
 dom.watch();
+
+accessibilityInit(Highcharts);
+exportingInit(Highcharts);
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
@@ -32,6 +42,7 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue, Ziggy)
             .use(Maska)
+            .use(HighchartsVue, Highcharts)
             .component('font-awesome-icon', FontAwesomeIcon)
             .mount(el);
     },

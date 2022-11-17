@@ -6,6 +6,7 @@ import InputText from '@/Components/InputText.vue';
 import InputSelect from "@/Components/InputSelect.vue";
 import ChartLineTimeSerie from "@/Components/ChartLineTimeSerie.vue";
 import AuthUtil from '@/../util/auth.util'
+import TextUtil from '@/../util/text.util'
 import TimeUtil from "@/../util/time.util";
 
 const props = defineProps({
@@ -136,7 +137,7 @@ const addProductRecipeItem = () => {
             <InputText v-if="isShowContext" label="Tempo Médio de Produção" v-model="productAverageProductionTimeFormated" disabled/>
         </div>
 
-        <div class="divider" v-if="productRecipe.length || isEditContext">Etapa de Produto</div>
+        <div class="divider" v-if="productRecipe.length">Etapa de Produto</div>
 
         <div v-if="isEditContext" class="grid sm:grid-cols-4 gap-2 my-2">
             <a href="#addProductModal" class="btn w-full sm:col-span-4 gap-2">
@@ -158,32 +159,34 @@ const addProductRecipeItem = () => {
             </div>
         </div>
 
-        <div class="grid sm:grid-cols-5 gap-1">
+        <div class="grid sm:grid-cols-3 gap-2">
             <template v-for="(productRecipeItem, index) in productRecipe" :key="index">
-                <div class="card card-compact bg-base-100 border-[1px] border-gray-500">
-                    <div class="flex items-center space-x-2 h-14 p-2 bg-base-300">
+                <div class="card card-compact bg-base-100 shadow-sm">
+                    <div class="flex items-center space-x-2 h-12 p-2 bg-base-300">
+                        <div class="avatar placeholder">
+                            <div class="bg-neutral-focus text-neutral-content rounded-full w-6">
+                                <span>{{ productRecipeItem['order'] }}</span>
+                            </div>
+                        </div>
                         <div>
-                            <div class="text-sm">{{ productRecipeItem['quantity'] }}x {{ productRecipeItem['partName'] }}</div>
+                            <div class="font-bold">{{ productRecipeItem['quantity'] }}x {{ productRecipeItem['partName'] }}</div>
                         </div>
                     </div>
                     <div class="flex items-center space-x-2 px-2">
                         <div class="w-full">
-                            <div class="border-b-2 text-xs flex justify-between items-center">
-                                <font-awesome-icon icon="fas fa-dharmachakra" />
+                            <div class="grid grid-cols-2 font-light border-b-2">
+                                <div class="font-semibold">Estação:</div>
                                 <div class="text-right">{{ productRecipeItem['machineryName'] ?? '---' }}</div>
                             </div>
-                            <div class="border-b-2 text-xs flex justify-between items-center">
-                                <font-awesome-icon icon="fas fa-clock" />
+                            <div class="grid grid-cols-2 font-light">
+                                <div class="font-semibold">Tempo Médio:</div>
                                 <div class="text-right">{{ TimeUtil.secondsToTimestamp(productRecipeItem['partAverageProductionTime']) ?? '---' }}</div>
                             </div>
                         </div>
                     </div>
-                    <div v-if="isEditContext" class="bg-base-300/25 grid grid-cols-4 gap-1">
+                    <div v-if="isEditContext" class="bg-base-300/25 grid grid-cols-3 gap-2">
                         <button class="btn btn-ghost btn-sm w-full gap-2" @click="updateOrderDown(productRecipeItem)" :disabled="productRecipeItem['order'] <= 1">
                             <font-awesome-icon icon="fa-solid fa-down-long"/>
-                        </button>
-                        <button class="btn btn-ghost btn-sm w-full gap-2" @click="updateOrderDelete(productRecipeItem)">
-                            <font-awesome-icon icon="fa-solid fa-edit"/>
                         </button>
                         <button class="btn btn-ghost btn-sm w-full gap-2" @click="updateOrderDelete(productRecipeItem)">
                             <font-awesome-icon icon="fa-solid fa-trash"/>
@@ -197,7 +200,7 @@ const addProductRecipeItem = () => {
             </template>
         </div>
 
-        <div class="mt-4">
+        <div v-if="isShowContext">
             <ChartLineTimeSerie label="Tempo médio YTD" :chartData="times_per_products"/>
         </div>
 
