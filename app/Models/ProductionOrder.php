@@ -18,7 +18,7 @@ class ProductionOrder extends Model
     {
         if(!$user->hasRole('super-admin')){
             $userCompanyId = $user->company_id;
-            return $query->where('company_id', $userCompanyId);
+            return $query->where('production_orders.company_id', $userCompanyId);
         }
         return $query;
     }

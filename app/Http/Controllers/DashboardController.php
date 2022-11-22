@@ -62,7 +62,7 @@ class DashboardController extends Controller
             'users_number' => User::where('company_id', auth()->user()->company_id)->count(),
             'tempos' => $tempos
         ];
-        
+
         return Inertia::render('Dashboard/Admin', $data);
     }
 
@@ -74,23 +74,21 @@ class DashboardController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->get(['id','company_id','progress','status','date_start','date_finish'])
                 ->toArray(),
-            'productions_with_open_time' => Times::inCompany(auth()->user())
-                ->where('user_id', auth()->user()->id)
-                ->whereIn('status', ['in_production'])
-                ->whereNull('finish')
-                ->join('product_recipes', 'product_recipe_id', '=', 'product_recipes.id')
-                ->join('parts', 'parts.id', '=', 'part_id')
-                ->groupBy('production_order_id', 'name', 'type')
-                ->get([
-                    'production_order_id as id',
-                    'name',
-                    'type',
-                    DB::raw('CONCAT(sum(production_order_parts.quantity) - sum(production_order_parts.done), "x ", name) as item'),
-                    //DB::raw('CONCAT(production_order_parts.quantity - production_order_parts.done, "x ", name) as item')
-                ])
-                // ->get()
-                ->toArray(),
+            'ordens_aguardando' => array_map(function($el) { return $el['id']; }, ProductionOrder::inCompany(auth()->user())->where('status', 'waiting')->get('id')->toArray()),
+            'ordens_producao' => ProductionOrder::inCompany(auth()->user())
+                ->join('production_order_parts', 'production_order_parts.production_order_id', '=', 'production_orders.id')
+                ->join('product_recipes', 'product_recipes.id', '=', 'production_order_parts.product_recipe_id')
+                ->join('parts', 'parts.id', '=', 'product_recipes.part_id')
+                ->join('times', 'times.production_order_part_id', '=', 'production_order_parts.id')
+                ->where('production_orders.status', 'in_production')
+                ->where('times.user_id', auth()->user()->id)
+                ->whereNull('times.finish')
+                ->whereRaw('production_order_parts.quantity > done')
+                ->orderBy('times.created_at', 'desc')
+                ->get(['production_orders.id', 'times.id as tid', 'times.type', 'times.finish', DB::raw('concat(`production_order_parts`.`quantity` - done, "x ", name) as texto')])
+                ->toArray()
         ];
+        // dd($data['ordens_producao']);
         return Inertia::render('Dashboard/AppTempos', $data);
     }
 }

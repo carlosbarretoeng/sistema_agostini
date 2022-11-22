@@ -38,6 +38,8 @@ Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified',])
             ->name('production_order.current');
         Route::get('production_order/stop/{productionOrder}', [ProductionOrderController::class, 'stop'])
             ->name('production_order.stop');
+        Route::get('production_order/finalize/{productionOrder}', [ProductionOrderController::class, 'finalize'])
+            ->name('production_order.finalize');
         Route::get('production_order/start/{productionOrder}', [ProductionOrderController::class, 'start'])
             ->name('production_order.start');
         Route::get('production_order/start/{productionOrder}/machinery', [ProductionOrderController::class, 'confirmMachinery'])

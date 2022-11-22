@@ -4,11 +4,21 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 
 const props = defineProps({
     production_orders: Array,
-    productions_with_open_time: Array
+    ordens_aguardando: Array,
+    ordens_producao: Array,
 })
 
-const productions_with_open_time_ids = _.uniq(props.productions_with_open_time.map(el => el.id));
-const productions_with_open_time_type = _.uniq(props.productions_with_open_time.map(el => el.type));
+const enableIniciarNovo = (prodution_order_id) => {
+    return props.ordens_producao.length === 0
+}
+
+const enableRetomar = (prodution_order_id) => {
+    return !enableIniciarNovo(prodution_order_id) && props.ordens_producao.filter(el => el.type === 'Produção').length === 0;
+}
+
+const enableInterromper = (prodution_order_id) => {
+    return !enableIniciarNovo(prodution_order_id) && props.ordens_producao.filter(el => el.type === 'Produção').length > 0;
+}
 
 </script>
 
@@ -22,42 +32,45 @@ const productions_with_open_time_type = _.uniq(props.productions_with_open_time.
                 <div class="card-body p-4 grid grid-cols-4">
                     <progress class="progress w-full col-span-4" :value="production_order.progress" max="100"></progress>
                     <div class="text-xl font-bold col-span-4 text-center">Ordem Monitorada #{{ production_order.id }}</div>
-                    <!-- <div class="text-lg font-semibold col-span-2">Data Início:</div>
-                    <div class="text-lg text-right col-span-2">{{ TimeUtil.toFormatedString(production_order.date_start, 'DD/MM/YYYY') }}</div>
-                    <div class="text-lg font-semibold col-span-2">Data Término:</div>
-                    <div class="text-lg text-right col-span-2">{{ TimeUtil.toFormatedString(production_order.date_finish, 'DD/MM/YYYY') }}</div> -->
-                    <div v-if="production_order.status === 'waiting'" class=" col-span-4">
+
+                    <div class=" col-span-4" v-if="_.indexOf(ordens_aguardando, production_order.id) > -1">
                         <a class="btn btn-primary gap-2 w-full" :href="route('production_order.start', production_order.id)">
                             <span>Iniciar</span>
                         </a>
                     </div>
-                    <div v-if="production_order.status === 'in_production' && productions_with_open_time_ids.indexOf(production_order.id) < 0" class=" col-span-4">
-                        <a class="btn btn-primary gap-2 w-full" :href="route('production_order.start', production_order.id)">
-                            <span>Iniciar</span>
-                        </a>
-                    </div>
-                    <template v-if="production_order.status === 'in_production' && productions_with_open_time_ids.indexOf(production_order.id) > -1">
+                    <template v-else>
                         <div class="col-span-4">
                             <div class="text-center font-medium">Você esta executando:</div>
-                            <div v-for="(pwot, idx) in productions_with_open_time" :key="idx" class="text-xs text-center mb-1">
-                                {{ pwot.item}}
+                            <div v-for="(pwot, idx) in ordens_producao" :key="idx" class="text-xs text-center mb-1">
+                                <span v-if="production_order.id === pwot.id">{{ pwot.texto }}</span>
                             </div>
                         </div>
-                        <div class="col-span-2" v-if="productions_with_open_time_type.indexOf('Produção') > -1">
-                            <a class="btn btn-secondary gap-2 w-full" :href="route('production_order.stop', production_order.id)">
-                                <span>Interromper</span>
+
+                        <div class=" col-span-4" v-if="enableIniciarNovo(production_order.id)">
+                            <a class="btn btn-primary gap-2 w-full" :href="route('production_order.start', production_order.id)">
+                                <span>Iniciar</span>
                             </a>
                         </div>
-                        <div class="col-span-2" v-else>
+
+                        <div class="col-span-4" v-if="enableRetomar(production_order.id)">
                             <a class="btn btn-success gap-2 w-full" :href="route('production_order.start', production_order.id)">
                                 <span>Retomar</span>
                             </a>
                         </div>
-                        <div class="col-span-2">
-                            <a class="btn btn-negative gap-2 w-full" :href="route('production_order.stop', production_order.id)">
-                                <span>Finalizar</span>
-                            </a>
-                        </div>
+
+                        <template v-if="enableInterromper(production_order.id)">
+                            <div class="col-span-2">
+                                <a class="btn btn-secondary gap-2 w-full" :href="route('production_order.stop', production_order.id)">
+                                    <span>Interromper</span>
+                                </a>
+                            </div>
+
+                            <div class="col-span-2">
+                                <a class="btn btn-negative gap-2 w-full" :href="route('production_order.finalize', production_order.id)">
+                                    <span>Finalizar</span>
+                                </a>
+                            </div>
+                        </template>
                     </template>
                 </div>
             </div>

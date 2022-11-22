@@ -92,7 +92,6 @@ class TimesController extends Controller
         $toBuild = array_reduce($pop, function($ol, $el) { return $ol + ($el["quantity"] - $el["done"]); }, 0);
 
         if($toBuild === 0){
-            // TODO: CALCULATE TIMES
             (new ProductionOrderController())->moveStatus($pop[0]['production_order_id'], 'done');
         }
     }

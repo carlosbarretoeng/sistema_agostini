@@ -117,10 +117,15 @@ class ProductionOrderController extends Controller
         $data = [
             ...$productionOrder->toArray(),
             'production_order_parts' => ProductionOrderPart::query()
-                ->join('times', 'times.production_order_part_id', '=', 'production_order_parts.id')
+                ->join('times', function($join) {
+                    $join->on('times.production_order_part_id', '=', 'production_order_parts.id')
+                        ->where('user_id', auth()->user()->id)
+                        ->whereNull('finish');
+                })
                 ->where('production_order_id', $productionOrder->id)
-                ->whereNull('times.finish')
-                ->get('production_order_parts.*')->toArray()
+                ->whereRaw('quantity > done')
+                ->get('production_order_parts.*')
+                ->toArray()
             ,
             'motivos'=> [
                 ['id' => Times::TYPE_BANHEIRO, 'name' => Times::TYPE_BANHEIRO],
@@ -128,11 +133,39 @@ class ProductionOrderController extends Controller
                 ['id' => Times::TYPE_CAFE, 'name' => Times::TYPE_CAFE],
                 ['id' => Times::TYPE_LIMPEZA, 'name' => Times::TYPE_LIMPEZA],
                 ['id' => Times::TYPE_REGULAGEM, 'name' => Times::TYPE_REGULAGEM],
-                ['id' => Times::TYPE_INSUMOS, 'name' => Times::TYPE_INSUMOS]
+                ['id' => Times::TYPE_INSUMOS, 'name' => Times::TYPE_INSUMOS],
+                ['id' => 0, 'name' => "Final do turno de trabalho"]
             ]
         ];
         // dd($data['production_order_parts']);
         return Inertia::render('ProductionOrder/Stop', $data);
+    }
+
+    function finalize(Request $request, ProductionOrder $productionOrder) {
+        $data = [
+            ...$productionOrder->toArray(),
+            'production_order_parts' => ProductionOrderPart::query()
+                ->join('times', function($join) {
+                    $join->on('times.production_order_part_id', '=', 'production_order_parts.id')
+                        ->where('user_id', auth()->user()->id)
+                        ->whereNull('finish');
+                })
+                ->where('production_order_id', $productionOrder->id)
+                ->whereRaw('quantity > done')
+                ->get('production_order_parts.*')
+                ->toArray()
+            ,
+            'motivos'=> [
+                ['id' => Times::TYPE_BANHEIRO, 'name' => Times::TYPE_BANHEIRO],
+                ['id' => Times::TYPE_ALMOCO, 'name' => Times::TYPE_ALMOCO],
+                ['id' => Times::TYPE_CAFE, 'name' => Times::TYPE_CAFE],
+                ['id' => Times::TYPE_LIMPEZA, 'name' => Times::TYPE_LIMPEZA],
+                ['id' => Times::TYPE_REGULAGEM, 'name' => Times::TYPE_REGULAGEM],
+                ['id' => Times::TYPE_INSUMOS, 'name' => Times::TYPE_INSUMOS],
+                ['id' => 0, 'name' => "Final do turno de trabalho"]
+            ]
+        ];
+        return Inertia::render('ProductionOrder/Finalize', $data);
     }
 
     function start(Request $request, ProductionOrder $productionOrder) {

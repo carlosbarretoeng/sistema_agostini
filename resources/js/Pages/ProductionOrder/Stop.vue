@@ -59,7 +59,7 @@ const interromper = () => {
                 <span class="hidden sm:inline-block">Voltar</span>
             </a>
         </template>
-        <div v-if="!flagInterrupcao">
+        <!-- <div v-if="!flagInterrupcao">
             <h3 class="font-bold text-center text-lg">Selecione uma das opções</h3>
 
             <div class="mt-4">
@@ -75,9 +75,9 @@ const interromper = () => {
                     <span>Preciso interromper por enquanto</span>
                 </button>
             </div>
-        </div>
+        </div> -->
 
-        <div v-else>
+        <div>
             <InputSelect label="Motivo da Interrupção" :options="motivos" v-model="form.motivo"/>
 
             <label class="label">
