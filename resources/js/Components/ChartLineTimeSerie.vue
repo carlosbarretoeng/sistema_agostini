@@ -29,6 +29,9 @@ const chartOptions = {
             text: null
         }
     },
+    legend: {
+        enabled: false
+    },
     plotOptions: {
         line: {
             dataLabels: {

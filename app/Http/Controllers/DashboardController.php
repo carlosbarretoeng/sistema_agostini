@@ -21,8 +21,10 @@ class DashboardController extends Controller
                 return $this->indexSuperAdmin();
             case 'admin':
                 return $this->indexAdmin();
-                case 'app_tempos':
+            case 'app_tempos':
                 return $this->indexAppTempos();
+            case 'app_custos':
+                    return $this->indexAppCustos();
         }
     }
 
@@ -90,5 +92,12 @@ class DashboardController extends Controller
         ];
         // dd($data['ordens_producao']);
         return Inertia::render('Dashboard/AppTempos', $data);
+    }
+
+    function indexAppCustos () {
+        $data = [
+        ];
+        // dd($data['ordens_producao']);
+        return Inertia::render('Dashboard/AppCustos', $data);
     }
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\MachineryController;
 use App\Http\Controllers\PartController;
+use App\Http\Controllers\PlanoDeContaController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductionOrderController;
 use App\Http\Controllers\ProductionOrderProductController;
@@ -62,4 +63,6 @@ Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified',])
 
         Route::post('times/finalizar', [TimesController::class, 'finalizar'])
             ->name('times.finalizar');
+
+        Route::resource('plano_de_contas', PlanoDeContaController::class);
     });

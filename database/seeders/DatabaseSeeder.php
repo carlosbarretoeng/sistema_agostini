@@ -8,6 +8,7 @@ use App\Models\Company;
 use App\Models\Department;
 use App\Models\Machinery;
 use App\Models\Part;
+use App\Models\PlanoDeConta;
 use App\Models\Product;
 use App\Models\ProductionOrder;
 use App\Models\ProductionOrderPart;
@@ -191,14 +192,6 @@ class DatabaseSeeder extends Seeder
         ProductRecipe::create(['product_id' => 2, 'part_id' => 12, 'order' => 6, 'quantity' => 1]);
         ProductRecipe::create(['product_id' => 2, 'part_id' => 13, 'order' => 7, 'quantity' => 1]);
 
-        // ProductionOrder::create([
-        //     'company_id' => 1,
-        //     'progress' => 0,
-        //     'status' => 'waiting',
-        //     'date_start' => Carbon::yesterday()->toDate(),
-        //     'date_finish' => Carbon::tomorrow()->toDate(),
-        // ]);
-
         (new \App\Actions\ProductionOrder\CreateNewProductionOrder())->create(
             1,
             Carbon::yesterday()->toDateTimeString(),
@@ -208,6 +201,43 @@ class DatabaseSeeder extends Seeder
                 [2, 50]
             ]
         );
+
+
+        PlanoDeConta::create([
+            'company_id' => 1,
+            'identificador' => '1',
+            'descricao' => 'Receitas',
+            'tipo' => 'receita'
+        ]);
+
+        PlanoDeConta::create([
+            'company_id' => 1,
+            'superior' => 1,
+            'identificador' => '1.1',
+            'descricao' => 'Salários',
+            'tipo' => 'receita'
+        ]);
+        PlanoDeConta::create([
+            'company_id' => 1,
+            'superior' => 2,
+            'identificador' => '1.1.1',
+            'descricao' => 'AGOSTINI TECNOLOGIA',
+            'tipo' => 'receita'
+        ]);
+        PlanoDeConta::create([
+            'company_id' => 1,
+            'superior' => 2,
+            'identificador' => '1.1.2',
+            'descricao' => 'AGOSTINI CONSULTORIA',
+            'tipo' => 'receita'
+        ]);
+
+        PlanoDeConta::create([
+            'company_id' => 1,
+            'identificador' => '2',
+            'descricao' => 'Despesas',
+            'tipo' => 'despesa'
+        ]);
 
         /**/
     }
